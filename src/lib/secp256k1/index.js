@@ -1,6 +1,4 @@
-// @ts-check
 import { EC } from '../elliptic';
-import * as tiny from '../tiny-secp256k1';
 
 
 const ec = new EC('secp256k1');

@@ -1,4 +1,3 @@
-// @ts-check
 'use strict';
 
 import BN from '../../../bn.js';

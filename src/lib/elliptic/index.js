@@ -1,4 +1,3 @@
-// @ts-check
 'use strict';
 
 // export * as utils from './elliptic/utils';

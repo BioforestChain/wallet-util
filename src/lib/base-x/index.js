@@ -1,4 +1,3 @@
-// @ts-check
 'use strict';
 // base-x encoding / decoding
 // Copyright (c) 2018 base-x contributors
