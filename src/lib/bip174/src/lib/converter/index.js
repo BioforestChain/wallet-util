@@ -1,26 +1,26 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const typeFields_1 = require('../typeFields');
-const globalXpub = require('./global/globalXpub');
-const unsignedTx = require('./global/unsignedTx');
-const finalScriptSig = require('./input/finalScriptSig');
-const finalScriptWitness = require('./input/finalScriptWitness');
-const nonWitnessUtxo = require('./input/nonWitnessUtxo');
-const partialSig = require('./input/partialSig');
-const porCommitment = require('./input/porCommitment');
-const sighashType = require('./input/sighashType');
-const tapKeySig = require('./input/tapKeySig');
-const tapLeafScript = require('./input/tapLeafScript');
-const tapMerkleRoot = require('./input/tapMerkleRoot');
-const tapScriptSig = require('./input/tapScriptSig');
-const witnessUtxo = require('./input/witnessUtxo');
-const tapTree = require('./output/tapTree');
-const bip32Derivation = require('./shared/bip32Derivation');
-const checkPubkey = require('./shared/checkPubkey');
-const redeemScript = require('./shared/redeemScript');
-const tapBip32Derivation = require('./shared/tapBip32Derivation');
-const tapInternalKey = require('./shared/tapInternalKey');
-const witnessScript = require('./shared/witnessScript');
+const typeFields_1 = require('../typeFields.js');
+const globalXpub = require('./global/globalXpub.js');
+const unsignedTx = require('./global/unsignedTx.js');
+const finalScriptSig = require('./input/finalScriptSig.js');
+const finalScriptWitness = require('./input/finalScriptWitness.js');
+const nonWitnessUtxo = require('./input/nonWitnessUtxo.js');
+const partialSig = require('./input/partialSig.js');
+const porCommitment = require('./input/porCommitment.js');
+const sighashType = require('./input/sighashType.js');
+const tapKeySig = require('./input/tapKeySig.js');
+const tapLeafScript = require('./input/tapLeafScript.js');
+const tapMerkleRoot = require('./input/tapMerkleRoot.js');
+const tapScriptSig = require('./input/tapScriptSig.js');
+const witnessUtxo = require('./input/witnessUtxo.js');
+const tapTree = require('./output/tapTree.js');
+const bip32Derivation = require('./shared/bip32Derivation.js');
+const checkPubkey = require('./shared/checkPubkey.js');
+const redeemScript = require('./shared/redeemScript.js');
+const tapBip32Derivation = require('./shared/tapBip32Derivation.js');
+const tapInternalKey = require('./shared/tapInternalKey.js');
+const witnessScript = require('./shared/witnessScript.js');
 const globals = {
   unsignedTx,
   globalXpub,

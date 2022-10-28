@@ -1,9 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const combiner_1 = require('./combiner');
-const parser_1 = require('./parser');
-const typeFields_1 = require('./typeFields');
-const utils_1 = require('./utils');
+const combiner_1 = require('./combiner/index.js');
+const parser_1 = require('./parser/index.js');
+const typeFields_1 = require('./typeFields.js');
+const utils_1 = require('./utils.js');
 class Psbt {
   constructor(tx) {
     this.inputs = [];

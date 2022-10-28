@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require('../utils');
-var SHA256 = require('./256');
+var utils = require('../utils.js');
+var SHA256 = require('./256.js');
 
 function SHA224() {
   if (!(this instanceof SHA224))

@@ -1,4 +1,4 @@
-var native = require('./native')
+var native = require('./native.js')
 
 function getTypeName (fn) {
   return fn.name || fn.toString().match(/function (.*?)\s*\(/)[1]

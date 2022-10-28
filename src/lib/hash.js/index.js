@@ -1,10 +1,10 @@
 var hash = exports;
 
-hash.utils = require('./src/utils');
-hash.common = require('./src/common');
-hash.sha = require('./src/sha');
-hash.ripemd = require('./src/ripemd');
-hash.hmac = require('./src/hmac');
+hash.utils = require('./src/utils.js');
+hash.common = require('./src/common.js');
+hash.sha = require('./src/sha.js');
+hash.ripemd = require('./src/ripemd.js');
+hash.hmac = require('./src/hmac.js');
 
 // Proxy hash functions to the main object
 hash.sha1 = hash.sha.sha1;

@@ -1,7 +1,7 @@
-var Buffer = require('../buffer').Buffer
-var Transform = require('../tiny-stream/transform')
-var StringDecoder = require('../string_decoder').StringDecoder
-var inherits = require('../inherits')
+var Buffer = require('../buffer/index.js').Buffer
+var Transform = require('../tiny-stream/transform.js')
+var StringDecoder = require('../string_decoder/index.js').StringDecoder
+var inherits = require('../inherits/index.js')
 
 function CipherBase (hashMode) {
   Transform.call(this)

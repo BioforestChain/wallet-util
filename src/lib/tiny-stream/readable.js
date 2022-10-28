@@ -1,5 +1,5 @@
 /* replacement start */
-const process = require('../process')
+const process = require('../process/index.js')
 /* replacement end */
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -36,30 +36,30 @@ const {
   SafeSet,
   SymbolAsyncIterator,
   Symbol
-} = require('./primordials')
+} = require('./primordials.js')
 
 module.exports = Readable
 Readable.ReadableState = ReadableState
 
-const { EventEmitter: EE } = require('../events')
+const { EventEmitter: EE } = require('../events/index.js')
 
-const { Stream, prependListener } = require('./legacy')
+const { Stream, prependListener } = require('./legacy.js')
 
-const { Buffer } = require('../buffer')
+const { Buffer } = require('../buffer/index.js')
 
-const { addAbortSignal } = require('./add-abort-signal')
+const { addAbortSignal } = require('./add-abort-signal.js')
 
-const eos = require('./end-of-stream')
+const eos = require('./end-of-stream.js')
 
-let debug = require('./util').debuglog('stream', (fn) => {
+let debug = require('./util.js').debuglog('stream', (fn) => {
   debug = fn
 })
 
-const BufferList = require('./buffer_list')
+const BufferList = require('./buffer_list.js')
 
-const destroyImpl = require('./destroy')
+const destroyImpl = require('./destroy.js')
 
-const { getHighWaterMark, getDefaultHighWaterMark } = require('./state')
+const { getHighWaterMark, getDefaultHighWaterMark } = require('./state.js')
 
 const {
   aggregateTwoErrors,
@@ -70,15 +70,15 @@ const {
     ERR_STREAM_PUSH_AFTER_EOF,
     ERR_STREAM_UNSHIFT_AFTER_END_EVENT
   }
-} = require('./errors')
+} = require('./errors.js')
 
-const { validateObject } = require('./validators')
+const { validateObject } = require('./validators.js')
 
 const kPaused = Symbol('kPaused')
 
-const { StringDecoder } = require('../string_decoder')
+const { StringDecoder } = require('../string_decoder/index.js')
 
-const from = require('./from')
+const from = require('./from.js')
 
 ObjectSetPrototypeOf(Readable.prototype, Stream.prototype)
 ObjectSetPrototypeOf(Readable, Stream)
@@ -93,7 +93,7 @@ function ReadableState(options, stream, isDuplex) {
   // However, some cases require setting options to different
   // values for the readable and the writable sides of the duplex stream.
   // These options can be provided separately as readableXXX and writableXXX.
-  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof require('./duplex') // Object stream flag. Used to make read(n) ignore n and to
+  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof require('./duplex.js') // Object stream flag. Used to make read(n) ignore n and to
   // make all the buffer merging and length checks go away.
 
   this.objectMode = !!(options && options.objectMode)
@@ -172,7 +172,7 @@ function Readable(options) {
   if (!(this instanceof Readable)) return new Readable(options) // Checking for a Stream.Duplex instance is faster here instead of inside
   // the ReadableState constructor, at least with V8 6.5.
 
-  const isDuplex = this instanceof require('./duplex')
+  const isDuplex = this instanceof require('./duplex.js')
 
   this._readableState = new ReadableState(options, this, isDuplex)
 

@@ -1,8 +1,8 @@
 'use strict'
 
-const { ArrayIsArray, ObjectSetPrototypeOf } = require('./primordials')
+const { ArrayIsArray, ObjectSetPrototypeOf } = require('./primordials.js')
 
-const { EventEmitter: EE } = require('../events')
+const { EventEmitter: EE } = require('../events/index.js')
 
 function Stream(opts) {
   EE.call(this, opts)

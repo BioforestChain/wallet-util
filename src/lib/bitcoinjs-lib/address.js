@@ -1,12 +1,12 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.toOutputScript = exports.fromOutputScript = exports.toBech32 = exports.toBase58Check = exports.fromBech32 = exports.fromBase58Check = void 0;
-const networks = require('./networks');
-const payments = require('./payments');
-const bscript = require('./script');
-const types = require('./types');
-const bech32_1 = require('../bech32');
-const bs58check = require('../bs58check');
+const networks = require('./networks.js');
+const payments = require('./payments/index.js');
+const bscript = require('./script.js');
+const types = require('./types.js');
+const bech32_1 = require('../bech32/index.js');
+const bs58check = require('../bs58check/index.js');
 const { typeforce } = types;
 const FUTURE_SEGWIT_MAX_SIZE = 40;
 const FUTURE_SEGWIT_MIN_SIZE = 2;

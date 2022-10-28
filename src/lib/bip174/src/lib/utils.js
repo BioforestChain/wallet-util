@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const converter = require('./converter');
+const converter = require('./converter/index.js');
 function checkForInput(inputs, inputIndex) {
   const input = inputs[inputIndex];
   if (input === undefined) throw new Error(`No input #${inputIndex}`);

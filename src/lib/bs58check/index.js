@@ -1,7 +1,7 @@
 'use strict'
 
-var createHash = require('../create-hash')
-var bs58checkBase = require('./base')
+var createHash = require('../create-hash/index.js')
+var bs58checkBase = require('./base.js')
 
 // SHA256(SHA256(buffer))
 function sha256x2 (buffer) {

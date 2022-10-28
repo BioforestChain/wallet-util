@@ -1,9 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const convert = require('../converter');
-const tools_1 = require('../converter/tools');
-const varuint = require('../converter/varint');
-const typeFields_1 = require('../typeFields');
+const convert = require('../converter/index.js');
+const tools_1 = require('../converter/tools.js');
+const varuint = require('../converter/varint.js');
+const typeFields_1 = require('../typeFields.js');
 function psbtFromBuffer(buffer, txGetter) {
   let offset = 0;
   function varSlice() {

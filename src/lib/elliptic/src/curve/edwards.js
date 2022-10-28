@@ -1,9 +1,9 @@
 'use strict';
 
-var utils = require('../utils');
-var BN = require('../../../bn.js');
-var inherits = require('../../../inherits');
-var Base = require('./base');
+var utils = require('../utils.js');
+var BN = require('../../../bn.js/index.js');
+var inherits = require('../../../inherits/index.js');
+var Base = require('./base.js');
 
 var assert = utils.assert;
 

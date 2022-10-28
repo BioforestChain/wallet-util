@@ -1,8 +1,8 @@
 'use strict';
 
-var utils = require('../utils');
-var common = require('../common');
-var {assert} = require('../../../minimalistic-assert');
+var utils = require('../utils.js');
+var common = require('../common.js');
+var {assert} = require('../../../minimalistic-assert/index.js');
 
 var rotr64_hi = utils.rotr64_hi;
 var rotr64_lo = utils.rotr64_lo;

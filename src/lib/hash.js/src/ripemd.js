@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require('./utils');
-var common = require('./common');
+var utils = require('./utils.js');
+var common = require('./common.js');
 
 var rotl32 = utils.rotl32;
 var sum32 = utils.sum32;

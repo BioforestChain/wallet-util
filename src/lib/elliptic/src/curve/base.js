@@ -1,7 +1,7 @@
 'use strict';
 
-var BN = require('../../../bn.js');
-var utils = require('../utils');
+var BN = require('../../../bn.js/index.js');
+var utils = require('../utils.js');
 var getNAF = utils.getNAF;
 var getJSF = utils.getJSF;
 var assert = utils.assert;

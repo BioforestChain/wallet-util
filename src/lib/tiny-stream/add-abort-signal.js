@@ -1,8 +1,8 @@
 'use strict'
 
-const { AbortError, codes } = require('./errors')
+const { AbortError, codes } = require('./errors.js')
 
-const eos = require('./end-of-stream')
+const eos = require('./end-of-stream.js')
 
 const { ERR_INVALID_ARG_TYPE } = codes // This method is inlined here for readable-stream
 // It also does not allow for signal to not exist on the stream

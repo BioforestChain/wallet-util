@@ -1,12 +1,12 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.ECPairFactory = exports.networks = void 0;
-const networks = require('./networks');
+const networks = require('./networks.js');
 exports.networks = networks;
-const types = require('./types');
-const randomBytes = require('../../crypto.mjs').randomBytes;
-const wif = require('../wif');
-const testecc_1 = require('./testecc');
+const types = require('./types.js');
+const randomBytes = require('../crypto.mts').randomBytes;
+const wif = require('../wif/index.js');
+const testecc_1 = require('./testecc.js');
 const isOptions = types.typeforce.maybe(
   types.typeforce.compile({
     compressed: types.maybe(types.Boolean),

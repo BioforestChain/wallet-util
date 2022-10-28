@@ -1,5 +1,5 @@
 /* replacement start */
-const process = require('../process')
+const process = require('../process/index.js')
 /* replacement end */
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -37,22 +37,22 @@ const {
   StringPrototypeToLowerCase,
   Symbol,
   SymbolHasInstance
-} = require('./primordials')
+} = require('./primordials.js')
 
 module.exports = Writable
 Writable.WritableState = WritableState
 
-const { EventEmitter: EE } = require('../events')
+const { EventEmitter: EE } = require('../events/index.js')
 
-const Stream = require('./legacy').Stream
+const Stream = require('./legacy.js').Stream
 
-const { Buffer } = require('../buffer')
+const { Buffer } = require('../buffer/index.js')
 
-const destroyImpl = require('./destroy')
+const destroyImpl = require('./destroy.js')
 
-const { addAbortSignal } = require('./add-abort-signal')
+const { addAbortSignal } = require('./add-abort-signal.js')
 
-const { getHighWaterMark, getDefaultHighWaterMark } = require('./state')
+const { getHighWaterMark, getDefaultHighWaterMark } = require('./state.js')
 
 const {
   ERR_INVALID_ARG_TYPE,
@@ -64,7 +64,7 @@ const {
   ERR_STREAM_NULL_VALUES,
   ERR_STREAM_WRITE_AFTER_END,
   ERR_UNKNOWN_ENCODING
-} = require('./errors').codes
+} = require('./errors.js').codes
 
 const { errorOrDestroy } = destroyImpl
 ObjectSetPrototypeOf(Writable.prototype, Stream.prototype)
@@ -80,7 +80,7 @@ function WritableState(options, stream, isDuplex) {
   // However, some cases require setting options to different
   // values for the readable and the writable sides of the duplex stream,
   // e.g. options.readableObjectMode vs. options.writableObjectMode, etc.
-  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof require('./duplex') // Object stream flag to indicate whether or not this stream
+  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof require('./duplex.js') // Object stream flag to indicate whether or not this stream
   // contains buffers or objects.
 
   this.objectMode = !!(options && options.objectMode)
@@ -196,7 +196,7 @@ function Writable(options) {
   // `_writableState` that would lead to infinite recursion.
   // Checking for a Stream.Duplex instance is faster here instead of inside
   // the WritableState constructor, at least with V8 6.5.
-  const isDuplex = this instanceof require('./duplex')
+  const isDuplex = this instanceof require('./duplex.js')
 
   if (!isDuplex && !FunctionPrototypeSymbolHasInstance(Writable, this)) return new Writable(options)
   this._writableState = new WritableState(options, this, isDuplex)

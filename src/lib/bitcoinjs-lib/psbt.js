@@ -1,16 +1,16 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Psbt = void 0;
-const bip174_1 = require('../bip174');
-const varuint = require('../bip174/src/lib/converter/varint');
-const utils_1 = require('../bip174/src/lib/utils');
-const address_1 = require('./address');
-const bufferutils_1 = require('./bufferutils');
-const crypto_1 = require('./crypto');
-const networks_1 = require('./networks');
-const payments = require('./payments');
-const bscript = require('./script');
-const transaction_1 = require('./transaction');
+const bip174_1 = require('../bip174/index.js');
+const varuint = require('../bip174/src/lib/converter/varint.js');
+const utils_1 = require('../bip174/src/lib/utils.js');
+const address_1 = require('./address.js');
+const bufferutils_1 = require('./bufferutils.js');
+const crypto_1 = require('./crypto.js');
+const networks_1 = require('./networks.js');
+const payments = require('./payments/index.js');
+const bscript = require('./script.js');
+const transaction_1 = require('./transaction.js');
 /**
  * These are the default arguments for a Psbt instance.
  */

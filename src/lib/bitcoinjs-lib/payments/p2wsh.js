@@ -1,12 +1,12 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.p2wsh = void 0;
-const bcrypto = require('../crypto');
-const networks_1 = require('../networks');
-const bscript = require('../script');
-const types_1 = require('../types');
-const lazy = require('./lazy');
-const bech32_1 = require('../../bech32');
+const bcrypto = require('../crypto.js');
+const networks_1 = require('../networks.js');
+const bscript = require('../script.js');
+const types_1 = require('../types.js');
+const lazy = require('./lazy.js');
+const bech32_1 = require('../../bech32/index.js');
 const OPS = bscript.OPS;
 const EMPTY_BUFFER = Buffer.alloc(0);
 function stacksEqual(a, b) {

@@ -1,5 +1,5 @@
 'use strict'
-var Buffer = require('../buffer').Buffer
+var Buffer = require('../buffer/index.js').Buffer
 
 // Number.MAX_SAFE_INTEGER
 var MAX_SAFE_INTEGER = 9007199254740991

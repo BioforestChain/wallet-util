@@ -2,14 +2,14 @@
 
 /* replacement start */
 
-const process = require('../process')
+const process = require('../process/index.js')
 /* replacement end */
 
-const { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require('./primordials')
+const { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require('./primordials.js')
 
-const { Buffer } = require('../buffer')
+const { Buffer } = require('../buffer/index.js')
 
-const { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = require('./errors').codes
+const { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = require('./errors.js').codes
 
 function from(Readable, iterable, opts) {
   let iterator

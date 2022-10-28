@@ -1,7 +1,7 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const convert = require('../converter');
-const tools_1 = require('../converter/tools');
+const convert = require('../converter/index.js');
+const tools_1 = require('../converter/tools.js');
 function psbtToBuffer({ globalMap, inputs, outputs }) {
   const { globalKeyVals, inputKeyVals, outputKeyVals } = psbtToKeyVals({
     globalMap,

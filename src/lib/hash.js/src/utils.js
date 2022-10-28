@@ -1,7 +1,7 @@
 'use strict';
 
-var {assert} = require('../../minimalistic-assert');
-var inherits = require('../../inherits');
+var {assert} = require('../../minimalistic-assert/index.js');
+var inherits = require('../../inherits/index.js');
 
 exports.inherits = inherits;
 

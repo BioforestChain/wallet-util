@@ -1,5 +1,5 @@
-var NATIVE = require('./native')
-var ERRORS = require('./errors')
+var NATIVE = require('./native.js')
+var ERRORS = require('./errors.js')
 
 function _Buffer (value) {
   return Buffer.isBuffer(value)

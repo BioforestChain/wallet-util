@@ -7,9 +7,9 @@
  * See http://pajhome.org.uk/crypt/md5 for details.
  */
 
-var inherits = require('../inherits')
-var Hash = require('./hash')
-var Buffer = require('../buffer').Buffer
+var inherits = require('../inherits/index.js')
+var Hash = require('./hash.js')
+var Buffer = require('../buffer/index.js').Buffer
 
 var K = [
   0x5a827999, 0x6ed9eba1, 0x8f1bbcdc | 0, 0xca62c1d6 | 0

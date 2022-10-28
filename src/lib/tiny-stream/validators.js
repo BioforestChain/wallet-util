@@ -15,7 +15,7 @@ const {
   String,
   StringPrototypeToUpperCase,
   StringPrototypeTrim,
-} = require('./primordials');
+} = require('./primordials.js');
 
 const {
   hideStackFrames,
@@ -26,11 +26,11 @@ const {
     ERR_OUT_OF_RANGE,
     ERR_UNKNOWN_SIGNAL,
   },
-} = require('./errors');
+} = require('./errors.js');
 
-const { normalizeEncoding } = require('./util');
+const { normalizeEncoding } = require('./util.js');
 
-const { isAsyncFunction, isArrayBufferView } = require('./util').types;
+const { isAsyncFunction, isArrayBufferView } = require('./util.js').types;
 
 const signals = {};
 /**

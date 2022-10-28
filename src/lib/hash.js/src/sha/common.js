@@ -1,6 +1,6 @@
 'use strict';
 
-var utils = require('../utils');
+var utils = require('../utils.js');
 var rotr32 = utils.rotr32;
 
 function ft_1(s, x, y, z) {

@@ -1,8 +1,8 @@
 'use strict'
-var inherits = require('../inherits')
-var Buffer = require('../buffer').Buffer
+var inherits = require('../inherits/index.js')
+var Buffer = require('../buffer/index.js').Buffer
 
-var Base = require('../cipher-base')
+var Base = require('../cipher-base/index.js')
 
 var ZEROS = Buffer.alloc(128)
 var blocksize = 64

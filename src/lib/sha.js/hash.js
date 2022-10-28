@@ -1,4 +1,4 @@
-var Buffer = require('../buffer').Buffer
+var Buffer = require('../buffer/index.js').Buffer
 
 // prototype class for hash functions
 function Hash (blockSize, finalSize) {

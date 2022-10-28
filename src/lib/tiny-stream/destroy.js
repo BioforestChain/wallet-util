@@ -2,18 +2,18 @@
 
 /* replacement start */
 
-const process = require('../process')
+const process = require('../process/index.js')
 /* replacement end */
 
 const {
   aggregateTwoErrors,
   codes: { ERR_MULTIPLE_CALLBACK },
   AbortError
-} = require('./errors')
+} = require('./errors.js')
 
-const { Symbol } = require('./primordials')
+const { Symbol } = require('./primordials.js')
 
-const { kDestroyed, isDestroyed, isFinished, isServerRequest } = require('./utils')
+const { kDestroyed, isDestroyed, isFinished, isServerRequest } = require('./utils.js')
 
 const kDestroy = Symbol('kDestroy')
 const kConstruct = Symbol('kConstruct')

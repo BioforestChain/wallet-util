@@ -1,8 +1,8 @@
 'use strict'
 
-const { MathFloor, NumberIsInteger } = require('./primordials')
+const { MathFloor, NumberIsInteger } = require('./primordials.js')
 
-const { ERR_INVALID_ARG_VALUE } = require('./errors').codes
+const { ERR_INVALID_ARG_VALUE } = require('./errors.js').codes
 
 function highWaterMarkFrom(options, isDuplex, duplexKey) {
   return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null

@@ -61,15 +61,15 @@
 // the results of the previous transformed chunk were consumed.
 'use strict'
 
-const { ObjectSetPrototypeOf, Symbol } = require('./primordials')
+const { ObjectSetPrototypeOf, Symbol } = require('./primordials.js')
 
 module.exports = Transform
 
-const { ERR_METHOD_NOT_IMPLEMENTED } = require('./errors').codes
+const { ERR_METHOD_NOT_IMPLEMENTED } = require('./errors.js').codes
 
-const Duplex = require('./duplex')
+const Duplex = require('./duplex.js')
 
-const { getHighWaterMark } = require('./state')
+const { getHighWaterMark } = require('./state.js')
 
 ObjectSetPrototypeOf(Transform.prototype, Duplex.prototype)
 ObjectSetPrototypeOf(Transform, Duplex)

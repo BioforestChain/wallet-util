@@ -1,6 +1,6 @@
 'use strict'
 
-const { Symbol, SymbolAsyncIterator, SymbolIterator } = require('./primordials')
+const { Symbol, SymbolAsyncIterator, SymbolIterator } = require('./primordials.js')
 
 const kDestroyed = Symbol('kDestroyed')
 const kIsErrored = Symbol('kIsErrored')

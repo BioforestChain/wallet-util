@@ -1,11 +1,11 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Block = void 0;
-const bufferutils_1 = require('./bufferutils');
-const bcrypto = require('./crypto');
-const merkle_1 = require('./merkle');
-const transaction_1 = require('./transaction');
-const types = require('./types');
+const bufferutils_1 = require('./bufferutils.js');
+const bcrypto = require('./crypto.js');
+const merkle_1 = require('./merkle.js');
+const transaction_1 = require('./transaction.js');
+const types = require('./types.js');
 const { typeforce } = types;
 const errorMerkleNoTxes = new TypeError(
   'Cannot compute merkle root for zero transactions',

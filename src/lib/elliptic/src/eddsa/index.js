@@ -1,12 +1,12 @@
 'use strict';
 
-var hash = require('../../../hash.js');
-var curves = require('../curves');
-var utils = require('../utils');
+var hash = require('../../../hash.js/index.js');
+var curves = require('../curves.js');
+var utils = require('../utils.js');
 var assert = utils.assert;
 var parseBytes = utils.parseBytes;
-var KeyPair = require('./key');
-var Signature = require('./signature');
+var KeyPair = require('./key.js');
+var Signature = require('./signature.js');
 
 function EDDSA(curve) {
   assert(curve === 'ed25519', 'only tested with ed25519 so far');

@@ -1,10 +1,10 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.p2pk = void 0;
-const networks_1 = require('../networks');
-const bscript = require('../script');
-const types_1 = require('../types');
-const lazy = require('./lazy');
+const networks_1 = require('../networks.js');
+const bscript = require('../script.js');
+const types_1 = require('../types.js');
+const lazy = require('./lazy.js');
 const OPS = bscript.OPS;
 // input: {signature}
 // output: {pubKey} OP_CHECKSIG

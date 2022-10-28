@@ -1,4 +1,4 @@
-var bs58check = require('../bs58check')
+var bs58check = require('../bs58check/index.js')
 
 function decodeRaw (buffer, version) {
   // check version only if defined

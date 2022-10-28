@@ -1,8 +1,8 @@
 'use strict';
 
-var hash = require('../hash.js');
-var utils = require('../minimalistic-crypto-utils');
-var {assert} = require('../minimalistic-assert');
+var hash = require('../hash.js/index.js');
+var utils = require('../minimalistic-crypto-utils/index.js');
+var {assert} = require('../minimalistic-assert/index.js');
 
 function HmacDRBG(options) {
   if (!(this instanceof HmacDRBG))

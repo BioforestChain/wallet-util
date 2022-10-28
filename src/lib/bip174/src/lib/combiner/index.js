@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const parser_1 = require('../parser');
+const parser_1 = require('../parser/index.js');
 function combine(psbts) {
   const self = psbts[0];
   const selfKeyVals = parser_1.psbtToKeyVals(self);

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("./crypto");
 const testecc_1 = require("./testecc");
-const bs58check = require('../bs58check');
-const typeforce = require('../typeforce');
-const wif = require('../wif');
+const bs58check = require('../bs58check/index.js');
+const typeforce = require('../typeforce/index.js');
+const wif = require('../wif/index.js');
 function BIP32Factory(ecc) {
     testecc_1.testEcc(ecc);
     const UINT256_TYPE = typeforce.BufferN(32);

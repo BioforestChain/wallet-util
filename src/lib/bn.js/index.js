@@ -48,7 +48,7 @@
   BN.BN = BN;
   BN.wordSize = 26;
 
-  var Buffer = require('../buffer').Buffer;
+  var Buffer = require('../buffer/index.js').Buffer;
 
   BN.isBN = function isBN(num) {
     if (num instanceof BN) {

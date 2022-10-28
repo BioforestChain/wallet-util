@@ -1,7 +1,7 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const typeFields_1 = require('../../typeFields');
-const varuint = require('../varint');
+const typeFields_1 = require('../../typeFields.js');
+const varuint = require('../varint.js');
 function decode(keyVal) {
   if (
     keyVal.key[0] !== typeFields_1.OutputTypes.TAP_TREE ||

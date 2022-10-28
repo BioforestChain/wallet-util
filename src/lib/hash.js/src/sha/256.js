@@ -1,9 +1,9 @@
 'use strict';
 
-var utils = require('../utils');
-var common = require('../common');
-var shaCommon = require('./common');
-var {assert} = require('../../../minimalistic-assert');
+var utils = require('../utils.js');
+var common = require('../common.js');
+var shaCommon = require('./common.js');
+var {assert} = require('../../../minimalistic-assert/index.js');
 
 var sum32 = utils.sum32;
 var sum32_4 = utils.sum32_4;

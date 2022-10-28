@@ -1,4 +1,4 @@
-var typeforce = require('./')
+var typeforce = require('.//index.js')
 
 // async wrapper
 function tfAsync (type, value, strict, callback) {

@@ -1,4 +1,4 @@
-var typeforce = require('./')
+var typeforce = require('.//index.js')
 
 function tfNoThrow (type, value, strict) {
   try {

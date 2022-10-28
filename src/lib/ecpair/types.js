@@ -7,7 +7,7 @@ exports.maybe =
   exports.Network =
   exports.typeforce =
     void 0;
-exports.typeforce = require('typeforce');
+exports.typeforce = require('../typeforce/index.js');
 // exposed, external API
 exports.Network = exports.typeforce.compile({
   messagePrefix: exports.typeforce.oneOf(

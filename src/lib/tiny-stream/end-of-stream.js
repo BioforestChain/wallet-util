@@ -1,20 +1,20 @@
 /* replacement start */
-const process = require('../process')
+const process = require('../process/index.js')
 /* replacement end */
 // Ported from https://github.com/mafintosh/end-of-stream with
 // permission from the author, Mathias Buus (@mafintosh).
 
 ;('use strict')
 
-const { AbortError, codes } = require('./errors')
+const { AbortError, codes } = require('./errors.js')
 
 const { ERR_INVALID_ARG_TYPE, ERR_STREAM_PREMATURE_CLOSE } = codes
 
-const { kEmptyObject, once } = require('./util')
+const { kEmptyObject, once } = require('./util.js')
 
-const { validateAbortSignal, validateFunction, validateObject } = require('./validators')
+const { validateAbortSignal, validateFunction, validateObject } = require('./validators.js')
 
-const { Promise } = require('./primordials')
+const { Promise } = require('./primordials.js')
 
 const {
   isClosed,
@@ -28,7 +28,7 @@ const {
   isWritableErrored,
   isNodeStream,
   willEmitClose: _willEmitClose
-} = require('./utils')
+} = require('./utils.js')
 
 function isRequest(stream) {
   return stream.setHeader && typeof stream.abort === 'function'

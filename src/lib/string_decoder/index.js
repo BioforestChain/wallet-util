@@ -23,7 +23,7 @@
 
 /*<replacement>*/
 
-var Buffer = require('../buffer').Buffer;
+var Buffer = require('../buffer/index.js').Buffer;
 /*</replacement>*/
 
 var isEncoding = Buffer.isEncoding || function (encoding) {

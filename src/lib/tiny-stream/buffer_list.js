@@ -1,10 +1,10 @@
 'use strict'
 
-const { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array } = require('./primordials')
+const { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array } = require('./primordials.js')
 
-const { Buffer } = require('../buffer')
+const { Buffer } = require('../buffer/index.js')
 
-const { inspect } = require('./util')
+const { inspect } = require('./util.js')
 
 module.exports = class BufferList {
   constructor() {

@@ -1,18 +1,18 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.signature = exports.number = exports.isCanonicalScriptSignature = exports.isDefinedHashType = exports.isCanonicalPubKey = exports.toStack = exports.fromASM = exports.toASM = exports.decompile = exports.compile = exports.isPushOnly = exports.OPS = void 0;
-const bip66 = require('./bip66');
-const ops_1 = require('./ops');
+const bip66 = require('./bip66.js');
+const ops_1 = require('./ops.js');
 Object.defineProperty(exports, 'OPS', {
   enumerable: true,
   get: function() {
     return ops_1.OPS;
   },
 });
-const pushdata = require('./push_data');
-const scriptNumber = require('./script_number');
-const scriptSignature = require('./script_signature');
-const types = require('./types');
+const pushdata = require('./push_data.js');
+const scriptNumber = require('./script_number.js');
+const scriptSignature = require('./script_signature.js');
+const types = require('./types.js');
 const { typeforce } = types;
 const OP_INT_BASE = ops_1.OPS.OP_RESERVED; // OP_1 - 1
 function isOPInt(value) {

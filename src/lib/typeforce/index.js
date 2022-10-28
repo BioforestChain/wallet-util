@@ -1,5 +1,5 @@
-var ERRORS = require('./errors')
-var NATIVE = require('./native')
+var ERRORS = require('./errors.js')
+var NATIVE = require('./native.js')
 
 // short-hand
 var tfJSON = ERRORS.tfJSON
@@ -248,7 +248,7 @@ for (typeName in TYPES) {
   typeforce[typeName] = TYPES[typeName]
 }
 
-var EXTRA = require('./extra')
+var EXTRA = require('./extra.js')
 for (typeName in EXTRA) {
   typeforce[typeName] = EXTRA[typeName]
 }

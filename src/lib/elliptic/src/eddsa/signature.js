@@ -1,7 +1,7 @@
 'use strict';
 
-var BN = require('../../../bn.js');
-var utils = require('../utils');
+var BN = require('../../../bn.js/index.js');
+var utils = require('../utils.js');
 var assert = utils.assert;
 var cachedProperty = utils.cachedProperty;
 var parseBytes = utils.parseBytes;

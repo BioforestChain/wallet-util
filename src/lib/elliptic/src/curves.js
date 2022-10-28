@@ -160,7 +160,7 @@ export const ed25519 = defineCurve({
 
 var pre;
 try {
-  pre = require('./precomputed/secp256k1');
+  pre = require('./precomputed/secp256k1.js');
 } catch (e) {
   pre = undefined;
 }

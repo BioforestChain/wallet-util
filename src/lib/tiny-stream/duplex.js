@@ -29,13 +29,13 @@ const {
   ObjectGetOwnPropertyDescriptor,
   ObjectKeys,
   ObjectSetPrototypeOf
-} = require('./primordials')
+} = require('./primordials.js')
 
 module.exports = Duplex
 
-const Readable = require('./readable')
+const Readable = require('./readable.js')
 
-const Writable = require('./writable')
+const Writable = require('./writable.js')
 
 ObjectSetPrototypeOf(Duplex.prototype, Readable.prototype)
 ObjectSetPrototypeOf(Duplex, Readable)
@@ -146,12 +146,7 @@ Duplex.toWeb = function (duplex) {
   return lazyWebStreams().newReadableWritablePairFromDuplex(duplex)
 }
 
-// let duplexify
 
-// Duplex.from = function (body) {
-//   if (!duplexify) {
-//     duplexify = require('./duplexify')
-//   }
-
-//   return duplexify(body, 'body')
-// }
+Duplex.from = function (body) {
+  throw new Error("no support duplex.from");
+}

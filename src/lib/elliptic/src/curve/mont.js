@@ -1,10 +1,10 @@
 'use strict';
 
-var BN = require('../../../bn.js');
-var inherits = require('../../../inherits');
-var Base = require('./base');
+var BN = require('../../../bn.js/index.js');
+var inherits = require('../../../inherits/index.js');
+var Base = require('./base.js');
 
-var utils = require('../utils');
+var utils = require('../utils.js');
 
 function MontCurve(conf) {
   Base.call(this, 'mont', conf);

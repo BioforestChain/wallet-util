@@ -1,11 +1,11 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.Transaction = void 0;
-const bufferutils_1 = require('./bufferutils');
-const bcrypto = require('./crypto');
-const bscript = require('./script');
-const script_1 = require('./script');
-const types = require('./types');
+const bufferutils_1 = require('./bufferutils.js');
+const bcrypto = require('./crypto.js');
+const bscript = require('./script.js');
+const script_1 = require('./script.js');
+const types = require('./types.js');
 const { typeforce } = types;
 function varSliceSize(someScript) {
   const length = someScript.length;
