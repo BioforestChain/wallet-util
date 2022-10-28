@@ -1,24 +1,26 @@
-import { base as basex } from "./base-x";
-import * as ethUtil from "./ethUtil";
+import { base as basex } from "./base-x/index.js";
+import * as ethUtil from "./ethUtil.mjs";
 
-import { pbkdf2, randomBytes, sha } from "./crypto";
+import { pbkdf2, randomBytes, sha } from "./crypto.mjs";
 import {
   COIN_SYMBOL,
   getNetWorkInfo,
   networkIsEthereum,
   networkIsRsk,
-} from "./networks";
-import { assert, binaryToByte, bytesToBinary } from "./utils";
-import english from "./wordlists/english.json";
-import BIP32Factory from "./bip32";
-import ecc from "./tiny-secp256k1";
-import { Buffer } from "./buffer";
-import bitcoin from "./bitcoinjs-lib";
+} from "./networks.mjs";
+import { assert, binaryToByte, bytesToBinary } from "./utils.mjs";
+import english from "./wordlists/english.json" assert { type: "json" };
+import BIP32Factory from "./bip32/index.js";
+import * as ecc from "./tiny-secp256k1/index.js";
+import { Buffer } from "./buffer/index.js";
+import * as bitcoin from "./bitcoinjs-lib/index.js";
+import { ECPairFactory } from "./ecpair/index.js";
 
 const bip32 = BIP32Factory(ecc);
+const ecpair = ECPairFactory(ecc);
 
-declare const libs: typeof import("../assets/bip39-libs.js");
-const libsLoader = async () => libs;
+// declare const libs: typeof import("../assets/bip39-libs.js");
+// const libsLoader = async () => libs;
 
 function assertEntropy(entropy: Uint8Array) {
   assert(
@@ -250,7 +252,7 @@ async function convertRipplePriv(priv: string) {
 
 function calcBip32ExtendedKey(
   // bip32RootKey: import('../assets/bip39-libs.js').HDNode,
-  bip32RootKey: import("./bip32").BIP32Interface,
+  bip32RootKey: import("./bip32/index.js").BIP32Interface,
   path: DERIVATION_PATH
 ) {
   const pathBits = path.split("/");
@@ -321,7 +323,7 @@ export async function calcForDerivationPath(
   derivationPath: DERIVATION_PATH,
   index = 0
 ) {
-  const libs = await libsLoader();
+  // const libs = await libsLoader();
   const networkInfo = getNetWorkInfo(symbol);
 
   const bip32RootKey = bip32.fromSeed(
@@ -357,108 +359,112 @@ export async function calcForDerivationPath(
     address = ethUtil.addHexPrefix(checksumAddress);
     pubkey = ethUtil.addHexPrefix(pubkey);
     if (hasPrivkey) {
-      
       privkey = ethUtil.bufferToHex(key.privateKey!);
     }
   }
   // TRX is different
   if (networkInfo.name == "TRX - Tron") {
-    keyPair = new libs.bitcoin.ECPair(keyPair.d, null, {
-      network: networkInfo.network,
+    const keyPair = ecpair.fromPrivateKey(key.privateKey!, {
+      network: bitcoin.networks.bitcoin,
       compressed: false,
     });
-    const pubkeyBuffer = keyPair.getPublicKeyBuffer();
+
+    // keyPair = new libs.bitcoin.ECPair(keyPair.d, null, {
+    //   network: networkInfo.network,
+    //   compressed: false,
+    // });
+    const pubkeyBuffer = keyPair.getPublicKey!();
     const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
     const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
-    address = libs.bitcoin.address.toBase58Check(addressBuffer, 0x41);
+    address = bitcoin.address.toBase58Check(addressBuffer, 0x41);
     if (hasPrivkey) {
-      privkey = keyPair.d.toBuffer().toString("hex");
+      privkey = keyPair.privateKey!.toString("hex");
     }
   }
 
-  // RSK values are different
-  if (networkIsRsk(symbol)) {
-    const pubkeyBuffer = keyPair.getPublicKeyBuffer();
-    const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
-    const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
-    const hexAddress = addressBuffer.toString("hex");
-    // Use chainId based on selected network
-    // Ref: https://developers.rsk.co/rsk/architecture/account-based/#chainid
-    let chainId;
-    const rskNetworkName = networkInfo.name;
-    switch (rskNetworkName) {
-      case "R-BTC - RSK":
-        chainId = 30;
-        break;
-      case "tR-BTC - RSK Testnet":
-        chainId = 31;
-        break;
-      default:
-        chainId = null;
-    }
-    const checksumAddress = await toChecksumAddressForRsk(hexAddress, chainId);
-    address = ethUtil.addHexPrefix(checksumAddress);
-    pubkey = ethUtil.addHexPrefix(pubkey);
-    if (hasPrivkey) {
-      privkey = ethUtil.bufferToHex(keyPair.d.toBuffer());
-    }
-  }
+  // // RSK values are different
+  // if (networkIsRsk(symbol)) {
+  //   const pubkeyBuffer = keyPair.getPublicKeyBuffer();
+  //   const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
+  //   const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
+  //   const hexAddress = addressBuffer.toString("hex");
+  //   // Use chainId based on selected network
+  //   // Ref: https://developers.rsk.co/rsk/architecture/account-based/#chainid
+  //   let chainId;
+  //   const rskNetworkName = networkInfo.name;
+  //   switch (rskNetworkName) {
+  //     case "R-BTC - RSK":
+  //       chainId = 30;
+  //       break;
+  //     case "tR-BTC - RSK Testnet":
+  //       chainId = 31;
+  //       break;
+  //     default:
+  //       chainId = null;
+  //   }
+  //   const checksumAddress = await toChecksumAddressForRsk(hexAddress, chainId);
+  //   address = ethUtil.addHexPrefix(checksumAddress);
+  //   pubkey = ethUtil.addHexPrefix(pubkey);
+  //   if (hasPrivkey) {
+  //     privkey = ethUtil.bufferToHex(keyPair.d.toBuffer());
+  //   }
+  // }
 
-  // Handshake values are different
-  if (networkInfo.name == "HNS - Handshake") {
-    const ring = libs.handshake.KeyRing.fromPublic(
-      keyPair.getPublicKeyBuffer()
-    );
-    address = ring.getAddress().toString();
-  }
+  // // Handshake values are different
+  // if (networkInfo.name == "HNS - Handshake") {
+  //   const ring = libs.handshake.KeyRing.fromPublic(
+  //     keyPair.getPublicKeyBuffer()
+  //   );
+  //   address = ring.getAddress().toString();
+  // }
 
-  // Stellar is different
-  if (networkInfo.name == "XLM - Stellar") {
-    const keypair = libs.stellarUtil.getKeypair(derivationPath, seed);
-    privkey = keypair.secret();
-    pubkey = address = keypair.publicKey();
-  }
+  // // Stellar is different
+  // if (networkInfo.name == "XLM - Stellar") {
+  //   const keypair = libs.stellarUtil.getKeypair(derivationPath, seed);
+  //   privkey = keypair.secret();
+  //   pubkey = address = keypair.publicKey();
+  // }
 
-  if (networkInfo.name == "NAS - Nebulas") {
-    const privKeyBuffer = keyPair.d.toBuffer(32);
-    const nebulasAccount = libs.nebulas.Account.NewAccount();
-    nebulasAccount.setPrivateKey(privKeyBuffer);
-    address = nebulasAccount.getAddressString();
-    privkey = nebulasAccount.getPrivateKeyString();
-    pubkey = nebulasAccount.getPublicKeyString();
-  }
-  // Ripple values are different
-  if (networkInfo.name == "XRP - Ripple") {
-    privkey = await convertRipplePriv(privkey);
-    address = await convertRippleAdrr(address);
-  }
+  // if (networkInfo.name == "NAS - Nebulas") {
+  //   const privKeyBuffer = keyPair.d.toBuffer(32);
+  //   const nebulasAccount = libs.nebulas.Account.NewAccount();
+  //   nebulasAccount.setPrivateKey(privKeyBuffer);
+  //   address = nebulasAccount.getAddressString();
+  //   privkey = nebulasAccount.getPrivateKeyString();
+  //   pubkey = nebulasAccount.getPublicKeyString();
+  // }
+  // // Ripple values are different
+  // if (networkInfo.name == "XRP - Ripple") {
+  //   privkey = await convertRipplePriv(privkey);
+  //   address = await convertRippleAdrr(address);
+  // }
 
-  // Bitcoin Cash address format may vary
-  if (networkInfo.name == "BCH - Bitcoin Cash") {
-    const bchAddrType = "need input bitcoinCashAddressType" as string;
-    if (bchAddrType == "cashaddr") {
-      address = libs.bchaddr.toCashAddress(address);
-    } else if (bchAddrType == "bitpay") {
-      address = libs.bchaddr.toBitpayAddress(address);
-    }
-  }
-  // Bitcoin Cash address format may vary
-  if (networkInfo.name == "SLP - Simple Ledger Protocol") {
-    const bchAddrType = "need input bitcoinCashAddressType" as string;
-    if (bchAddrType == "cashaddr") {
-      address = libs.bchaddrSlp.toSlpAddress(address);
-    }
-  }
+  // // Bitcoin Cash address format may vary
+  // if (networkInfo.name == "BCH - Bitcoin Cash") {
+  //   const bchAddrType = "need input bitcoinCashAddressType" as string;
+  //   if (bchAddrType == "cashaddr") {
+  //     address = libs.bchaddr.toCashAddress(address);
+  //   } else if (bchAddrType == "bitpay") {
+  //     address = libs.bchaddr.toBitpayAddress(address);
+  //   }
+  // }
+  // // Bitcoin Cash address format may vary
+  // if (networkInfo.name == "SLP - Simple Ledger Protocol") {
+  //   const bchAddrType = "need input bitcoinCashAddressType" as string;
+  //   if (bchAddrType == "cashaddr") {
+  //     address = libs.bchaddrSlp.toSlpAddress(address);
+  //   }
+  // }
 
-  // ZooBC address format may vary
-  if (networkInfo.name == "ZBC - ZooBlockchain") {
-    const result = libs.zoobcUtil.getKeypair(derivationPath, seed);
-    const publicKey = result.pubKey.slice(1, 33);
-    const privateKey = result.key;
-    privkey = privateKey.toString("hex");
-    pubkey = publicKey.toString("hex");
-    address = libs.zoobcUtil.getZBCAddress(publicKey, "ZBC");
-  }
+  // // ZooBC address format may vary
+  // if (networkInfo.name == "ZBC - ZooBlockchain") {
+  //   const result = libs.zoobcUtil.getKeypair(derivationPath, seed);
+  //   const publicKey = result.pubKey.slice(1, 33);
+  //   const privateKey = result.key;
+  //   privkey = privateKey.toString("hex");
+  //   pubkey = publicKey.toString("hex");
+  //   address = libs.zoobcUtil.getZBCAddress(publicKey, "ZBC");
+  // }
   return {
     privkey,
     pubkey,

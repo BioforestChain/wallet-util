@@ -1,193 +1,20 @@
+import { networks } from "./bitcoinjs-lib/index.js";
 const _networksExtensions = {
-  bitcoin: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
-    bech32: 'bc',
-    bip32: {
-      public: 76067358,
-      private: 76066276,
-    },
-    pubKeyHash: 0,
-    scriptHash: 5,
-    wif: 128,
-    p2wpkh: {
-      baseNetwork: 'bitcoin',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bc',
-      bip32: {
-        public: 78792518,
-        private: 78791436,
-      },
-      pubKeyHash: 0,
-      scriptHash: 5,
-      wif: 128,
-    },
-    p2wpkhInP2sh: {
-      baseNetwork: 'bitcoin',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bc',
-      bip32: {
-        public: 77429938,
-        private: 77428856,
-      },
-      pubKeyHash: 0,
-      scriptHash: 5,
-      wif: 128,
-    },
-    p2wsh: {
-      baseNetwork: 'bitcoin',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bc',
-      bip32: {
-        public: 44728019,
-        private: 44726937,
-      },
-      pubKeyHash: 0,
-      scriptHash: 5,
-      wif: 128,
-    },
-    p2wshInP2sh: {
-      baseNetwork: 'bitcoin',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bc',
-      bip32: {
-        public: 43365439,
-        private: 43364357,
-      },
-      pubKeyHash: 0,
-      scriptHash: 5,
-      wif: 128,
-    },
-  },
-  regtest: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
-    bech32: 'bcrt',
-    bip32: {
-      public: 70617039,
-      private: 70615956,
-    },
-    pubKeyHash: 111,
-    scriptHash: 196,
-    wif: 239,
-    p2wpkh: {
-      baseNetwork: 'regtest',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bcrt',
-      bip32: {
-        public: 73342198,
-        private: 73341116,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wpkhInP2sh: {
-      baseNetwork: 'regtest',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bcrt',
-      bip32: {
-        public: 71979618,
-        private: 71978536,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wsh: {
-      baseNetwork: 'regtest',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bcrt',
-      bip32: {
-        public: 39277699,
-        private: 39276616,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wshInP2sh: {
-      baseNetwork: 'regtest',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'bcrt',
-      bip32: {
-        public: 37915119,
-        private: 37914037,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-  },
-  testnet: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
-    bech32: 'tb',
-    bip32: {
-      public: 70617039,
-      private: 70615956,
-    },
-    pubKeyHash: 111,
-    scriptHash: 196,
-    wif: 239,
-    p2wpkh: {
-      baseNetwork: 'testnet',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'tb',
-      bip32: {
-        public: 73342198,
-        private: 73341116,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wpkhInP2sh: {
-      baseNetwork: 'testnet',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'tb',
-      bip32: {
-        public: 71979618,
-        private: 71978536,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wsh: {
-      baseNetwork: 'testnet',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'tb',
-      bip32: {
-        public: 39277699,
-        private: 39276616,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-    p2wshInP2sh: {
-      baseNetwork: 'testnet',
-      messagePrefix: '\u0018Bitcoin Signed Message:\n',
-      bech32: 'tb',
-      bip32: {
-        public: 37915119,
-        private: 37914037,
-      },
-      pubKeyHash: 111,
-      scriptHash: 196,
-      wif: 239,
-    },
-  },
+  bitcoin: networks.bitcoin,
+  regtest: networks.regtest,
+  testnet: networks.testnet,
   dummyNetwork: {
     bip32: {
       public: 0,
       private: 0,
     },
-    messagePrefix: '',
+    messagePrefix: "",
     pubKeyHash: 0,
     scriptHash: 0,
     wif: 0,
   },
   shadow: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 4001376362,
       private: 4001378792,
@@ -197,7 +24,7 @@ const _networksExtensions = {
     wif: 191,
   },
   shadowtn: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 1992359419,
       private: 1992361850,
@@ -207,7 +34,7 @@ const _networksExtensions = {
     wif: 255,
   },
   clam: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 2831314276,
       private: 2831251494,
@@ -217,7 +44,7 @@ const _networksExtensions = {
     wif: 133,
   },
   crown: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -227,7 +54,7 @@ const _networksExtensions = {
     wif: 128,
   },
   dash: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -237,7 +64,7 @@ const _networksExtensions = {
     wif: 204,
   },
   maza: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -247,7 +74,7 @@ const _networksExtensions = {
     wif: 224,
   },
   dashtn: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -257,7 +84,7 @@ const _networksExtensions = {
     wif: 239,
   },
   game: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -267,7 +94,7 @@ const _networksExtensions = {
     wif: 166,
   },
   namecoin: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -277,7 +104,7 @@ const _networksExtensions = {
     wif: 180,
   },
   peercoin: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -287,7 +114,7 @@ const _networksExtensions = {
     wif: 183,
   },
   axe: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -297,7 +124,7 @@ const _networksExtensions = {
     wif: 204,
   },
   scribe: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -307,7 +134,7 @@ const _networksExtensions = {
     wif: 110,
   },
   slimcoin: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 4016758544,
       private: 4016695936,
@@ -317,7 +144,7 @@ const _networksExtensions = {
     wif: 70,
   },
   slimcointn: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -327,7 +154,7 @@ const _networksExtensions = {
     wif: 87,
   },
   dogecoin: {
-    messagePrefix: '\u0019Dogecoin Signed Message:\n',
+    messagePrefix: "\u0019Dogecoin Signed Message:\n",
     bip32: {
       public: 49990397,
       private: 49988504,
@@ -337,7 +164,7 @@ const _networksExtensions = {
     wif: 158,
   },
   dogecointestnet: {
-    messagePrefix: '\u0019Dogecoin Signed Message:\n',
+    messagePrefix: "\u0019Dogecoin Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -347,7 +174,7 @@ const _networksExtensions = {
     wif: 241,
   },
   denarius: {
-    messagePrefix: '\u0019Denarius Signed Message:\n',
+    messagePrefix: "\u0019Denarius Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -357,7 +184,7 @@ const _networksExtensions = {
     wif: 158,
   },
   neblio: {
-    messagePrefix: '\u0018Neblio Signed Message:\n',
+    messagePrefix: "\u0018Neblio Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -367,7 +194,7 @@ const _networksExtensions = {
     wif: 181,
   },
   viacoin: {
-    messagePrefix: '\u0018Viacoin Signed Message:\n',
+    messagePrefix: "\u0018Viacoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -377,7 +204,7 @@ const _networksExtensions = {
     wif: 199,
   },
   viacointestnet: {
-    messagePrefix: '\u0018Viacoin Signed Message:\n',
+    messagePrefix: "\u0018Viacoin Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -387,7 +214,7 @@ const _networksExtensions = {
     wif: 255,
   },
   gamerscoin: {
-    messagePrefix: '\u0019Gamerscoin Signed Message:\n',
+    messagePrefix: "\u0019Gamerscoin Signed Message:\n",
     bip32: {
       public: 27108450,
       private: 27106558,
@@ -397,7 +224,7 @@ const _networksExtensions = {
     wif: 166,
   },
   jumbucks: {
-    messagePrefix: '\u0019Jumbucks Signed Message:\n',
+    messagePrefix: "\u0019Jumbucks Signed Message:\n",
     bip32: {
       public: 58353818,
       private: 58352736,
@@ -407,7 +234,7 @@ const _networksExtensions = {
     wif: 171,
   },
   zetacoin: {
-    messagePrefix: '\u0018Zetacoin Signed Message:\n',
+    messagePrefix: "\u0018Zetacoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -417,7 +244,7 @@ const _networksExtensions = {
     wif: 224,
   },
   myriadcoin: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -427,7 +254,7 @@ const _networksExtensions = {
     wif: 178,
   },
   bolivarcoin: {
-    messagePrefix: 'Bolivarcoin Signed Message:\n',
+    messagePrefix: "Bolivarcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -437,7 +264,7 @@ const _networksExtensions = {
     wif: 213,
   },
   onixcoin: {
-    messagePrefix: 'ONIX Signed Message:\n',
+    messagePrefix: "ONIX Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -447,7 +274,7 @@ const _networksExtensions = {
     wif: 203,
   },
   lkrcoin: {
-    messagePrefix: '\u0018LKRcoin Signed Message:\n',
+    messagePrefix: "\u0018LKRcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -457,7 +284,7 @@ const _networksExtensions = {
     wif: 176,
   },
   pivx: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -467,7 +294,7 @@ const _networksExtensions = {
     wif: 212,
   },
   pivxtestnet: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 981492128,
       private: 981489719,
@@ -477,7 +304,7 @@ const _networksExtensions = {
     wif: 239,
   },
   fix: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -487,7 +314,7 @@ const _networksExtensions = {
     wif: 60,
   },
   fixtestnet: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 981492128,
       private: 981489719,
@@ -497,7 +324,7 @@ const _networksExtensions = {
     wif: 237,
   },
   fujicoin: {
-    messagePrefix: '\u0019FujiCoin Signed Message:\n',
+    messagePrefix: "\u0019FujiCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -507,7 +334,7 @@ const _networksExtensions = {
     wif: 164,
   },
   nubits: {
-    messagePrefix: '\u0018Nu Signed Message:\n',
+    messagePrefix: "\u0018Nu Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -517,7 +344,7 @@ const _networksExtensions = {
     wif: 150,
   },
   bgold: {
-    messagePrefix: '\u001dBitcoin Gold Signed Message:\n',
+    messagePrefix: "\u001dBitcoin Gold Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -527,7 +354,7 @@ const _networksExtensions = {
     wif: 128,
   },
   monacoin: {
-    messagePrefix: '\u0018Monacoin Signed Message:\n',
+    messagePrefix: "\u0018Monacoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -537,7 +364,7 @@ const _networksExtensions = {
     wif: 176,
   },
   litecoinXprv: {
-    messagePrefix: '\u0019Litecoin Signed Message:\n',
+    messagePrefix: "\u0019Litecoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -547,7 +374,7 @@ const _networksExtensions = {
     wif: 176,
   },
   komodo: {
-    messagePrefix: '\u0018Komodo Signed Message:\n',
+    messagePrefix: "\u0018Komodo Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -557,7 +384,7 @@ const _networksExtensions = {
     wif: 188,
   },
   blackcoin: {
-    messagePrefix: '\u0018BlackCoin Signed Message:\n',
+    messagePrefix: "\u0018BlackCoin Signed Message:\n",
     bip32: {
       public: 47169246,
       private: 47169376,
@@ -567,7 +394,7 @@ const _networksExtensions = {
     wif: 153,
   },
   beetlecoin: {
-    messagePrefix: '\u0019Beetlecoin Signed Message:\n',
+    messagePrefix: "\u0019Beetlecoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -577,7 +404,7 @@ const _networksExtensions = {
     wif: 153,
   },
   adcoin: {
-    messagePrefix: '\u0018AdCoin Signed Message:\n',
+    messagePrefix: "\u0018AdCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -587,7 +414,7 @@ const _networksExtensions = {
     wif: 176,
   },
   asiacoin: {
-    messagePrefix: '\u0018AsiaCoin Signed Message:\n',
+    messagePrefix: "\u0018AsiaCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -597,7 +424,7 @@ const _networksExtensions = {
     wif: 151,
   },
   auroracoin: {
-    messagePrefix: '\u0018AuroraCoin Signed Message:\n',
+    messagePrefix: "\u0018AuroraCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -607,7 +434,7 @@ const _networksExtensions = {
     wif: 151,
   },
   bata: {
-    messagePrefix: '\u0018Bata Signed Message:\n',
+    messagePrefix: "\u0018Bata Signed Message:\n",
     bip32: {
       public: 2752284410,
       private: 2752221629,
@@ -617,7 +444,7 @@ const _networksExtensions = {
     wif: 164,
   },
   belacoin: {
-    messagePrefix: '\u0018BelaCoin Signed Message:\n',
+    messagePrefix: "\u0018BelaCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -627,7 +454,7 @@ const _networksExtensions = {
     wif: 153,
   },
   atom: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -637,7 +464,7 @@ const _networksExtensions = {
     wif: 128,
   },
   bitcoinplus: {
-    messagePrefix: '\u0018BitcoinPlus Signed Message:\n',
+    messagePrefix: "\u0018BitcoinPlus Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -647,7 +474,7 @@ const _networksExtensions = {
     wif: 153,
   },
   bitcloud: {
-    messagePrefix: '\u0018BitCloud Signed Message:\n',
+    messagePrefix: "\u0018BitCloud Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -657,7 +484,7 @@ const _networksExtensions = {
     wif: 153,
   },
   bitcore: {
-    messagePrefix: '\u0018BitCore Signed Message:\n',
+    messagePrefix: "\u0018BitCore Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -667,7 +494,7 @@ const _networksExtensions = {
     wif: 128,
   },
   bitsend: {
-    messagePrefix: '\u0018Bitsend Signed Message:\n',
+    messagePrefix: "\u0018Bitsend Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -677,7 +504,7 @@ const _networksExtensions = {
     wif: 204,
   },
   britcoin: {
-    messagePrefix: '\u0018BritCoin Signed Message:\n',
+    messagePrefix: "\u0018BritCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -687,7 +514,7 @@ const _networksExtensions = {
     wif: 153,
   },
   canadaecoin: {
-    messagePrefix: '\u0018Canada eCoin Signed Message:\n',
+    messagePrefix: "\u0018Canada eCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -697,7 +524,7 @@ const _networksExtensions = {
     wif: 156,
   },
   cannacoin: {
-    messagePrefix: '\u0018Cannacoin Signed Message:\n',
+    messagePrefix: "\u0018Cannacoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -707,7 +534,7 @@ const _networksExtensions = {
     wif: 156,
   },
   cranepay: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -717,7 +544,7 @@ const _networksExtensions = {
     wif: 123,
   },
   cryptoescudo: {
-    messagePrefix: '\u0018Cryptoescudo Signed Message:\n',
+    messagePrefix: "\u0018Cryptoescudo Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -727,7 +554,7 @@ const _networksExtensions = {
     wif: 156,
   },
   clubcoin: {
-    messagePrefix: '\u0018ClubCoin Signed Message:\n',
+    messagePrefix: "\u0018ClubCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -737,7 +564,7 @@ const _networksExtensions = {
     wif: 153,
   },
   compcoin: {
-    messagePrefix: '\u0018CompCoin Signed Message:\n',
+    messagePrefix: "\u0018CompCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -747,7 +574,7 @@ const _networksExtensions = {
     wif: 156,
   },
   crave: {
-    messagePrefix: '\u0018DarkNet Signed Message:\n',
+    messagePrefix: "\u0018DarkNet Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -757,7 +584,7 @@ const _networksExtensions = {
     wif: 153,
   },
   defcoin: {
-    messagePrefix: '\u0018defcoin Signed Message:\n',
+    messagePrefix: "\u0018defcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -767,7 +594,7 @@ const _networksExtensions = {
     wif: 158,
   },
   diamond: {
-    messagePrefix: '\u0018Diamond Signed Message:\n',
+    messagePrefix: "\u0018Diamond Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -777,7 +604,7 @@ const _networksExtensions = {
     wif: 218,
   },
   digibyte: {
-    messagePrefix: '\u0019DigiByte Signed Message:\n',
+    messagePrefix: "\u0019DigiByte Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -787,7 +614,7 @@ const _networksExtensions = {
     wif: 128,
   },
   digitalcoin: {
-    messagePrefix: '\u0018Digitalcoin Signed Message:\n',
+    messagePrefix: "\u0018Digitalcoin Signed Message:\n",
     bip32: {
       public: 2651097266,
       private: 76066276,
@@ -797,7 +624,7 @@ const _networksExtensions = {
     wif: 158,
   },
   divi: {
-    messagePrefix: '\u0019Divi Signed Message:\n',
+    messagePrefix: "\u0019Divi Signed Message:\n",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -807,7 +634,7 @@ const _networksExtensions = {
     wif: 212,
   },
   divitestnet: {
-    messagePrefix: '\u0019Divi Signed Message:\n',
+    messagePrefix: "\u0019Divi Signed Message:\n",
     bip32: {
       public: 981492128,
       private: 981489719,
@@ -817,7 +644,7 @@ const _networksExtensions = {
     wif: 239,
   },
   ecoin: {
-    messagePrefix: '\u0018eCoin Signed Message:\n',
+    messagePrefix: "\u0018eCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -827,7 +654,7 @@ const _networksExtensions = {
     wif: 220,
   },
   edrcoin: {
-    messagePrefix: '\u0018EDRcoin Signed Message:\n',
+    messagePrefix: "\u0018EDRcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -837,7 +664,7 @@ const _networksExtensions = {
     wif: 221,
   },
   egulden: {
-    messagePrefix: '\u0018Egulden Signed Message:\n',
+    messagePrefix: "\u0018Egulden Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -847,7 +674,7 @@ const _networksExtensions = {
     wif: 176,
   },
   einsteinium: {
-    messagePrefix: '\u0018Einsteinium Signed Message:\n',
+    messagePrefix: "\u0018Einsteinium Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -857,7 +684,7 @@ const _networksExtensions = {
     wif: 161,
   },
   europecoin: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -867,7 +694,7 @@ const _networksExtensions = {
     wif: 168,
   },
   exclusivecoin: {
-    messagePrefix: '\u0018ExclusiveCoin Signed Message:\n',
+    messagePrefix: "\u0018ExclusiveCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -877,7 +704,7 @@ const _networksExtensions = {
     wif: 161,
   },
   feathercoin: {
-    messagePrefix: '\u0018Feathercoin Signed Message:\n',
+    messagePrefix: "\u0018Feathercoin Signed Message:\n",
     bip32: {
       public: 76069926,
       private: 76077806,
@@ -887,7 +714,7 @@ const _networksExtensions = {
     wif: 142,
   },
   firo: {
-    messagePrefix: '\u0018Firo Signed Message:\n',
+    messagePrefix: "\u0018Firo Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -897,7 +724,7 @@ const _networksExtensions = {
     wif: 210,
   },
   zcoin: {
-    messagePrefix: '\u0018Zcoin Signed Message:\n',
+    messagePrefix: "\u0018Zcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -907,7 +734,7 @@ const _networksExtensions = {
     wif: 210,
   },
   firstcoin: {
-    messagePrefix: '\u0018FirstCoin Signed Message:\n',
+    messagePrefix: "\u0018FirstCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -917,7 +744,7 @@ const _networksExtensions = {
     wif: 163,
   },
   flashcoin: {
-    messagePrefix: '\u0018Flashcoin Signed Message:\n',
+    messagePrefix: "\u0018Flashcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -927,7 +754,7 @@ const _networksExtensions = {
     wif: 196,
   },
   gcr: {
-    messagePrefix: '\u0018GCR Signed Message:\n',
+    messagePrefix: "\u0018GCR Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -937,7 +764,7 @@ const _networksExtensions = {
     wif: 154,
   },
   gobyte: {
-    messagePrefix: '\u0018DarkCoin Signed Message:\n',
+    messagePrefix: "\u0018DarkCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -947,7 +774,7 @@ const _networksExtensions = {
     wif: 198,
   },
   gridcoin: {
-    messagePrefix: '\u0018Gridcoin Signed Message:\n',
+    messagePrefix: "\u0018Gridcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -957,7 +784,7 @@ const _networksExtensions = {
     wif: 190,
   },
   groestlcoin: {
-    messagePrefix: '\u0019GroestlCoin Signed Message:\n',
+    messagePrefix: "\u0019GroestlCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -967,7 +794,7 @@ const _networksExtensions = {
     wif: 128,
   },
   groestlcointestnet: {
-    messagePrefix: '\u0019GroestlCoin Signed Message:\n',
+    messagePrefix: "\u0019GroestlCoin Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -977,7 +804,7 @@ const _networksExtensions = {
     wif: 239,
   },
   gulden: {
-    messagePrefix: '\u0018Guldencoin Signed Message:\n',
+    messagePrefix: "\u0018Guldencoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -987,7 +814,7 @@ const _networksExtensions = {
     wif: 98,
   },
   helleniccoin: {
-    messagePrefix: '\u0018helleniccoin Signed Message:\n',
+    messagePrefix: "\u0018helleniccoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -997,7 +824,7 @@ const _networksExtensions = {
     wif: 176,
   },
   hempcoin: {
-    messagePrefix: '\u0018Hempcoin Signed Message:\n',
+    messagePrefix: "\u0018Hempcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1007,7 +834,7 @@ const _networksExtensions = {
     wif: 168,
   },
   insane: {
-    messagePrefix: '\u0018INSaNe Signed Message:\n',
+    messagePrefix: "\u0018INSaNe Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1017,7 +844,7 @@ const _networksExtensions = {
     wif: 55,
   },
   iop: {
-    messagePrefix: '\u0018IoP Signed Message:\n',
+    messagePrefix: "\u0018IoP Signed Message:\n",
     bip32: {
       public: 662737247,
       private: 2922649334,
@@ -1027,7 +854,7 @@ const _networksExtensions = {
     wif: 49,
   },
   ixcoin: {
-    messagePrefix: '\u0018Ixcoin Signed Message:\n',
+    messagePrefix: "\u0018Ixcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1037,7 +864,7 @@ const _networksExtensions = {
     wif: 128,
   },
   kobocoin: {
-    messagePrefix: '\u0018Kobocoin Signed Message:\n',
+    messagePrefix: "\u0018Kobocoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1047,7 +874,7 @@ const _networksExtensions = {
     wif: 163,
   },
   landcoin: {
-    messagePrefix: '\u0018Landcoin Signed Message:\n',
+    messagePrefix: "\u0018Landcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1057,7 +884,7 @@ const _networksExtensions = {
     wif: 176,
   },
   lbry: {
-    messagePrefix: '\u0018LBRYcrd Signed Message:\n',
+    messagePrefix: "\u0018LBRYcrd Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1067,7 +894,7 @@ const _networksExtensions = {
     wif: 28,
   },
   linx: {
-    messagePrefix: '\u0018LinX Signed Message:\n',
+    messagePrefix: "\u0018LinX Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1077,7 +904,7 @@ const _networksExtensions = {
     wif: 203,
   },
   litecointestnet: {
-    messagePrefix: '\u0018Litecoin Signed Message:\n',
+    messagePrefix: "\u0018Litecoin Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -1087,7 +914,7 @@ const _networksExtensions = {
     wif: 239,
   },
   litecoin: {
-    messagePrefix: '\u0019Litecoin Signed Message:\n',
+    messagePrefix: "\u0019Litecoin Signed Message:\n",
     bip32: {
       public: 27108450,
       private: 27106558,
@@ -1096,9 +923,9 @@ const _networksExtensions = {
     scriptHash: 50,
     wif: 176,
     p2wpkh: {
-      baseNetwork: 'litecoin',
-      messagePrefix: '\u0019Litecoin Signed Message:\n',
-      bech32: 'ltc',
+      baseNetwork: "litecoin",
+      messagePrefix: "\u0019Litecoin Signed Message:\n",
+      bech32: "ltc",
       bip32: {
         public: 78792518,
         private: 78791436,
@@ -1108,9 +935,9 @@ const _networksExtensions = {
       wif: 176,
     },
     p2wpkhInP2sh: {
-      baseNetwork: 'litecoin',
-      messagePrefix: '\u0019Litecoin Signed Message:\n',
-      bech32: 'ltc',
+      baseNetwork: "litecoin",
+      messagePrefix: "\u0019Litecoin Signed Message:\n",
+      bech32: "ltc",
       bip32: {
         public: 28471030,
         private: 28469138,
@@ -1121,7 +948,7 @@ const _networksExtensions = {
     },
   },
   litecoincash: {
-    messagePrefix: '\u0018Litecoin Signed Message:\n',
+    messagePrefix: "\u0018Litecoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1131,7 +958,7 @@ const _networksExtensions = {
     wif: 176,
   },
   lynx: {
-    messagePrefix: '\u0018Lynx Signed Message:\n',
+    messagePrefix: "\u0018Lynx Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1141,7 +968,7 @@ const _networksExtensions = {
     wif: 173,
   },
   megacoin: {
-    messagePrefix: '\u0018Megacoin Signed Message:\n',
+    messagePrefix: "\u0018Megacoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1151,7 +978,7 @@ const _networksExtensions = {
     wif: 178,
   },
   minexcoin: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1161,7 +988,7 @@ const _networksExtensions = {
     wif: 128,
   },
   navcoin: {
-    messagePrefix: '\u0018Navcoin Signed Message:\n',
+    messagePrefix: "\u0018Navcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1171,7 +998,7 @@ const _networksExtensions = {
     wif: 150,
   },
   neoscoin: {
-    messagePrefix: '\u0018NeosCoin Signed Message:\n',
+    messagePrefix: "\u0018NeosCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1181,7 +1008,7 @@ const _networksExtensions = {
     wif: 177,
   },
   nix: {
-    messagePrefix: '\u0018Nix Signed Message:\n',
+    messagePrefix: "\u0018Nix Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1191,7 +1018,7 @@ const _networksExtensions = {
     wif: 128,
   },
   neurocoin: {
-    messagePrefix: '\u0018PPCoin Signed Message:\n',
+    messagePrefix: "\u0018PPCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1201,7 +1028,7 @@ const _networksExtensions = {
     wif: 181,
   },
   newyorkc: {
-    messagePrefix: '\u0018newyorkc Signed Message:\n',
+    messagePrefix: "\u0018newyorkc Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1211,7 +1038,7 @@ const _networksExtensions = {
     wif: 188,
   },
   novacoin: {
-    messagePrefix: '\u0018NovaCoin Signed Message:\n',
+    messagePrefix: "\u0018NovaCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1221,7 +1048,7 @@ const _networksExtensions = {
     wif: 136,
   },
   nushares: {
-    messagePrefix: '\u0018Nu Signed Message:\n',
+    messagePrefix: "\u0018Nu Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1231,7 +1058,7 @@ const _networksExtensions = {
     wif: 149,
   },
   okcash: {
-    messagePrefix: '\u0018OKCash Signed Message:\n',
+    messagePrefix: "\u0018OKCash Signed Message:\n",
     bip32: {
       public: 63710167,
       private: 63708275,
@@ -1241,7 +1068,7 @@ const _networksExtensions = {
     wif: 3,
   },
   omnicore: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1251,7 +1078,7 @@ const _networksExtensions = {
     wif: 128,
   },
   pesobit: {
-    messagePrefix: '\u0018Pesobit Signed Message:\n',
+    messagePrefix: "\u0018Pesobit Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1261,7 +1088,7 @@ const _networksExtensions = {
     wif: 183,
   },
   pinkcoin: {
-    messagePrefix: '\u0018Pinkcoin Signed Message:\n',
+    messagePrefix: "\u0018Pinkcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1271,7 +1098,7 @@ const _networksExtensions = {
     wif: 131,
   },
   poswcoin: {
-    messagePrefix: '\u0018Poswcoin Signed Message:\n',
+    messagePrefix: "\u0018Poswcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1281,7 +1108,7 @@ const _networksExtensions = {
     wif: 183,
   },
   potcoin: {
-    messagePrefix: '\u0018Potcoin Signed Message:\n',
+    messagePrefix: "\u0018Potcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1291,7 +1118,7 @@ const _networksExtensions = {
     wif: 183,
   },
   putincoin: {
-    messagePrefix: '\u0018PutinCoin Signed Message:\n',
+    messagePrefix: "\u0018PutinCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1301,7 +1128,7 @@ const _networksExtensions = {
     wif: 183,
   },
   ravencoin: {
-    messagePrefix: '\u0016Raven Signed Message:\n',
+    messagePrefix: "\u0016Raven Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1311,7 +1138,7 @@ const _networksExtensions = {
     wif: 128,
   },
   reddcoin: {
-    messagePrefix: '\u0018Reddcoin Signed Message:\n',
+    messagePrefix: "\u0018Reddcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1321,7 +1148,7 @@ const _networksExtensions = {
     wif: 189,
   },
   revolutionvr: {
-    messagePrefix: '\u0018Voxels Signed Message:\n',
+    messagePrefix: "\u0018Voxels Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1331,7 +1158,7 @@ const _networksExtensions = {
     wif: 198,
   },
   ritocoin: {
-    messagePrefix: '\u0015Rito Signed Message:\n',
+    messagePrefix: "\u0015Rito Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1341,7 +1168,7 @@ const _networksExtensions = {
     wif: 139,
   },
   rsk: {
-    messagePrefix: '\u0018RSK Signed Message:\n',
+    messagePrefix: "\u0018RSK Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1351,7 +1178,7 @@ const _networksExtensions = {
     wif: 128,
   },
   rsktestnet: {
-    messagePrefix: '\u0018RSK Testnet Signed Message:\n',
+    messagePrefix: "\u0018RSK Testnet Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -1361,7 +1188,7 @@ const _networksExtensions = {
     wif: 239,
   },
   rubycoin: {
-    messagePrefix: '\u0018Rubycoin Signed Message:\n',
+    messagePrefix: "\u0018Rubycoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1371,7 +1198,7 @@ const _networksExtensions = {
     wif: 188,
   },
   safecoin: {
-    messagePrefix: '\u0018Safecoin Signed Message:\n',
+    messagePrefix: "\u0018Safecoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1381,7 +1208,7 @@ const _networksExtensions = {
     wif: 189,
   },
   salus: {
-    messagePrefix: '\u0018Salus Signed Message:\n',
+    messagePrefix: "\u0018Salus Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1391,7 +1218,7 @@ const _networksExtensions = {
     wif: 191,
   },
   smileycoin: {
-    messagePrefix: '\u0018Smileycoin Signed Message:\n',
+    messagePrefix: "\u0018Smileycoin Signed Message:\n",
     bip32: {
       public: 508964250,
       private: 508965308,
@@ -1401,7 +1228,7 @@ const _networksExtensions = {
     wif: 5,
   },
   solarcoin: {
-    messagePrefix: '\u0018SolarCoin Signed Message:\n',
+    messagePrefix: "\u0018SolarCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1411,7 +1238,7 @@ const _networksExtensions = {
     wif: 146,
   },
   stash: {
-    messagePrefix: '\u0018Stash Signed Message:\n',
+    messagePrefix: "\u0018Stash Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1421,7 +1248,7 @@ const _networksExtensions = {
     wif: 204,
   },
   stashtn: {
-    messagePrefix: '\u0018Stash Test Signed Message:\n',
+    messagePrefix: "\u0018Stash Test Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -1431,7 +1258,7 @@ const _networksExtensions = {
     wif: 239,
   },
   stratis: {
-    messagePrefix: '\u0018Stratis Signed Message:\n',
+    messagePrefix: "\u0018Stratis Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1441,7 +1268,7 @@ const _networksExtensions = {
     wif: 191,
   },
   stratistest: {
-    messagePrefix: '\u0018Stratis Test Signed Message:\n',
+    messagePrefix: "\u0018Stratis Test Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1451,7 +1278,7 @@ const _networksExtensions = {
     wif: 191,
   },
   syscoin: {
-    messagePrefix: '\u0018Syscoin Signed Message:\n',
+    messagePrefix: "\u0018Syscoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1461,7 +1288,7 @@ const _networksExtensions = {
     wif: 128,
   },
   toa: {
-    messagePrefix: '\u0018TOA Signed Message:\n',
+    messagePrefix: "\u0018TOA Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1471,7 +1298,7 @@ const _networksExtensions = {
     wif: 193,
   },
   twins: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -1481,7 +1308,7 @@ const _networksExtensions = {
     wif: 66,
   },
   twinstestnet: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 981492128,
       private: 981489719,
@@ -1491,7 +1318,7 @@ const _networksExtensions = {
     wif: 237,
   },
   ultimatesecurecash: {
-    messagePrefix: '\u0018UltimateSecureCash Signed Message:\n',
+    messagePrefix: "\u0018UltimateSecureCash Signed Message:\n",
     bip32: {
       public: 4001376362,
       private: 4001378792,
@@ -1501,7 +1328,7 @@ const _networksExtensions = {
     wif: 191,
   },
   unobtanium: {
-    messagePrefix: '\u0018Unobtanium Signed Message:\n',
+    messagePrefix: "\u0018Unobtanium Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1511,7 +1338,7 @@ const _networksExtensions = {
     wif: 224,
   },
   vcash: {
-    messagePrefix: '\u0018Vcash Signed Message:\n',
+    messagePrefix: "\u0018Vcash Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1521,7 +1348,7 @@ const _networksExtensions = {
     wif: 199,
   },
   verge: {
-    messagePrefix: '\u0018VERGE Signed Message:\n',
+    messagePrefix: "\u0018VERGE Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1531,7 +1358,7 @@ const _networksExtensions = {
     wif: 158,
   },
   vertcoin: {
-    messagePrefix: '\u0018Vertcoin Signed Message:\n',
+    messagePrefix: "\u0018Vertcoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1541,7 +1368,7 @@ const _networksExtensions = {
     wif: 128,
   },
   vivo: {
-    messagePrefix: '\u0018DarkCoin Signed Message:\n',
+    messagePrefix: "\u0018DarkCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1551,7 +1378,7 @@ const _networksExtensions = {
     wif: 198,
   },
   vpncoin: {
-    messagePrefix: '\u0018VpnCoin Signed Message:\n',
+    messagePrefix: "\u0018VpnCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1561,7 +1388,7 @@ const _networksExtensions = {
     wif: 199,
   },
   whitecoin: {
-    messagePrefix: '\u0018Whitecoin Signed Message:\n',
+    messagePrefix: "\u0018Whitecoin Signed Message:\n",
     bip32: {
       public: 76054302,
       private: 76059885,
@@ -1571,7 +1398,7 @@ const _networksExtensions = {
     wif: 201,
   },
   wincoin: {
-    messagePrefix: '\u0018WinCoin Signed Message:\n',
+    messagePrefix: "\u0018WinCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1581,7 +1408,7 @@ const _networksExtensions = {
     wif: 201,
   },
   zcash: {
-    messagePrefix: '\u0018Zcash Signed Message:\n',
+    messagePrefix: "\u0018Zcash Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1591,7 +1418,7 @@ const _networksExtensions = {
     wif: 128,
   },
   xuez: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -1601,7 +1428,7 @@ const _networksExtensions = {
     wif: 212,
   },
   bitcoinprivate: {
-    messagePrefix: '\u0018BitcoinPrivate Signed Message:\n',
+    messagePrefix: "\u0018BitcoinPrivate Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1611,7 +1438,7 @@ const _networksExtensions = {
     wif: 128,
   },
   bitcoinprivatetestnet: {
-    messagePrefix: '\u0018BitcoinPrivate Signed Message:\n',
+    messagePrefix: "\u0018BitcoinPrivate Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -1621,7 +1448,7 @@ const _networksExtensions = {
     wif: 239,
   },
   bitcoinz: {
-    messagePrefix: '\u0018BitcoinZ Signed Message:\n',
+    messagePrefix: "\u0018BitcoinZ Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1631,7 +1458,7 @@ const _networksExtensions = {
     wif: 128,
   },
   hush: {
-    messagePrefix: '\u0018Hush Signed Message:\n',
+    messagePrefix: "\u0018Hush Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1641,7 +1468,7 @@ const _networksExtensions = {
     wif: 128,
   },
   hush3: {
-    messagePrefix: '\u0018Hush Signed Message:\n',
+    messagePrefix: "\u0018Hush Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1651,8 +1478,8 @@ const _networksExtensions = {
     wif: 188,
   },
   zoobc: {
-    messagePrefix: '\u0018ZooBC Signed Message:\n',
-    bech32: 'bc',
+    messagePrefix: "\u0018ZooBC Signed Message:\n",
+    bech32: "bc",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1662,7 +1489,7 @@ const _networksExtensions = {
     wif: 128,
   },
   zclassic: {
-    messagePrefix: '\u0018Zcash Signed Message:\n',
+    messagePrefix: "\u0018Zcash Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1672,7 +1499,7 @@ const _networksExtensions = {
     wif: 128,
   },
   zencash: {
-    messagePrefix: '\u0018Zcash Signed Message:\n',
+    messagePrefix: "\u0018Zcash Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1682,7 +1509,7 @@ const _networksExtensions = {
     wif: 128,
   },
   energi: {
-    messagePrefix: 'DarkCoin Signed Message:\n',
+    messagePrefix: "DarkCoin Signed Message:\n",
     bip32: {
       public: 62441558,
       private: 3621547679,
@@ -1692,7 +1519,7 @@ const _networksExtensions = {
     wif: 106,
   },
   exchangecoin: {
-    messagePrefix: 'ExchangeCoin Signed Message:\n',
+    messagePrefix: "ExchangeCoin Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1702,7 +1529,7 @@ const _networksExtensions = {
     wif: 128,
   },
   artax: {
-    messagePrefix: '\u0018Artax Signed Message:\n',
+    messagePrefix: "\u0018Artax Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1712,7 +1539,7 @@ const _networksExtensions = {
     wif: 151,
   },
   bitcoingreen: {
-    messagePrefix: '\u0018BitcoinGreen Signed Message:\n',
+    messagePrefix: "\u0018BitcoinGreen Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1722,7 +1549,7 @@ const _networksExtensions = {
     wif: 46,
   },
   anon: {
-    messagePrefix: '\u0018ANON Signed Message:\n',
+    messagePrefix: "\u0018ANON Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1732,7 +1559,7 @@ const _networksExtensions = {
     wif: 128,
   },
   projectcoin: {
-    messagePrefix: '\u0018ProjectCoin Signed Message:\n',
+    messagePrefix: "\u0018ProjectCoin Signed Message:\n",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -1742,7 +1569,7 @@ const _networksExtensions = {
     wif: 117,
   },
   phore: {
-    messagePrefix: '\u0018Phore Signed Message:\n',
+    messagePrefix: "\u0018Phore Signed Message:\n",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -1752,7 +1579,7 @@ const _networksExtensions = {
     wif: 212,
   },
   blocknode: {
-    messagePrefix: '\u0018Blocknode Signed Message:\n',
+    messagePrefix: "\u0018Blocknode Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1762,7 +1589,7 @@ const _networksExtensions = {
     wif: 75,
   },
   blocknode_testnet: {
-    messagePrefix: '\u0018Blocknode Testnet Signed Message:\n',
+    messagePrefix: "\u0018Blocknode Testnet Signed Message:\n",
     bip32: {
       public: 70617039,
       private: 70615956,
@@ -1772,7 +1599,7 @@ const _networksExtensions = {
     wif: 137,
   },
   litecoinz: {
-    messagePrefix: '\u0018LitecoinZ Signed Message:\n',
+    messagePrefix: "\u0018LitecoinZ Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066275,
@@ -1782,7 +1609,7 @@ const _networksExtensions = {
     wif: 128,
   },
   blockstamp: {
-    messagePrefix: '\u0018BlockStamp Signed Message:\n',
+    messagePrefix: "\u0018BlockStamp Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1792,7 +1619,7 @@ const _networksExtensions = {
     wif: 128,
   },
   deeponion: {
-    messagePrefix: 'x18DeepOnion Signed Message:\n',
+    messagePrefix: "x18DeepOnion Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1802,7 +1629,7 @@ const _networksExtensions = {
     wif: 159,
   },
   cpuchain: {
-    messagePrefix: 'x18CPUchain Signed Message:\n',
+    messagePrefix: "x18CPUchain Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1812,7 +1639,7 @@ const _networksExtensions = {
     wif: 128,
   },
   wagerr: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 36513075,
       private: 35729707,
@@ -1822,7 +1649,7 @@ const _networksExtensions = {
     wif: 199,
   },
   bitcoinsv: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1832,7 +1659,7 @@ const _networksExtensions = {
     wif: 128,
   },
   monkeyproject: {
-    messagePrefix: 'Monkey Signed Message:\n',
+    messagePrefix: "Monkey Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76078564,
@@ -1842,7 +1669,7 @@ const _networksExtensions = {
     wif: 55,
   },
   rapids: {
-    messagePrefix: 'DarkNet Signed Message:\n',
+    messagePrefix: "DarkNet Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1852,8 +1679,8 @@ const _networksExtensions = {
     wif: 46,
   },
   aryacoin: {
-    messagePrefix: '\u0018Aryacoin Signed Message:\n',
-    bech32: 'arya',
+    messagePrefix: "\u0018Aryacoin Signed Message:\n",
+    bech32: "arya",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1863,7 +1690,7 @@ const _networksExtensions = {
     wif: 151,
   },
   thought: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 4224098317,
       private: 1525405894,
@@ -1873,7 +1700,7 @@ const _networksExtensions = {
     wif: 123,
   },
   elastos: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1883,7 +1710,7 @@ const _networksExtensions = {
     wif: 239,
   },
   sugarchain: {
-    messagePrefix: '\u0018Sugarchain Signed Message:\n',
+    messagePrefix: "\u0018Sugarchain Signed Message:\n",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1893,7 +1720,7 @@ const _networksExtensions = {
     wif: 128,
   },
   sugarchaintestnet: {
-    messagePrefix: '\u0018Sugarchain Signed Message:\n',
+    messagePrefix: "\u0018Sugarchain Signed Message:\n",
     bip32: {
       public: 73342198,
       private: 73341116,
@@ -1903,7 +1730,7 @@ const _networksExtensions = {
     wif: 239,
   },
   argoneum: {
-    messagePrefix: 'unused',
+    messagePrefix: "unused",
     bip32: {
       public: 76067358,
       private: 76066276,
@@ -1913,8 +1740,8 @@ const _networksExtensions = {
     wif: 191,
   },
   particl: {
-    messagePrefix: '\u0018Bitcoin Signed Message:\n',
-    bech32: 'pw',
+    messagePrefix: "\u0018Bitcoin Signed Message:\n",
+    bech32: "pw",
     bip32: {
       public: 1768850129,
       private: 2401087160,
@@ -1927,1626 +1754,1626 @@ const _networksExtensions = {
 
 const _networks_Map = new Map([
   [
-    'AC',
+    "AC",
     {
-      symbol: 'AC',
-      name: 'AC - Asiacoin',
+      symbol: "AC",
+      name: "AC - Asiacoin",
       network: _networksExtensions.asiacoin,
     },
   ],
   [
-    'ACC',
+    "ACC",
     {
-      symbol: 'ACC',
-      name: 'ACC - Adcoin',
+      symbol: "ACC",
+      name: "ACC - Adcoin",
       network: _networksExtensions.adcoin,
     },
   ],
   [
-    'AGM',
+    "AGM",
     {
-      symbol: 'AGM',
-      name: 'AGM - Argoneum',
+      symbol: "AGM",
+      name: "AGM - Argoneum",
       network: _networksExtensions.argoneum,
     },
   ],
   [
-    'ARYA',
+    "ARYA",
     {
-      symbol: 'ARYA',
-      name: 'ARYA - Aryacoin',
+      symbol: "ARYA",
+      name: "ARYA - Aryacoin",
       network: _networksExtensions.aryacoin,
     },
   ],
   [
-    'ATOM',
+    "ATOM",
     {
-      symbol: 'ATOM',
-      name: 'ATOM - Cosmos Hub',
+      symbol: "ATOM",
+      name: "ATOM - Cosmos Hub",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'AUR',
+    "AUR",
     {
-      symbol: 'AUR',
-      name: 'AUR - Auroracoin',
+      symbol: "AUR",
+      name: "AUR - Auroracoin",
       network: _networksExtensions.auroracoin,
     },
   ],
   [
-    'AXE',
+    "AXE",
     {
-      symbol: 'AXE',
-      name: 'AXE - Axe',
+      symbol: "AXE",
+      name: "AXE - Axe",
       network: _networksExtensions.axe,
     },
   ],
   [
-    'ANON',
+    "ANON",
     {
-      symbol: 'ANON',
-      name: 'ANON - ANON',
+      symbol: "ANON",
+      name: "ANON - ANON",
       network: _networksExtensions.anon,
     },
   ],
   [
-    'BOLI',
+    "BOLI",
     {
-      symbol: 'BOLI',
-      name: 'BOLI - Bolivarcoin',
+      symbol: "BOLI",
+      name: "BOLI - Bolivarcoin",
       network: _networksExtensions.bolivarcoin,
     },
   ],
   [
-    'BCA',
+    "BCA",
     {
-      symbol: 'BCA',
-      name: 'BCA - Bitcoin Atom',
+      symbol: "BCA",
+      name: "BCA - Bitcoin Atom",
       network: _networksExtensions.atom,
     },
   ],
   [
-    'BCH',
+    "BCH",
     {
-      symbol: 'BCH',
-      name: 'BCH - Bitcoin Cash',
+      symbol: "BCH",
+      name: "BCH - Bitcoin Cash",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'BEET',
+    "BEET",
     {
-      symbol: 'BEET',
-      name: 'BEET - Beetlecoin',
+      symbol: "BEET",
+      name: "BEET - Beetlecoin",
       network: _networksExtensions.beetlecoin,
     },
   ],
   [
-    'BELA',
+    "BELA",
     {
-      symbol: 'BELA',
-      name: 'BELA - Belacoin',
+      symbol: "BELA",
+      name: "BELA - Belacoin",
       network: _networksExtensions.belacoin,
     },
   ],
   [
-    'BLK',
+    "BLK",
     {
-      symbol: 'BLK',
-      name: 'BLK - BlackCoin',
+      symbol: "BLK",
+      name: "BLK - BlackCoin",
       network: _networksExtensions.blackcoin,
     },
   ],
   [
-    'BND',
+    "BND",
     {
-      symbol: 'BND',
-      name: 'BND - Blocknode',
+      symbol: "BND",
+      name: "BND - Blocknode",
       network: _networksExtensions.blocknode,
     },
   ],
   [
-    'tBND',
+    "tBND",
     {
-      symbol: 'tBND',
-      name: 'tBND - Blocknode Testnet',
+      symbol: "tBND",
+      name: "tBND - Blocknode Testnet",
       network: _networksExtensions.blocknode_testnet,
     },
   ],
   [
-    'BRIT',
+    "BRIT",
     {
-      symbol: 'BRIT',
-      name: 'BRIT - Britcoin',
+      symbol: "BRIT",
+      name: "BRIT - Britcoin",
       network: _networksExtensions.britcoin,
     },
   ],
   [
-    'BSD',
+    "BSD",
     {
-      symbol: 'BSD',
-      name: 'BSD - Bitsend',
+      symbol: "BSD",
+      name: "BSD - Bitsend",
       network: _networksExtensions.bitsend,
     },
   ],
   [
-    'BST',
+    "BST",
     {
-      symbol: 'BST',
-      name: 'BST - BlockStamp',
+      symbol: "BST",
+      name: "BST - BlockStamp",
       network: _networksExtensions.blockstamp,
     },
   ],
   [
-    'BTA',
+    "BTA",
     {
-      symbol: 'BTA',
-      name: 'BTA - Bata',
+      symbol: "BTA",
+      name: "BTA - Bata",
       network: _networksExtensions.bata,
     },
   ],
   [
-    'BTC',
+    "BTC",
     {
-      symbol: 'BTC',
-      name: 'BTC - Bitcoin',
+      symbol: "BTC",
+      name: "BTC - Bitcoin",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'BTC-R',
+    "BTC-R",
     {
-      symbol: 'BTC',
-      name: 'BTC - Bitcoin RegTest',
+      symbol: "BTC",
+      name: "BTC - Bitcoin RegTest",
       network: _networksExtensions.regtest,
     },
   ],
   [
-    'BTC-T',
+    "BTC-T",
     {
-      symbol: 'BTC',
-      name: 'BTC - Bitcoin Testnet',
+      symbol: "BTC",
+      name: "BTC - Bitcoin Testnet",
       network: _networksExtensions.testnet,
     },
   ],
   [
-    'BITG',
+    "BITG",
     {
-      symbol: 'BITG',
-      name: 'BITG - Bitcoin Green',
+      symbol: "BITG",
+      name: "BITG - Bitcoin Green",
       network: _networksExtensions.bitcoingreen,
     },
   ],
   [
-    'BTCP',
+    "BTCP",
     {
-      symbol: 'BTCP',
-      name: 'BTCP - Bitcoin Private',
+      symbol: "BTCP",
+      name: "BTCP - Bitcoin Private",
       network: _networksExtensions.bitcoinprivate,
     },
   ],
   [
-    'BTCPt',
+    "BTCPt",
     {
-      symbol: 'BTCPt',
-      name: 'BTCPt - Bitcoin Private Testnet',
+      symbol: "BTCPt",
+      name: "BTCPt - Bitcoin Private Testnet",
       network: _networksExtensions.bitcoinprivatetestnet,
     },
   ],
   [
-    'BSC',
+    "BSC",
     {
-      symbol: 'BSC',
-      name: 'BSC - Binance Smart Chain',
+      symbol: "BSC",
+      name: "BSC - Binance Smart Chain",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'BSV',
+    "BSV",
     {
-      symbol: 'BSV',
-      name: 'BSV - BitcoinSV',
+      symbol: "BSV",
+      name: "BSV - BitcoinSV",
       network: _networksExtensions.bitcoinsv,
     },
   ],
   [
-    'BTCZ',
+    "BTCZ",
     {
-      symbol: 'BTCZ',
-      name: 'BTCZ - Bitcoinz',
+      symbol: "BTCZ",
+      name: "BTCZ - Bitcoinz",
       network: _networksExtensions.bitcoinz,
     },
   ],
   [
-    'BTDX',
+    "BTDX",
     {
-      symbol: 'BTDX',
-      name: 'BTDX - BitCloud',
+      symbol: "BTDX",
+      name: "BTDX - BitCloud",
       network: _networksExtensions.bitcloud,
     },
   ],
   [
-    'BTG',
+    "BTG",
     {
-      symbol: 'BTG',
-      name: 'BTG - Bitcoin Gold',
+      symbol: "BTG",
+      name: "BTG - Bitcoin Gold",
       network: _networksExtensions.bgold,
     },
   ],
   [
-    'BTX',
+    "BTX",
     {
-      symbol: 'BTX',
-      name: 'BTX - Bitcore',
+      symbol: "BTX",
+      name: "BTX - Bitcore",
       network: _networksExtensions.bitcore,
     },
   ],
   [
-    'CCN',
+    "CCN",
     {
-      symbol: 'CCN',
-      name: 'CCN - Cannacoin',
+      symbol: "CCN",
+      name: "CCN - Cannacoin",
       network: _networksExtensions.cannacoin,
     },
   ],
   [
-    'CESC',
+    "CESC",
     {
-      symbol: 'CESC',
-      name: 'CESC - Cryptoescudo',
+      symbol: "CESC",
+      name: "CESC - Cryptoescudo",
       network: _networksExtensions.cannacoin,
     },
   ],
   [
-    'CDN',
+    "CDN",
     {
-      symbol: 'CDN',
-      name: 'CDN - Canadaecoin',
+      symbol: "CDN",
+      name: "CDN - Canadaecoin",
       network: _networksExtensions.canadaecoin,
     },
   ],
   [
-    'CLAM',
+    "CLAM",
     {
-      symbol: 'CLAM',
-      name: 'CLAM - Clams',
+      symbol: "CLAM",
+      name: "CLAM - Clams",
       network: _networksExtensions.clam,
     },
   ],
   [
-    'CLO',
+    "CLO",
     {
-      symbol: 'CLO',
-      name: 'CLO - Callisto',
+      symbol: "CLO",
+      name: "CLO - Callisto",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'CLUB',
+    "CLUB",
     {
-      symbol: 'CLUB',
-      name: 'CLUB - Clubcoin',
+      symbol: "CLUB",
+      name: "CLUB - Clubcoin",
       network: _networksExtensions.clubcoin,
     },
   ],
   [
-    'CMP',
+    "CMP",
     {
-      symbol: 'CMP',
-      name: 'CMP - Compcoin',
+      symbol: "CMP",
+      name: "CMP - Compcoin",
       network: _networksExtensions.compcoin,
     },
   ],
   [
-    'CPU',
+    "CPU",
     {
-      symbol: 'CPU',
-      name: 'CPU - CPUchain',
+      symbol: "CPU",
+      name: "CPU - CPUchain",
       network: _networksExtensions.cpuchain,
     },
   ],
   [
-    'CRAVE',
+    "CRAVE",
     {
-      symbol: 'CRAVE',
-      name: 'CRAVE - Crave',
+      symbol: "CRAVE",
+      name: "CRAVE - Crave",
       network: _networksExtensions.crave,
     },
   ],
   [
-    'CRP',
+    "CRP",
     {
-      symbol: 'CRP',
-      name: 'CRP - CranePay',
+      symbol: "CRP",
+      name: "CRP - CranePay",
       network: _networksExtensions.cranepay,
     },
   ],
   [
-    'CRW',
+    "CRW",
     {
-      symbol: 'CRW',
-      name: 'CRW - Crown',
+      symbol: "CRW",
+      name: "CRW - Crown",
       network: _networksExtensions.crown,
     },
   ],
   [
-    'CSC',
+    "CSC",
     {
-      symbol: 'CSC',
-      name: 'CSC - CasinoCoin',
+      symbol: "CSC",
+      name: "CSC - CasinoCoin",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'DASH',
+    "DASH",
     {
-      symbol: 'DASH',
-      name: 'DASH - Dash',
+      symbol: "DASH",
+      name: "DASH - Dash",
       network: _networksExtensions.dash,
     },
   ],
   [
-    'DASH-T',
+    "DASH-T",
     {
-      symbol: 'DASH',
-      name: 'DASH - Dash Testnet',
+      symbol: "DASH",
+      name: "DASH - Dash Testnet",
       network: _networksExtensions.dashtn,
     },
   ],
   [
-    'DFC',
+    "DFC",
     {
-      symbol: 'DFC',
-      name: 'DFC - Defcoin',
+      symbol: "DFC",
+      name: "DFC - Defcoin",
       network: _networksExtensions.defcoin,
     },
   ],
   [
-    'DGB',
+    "DGB",
     {
-      symbol: 'DGB',
-      name: 'DGB - Digibyte',
+      symbol: "DGB",
+      name: "DGB - Digibyte",
       network: _networksExtensions.digibyte,
     },
   ],
   [
-    'DGC',
+    "DGC",
     {
-      symbol: 'DGC',
-      name: 'DGC - Digitalcoin',
+      symbol: "DGC",
+      name: "DGC - Digitalcoin",
       network: _networksExtensions.digitalcoin,
     },
   ],
   [
-    'DIVI',
+    "DIVI",
     {
-      symbol: 'DIVI',
-      name: 'DIVI - DIVI',
+      symbol: "DIVI",
+      name: "DIVI - DIVI",
       network: _networksExtensions.divi,
     },
   ],
   [
-    'DIVI-T',
+    "DIVI-T",
     {
-      symbol: 'DIVI',
-      name: 'DIVI - DIVI Testnet',
+      symbol: "DIVI",
+      name: "DIVI - DIVI Testnet",
       network: _networksExtensions.divitestnet,
     },
   ],
   [
-    'DMD',
+    "DMD",
     {
-      symbol: 'DMD',
-      name: 'DMD - Diamond',
+      symbol: "DMD",
+      name: "DMD - Diamond",
       network: _networksExtensions.diamond,
     },
   ],
   [
-    'DNR',
+    "DNR",
     {
-      symbol: 'DNR',
-      name: 'DNR - Denarius',
+      symbol: "DNR",
+      name: "DNR - Denarius",
       network: _networksExtensions.denarius,
     },
   ],
   [
-    'DOGE',
+    "DOGE",
     {
-      symbol: 'DOGE',
-      name: 'DOGE - Dogecoin',
+      symbol: "DOGE",
+      name: "DOGE - Dogecoin",
       network: _networksExtensions.dogecoin,
     },
   ],
   [
-    'DOGEt',
+    "DOGEt",
     {
-      symbol: 'DOGEt',
-      name: 'DOGEt - Dogecoin Testnet',
+      symbol: "DOGEt",
+      name: "DOGEt - Dogecoin Testnet",
       network: _networksExtensions.dogecointestnet,
     },
   ],
   [
-    'DXN',
+    "DXN",
     {
-      symbol: 'DXN',
-      name: 'DXN - DEXON',
+      symbol: "DXN",
+      name: "DXN - DEXON",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'ECN',
+    "ECN",
     {
-      symbol: 'ECN',
-      name: 'ECN - Ecoin',
+      symbol: "ECN",
+      name: "ECN - Ecoin",
       network: _networksExtensions.ecoin,
     },
   ],
   [
-    'EDRC',
+    "EDRC",
     {
-      symbol: 'EDRC',
-      name: 'EDRC - Edrcoin',
+      symbol: "EDRC",
+      name: "EDRC - Edrcoin",
       network: _networksExtensions.edrcoin,
     },
   ],
   [
-    'EFL',
+    "EFL",
     {
-      symbol: 'EFL',
-      name: 'EFL - Egulden',
+      symbol: "EFL",
+      name: "EFL - Egulden",
       network: _networksExtensions.egulden,
     },
   ],
   [
-    'ELA',
+    "ELA",
     {
-      symbol: 'ELA',
-      name: 'ELA - Elastos',
+      symbol: "ELA",
+      name: "ELA - Elastos",
       network: _networksExtensions.elastos,
     },
   ],
   [
-    'ELLA',
+    "ELLA",
     {
-      symbol: 'ELLA',
-      name: 'ELLA - Ellaism',
+      symbol: "ELLA",
+      name: "ELLA - Ellaism",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'EMC2',
+    "EMC2",
     {
-      symbol: 'EMC2',
-      name: 'EMC2 - Einsteinium',
+      symbol: "EMC2",
+      name: "EMC2 - Einsteinium",
       network: _networksExtensions.einsteinium,
     },
   ],
   [
-    'ERC',
+    "ERC",
     {
-      symbol: 'ERC',
-      name: 'ERC - Europecoin',
+      symbol: "ERC",
+      name: "ERC - Europecoin",
       network: _networksExtensions.europecoin,
     },
   ],
   [
-    'EOS',
+    "EOS",
     {
-      symbol: 'EOS',
-      name: 'EOS - EOSIO',
+      symbol: "EOS",
+      name: "EOS - EOSIO",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'ERE',
+    "ERE",
     {
-      symbol: 'ERE',
-      name: 'ERE - EtherCore',
+      symbol: "ERE",
+      name: "ERE - EtherCore",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'ESN',
+    "ESN",
     {
-      symbol: 'ESN',
-      name: 'ESN - Ethersocial Network',
+      symbol: "ESN",
+      name: "ESN - Ethersocial Network",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'ETC',
+    "ETC",
     {
-      symbol: 'ETC',
-      name: 'ETC - Ethereum Classic',
+      symbol: "ETC",
+      name: "ETC - Ethereum Classic",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'ETH',
+    "ETH",
     {
-      symbol: 'ETH',
-      name: 'ETH - Ethereum',
+      symbol: "ETH",
+      name: "ETH - Ethereum",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'EWT',
+    "EWT",
     {
-      symbol: 'EWT',
-      name: 'EWT - EnergyWeb',
+      symbol: "EWT",
+      name: "EWT - EnergyWeb",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'EXCL',
+    "EXCL",
     {
-      symbol: 'EXCL',
-      name: 'EXCL - Exclusivecoin',
+      symbol: "EXCL",
+      name: "EXCL - Exclusivecoin",
       network: _networksExtensions.exclusivecoin,
     },
   ],
   [
-    'EXCC',
+    "EXCC",
     {
-      symbol: 'EXCC',
-      name: 'EXCC - ExchangeCoin',
+      symbol: "EXCC",
+      name: "EXCC - ExchangeCoin",
       network: _networksExtensions.exchangecoin,
     },
   ],
   [
-    'EXP',
+    "EXP",
     {
-      symbol: 'EXP',
-      name: 'EXP - Expanse',
+      symbol: "EXP",
+      name: "EXP - Expanse",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'FIO',
+    "FIO",
     {
-      symbol: 'FIO',
-      name: 'FIO - Foundation for Interwallet Operability',
+      symbol: "FIO",
+      name: "FIO - Foundation for Interwallet Operability",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'FIRO',
+    "FIRO",
     {
-      symbol: 'FIRO',
-      name: 'FIRO - Firo (Zcoin rebrand)',
+      symbol: "FIRO",
+      name: "FIRO - Firo (Zcoin rebrand)",
       network: _networksExtensions.firo,
     },
   ],
   [
-    'FIX',
+    "FIX",
     {
-      symbol: 'FIX',
-      name: 'FIX - FIX',
+      symbol: "FIX",
+      name: "FIX - FIX",
       network: _networksExtensions.fix,
     },
   ],
   [
-    'FIX-T',
+    "FIX-T",
     {
-      symbol: 'FIX',
-      name: 'FIX - FIX Testnet',
+      symbol: "FIX",
+      name: "FIX - FIX Testnet",
       network: _networksExtensions.fixtestnet,
     },
   ],
   [
-    'FJC',
+    "FJC",
     {
-      symbol: 'FJC',
-      name: 'FJC - Fujicoin',
+      symbol: "FJC",
+      name: "FJC - Fujicoin",
       network: _networksExtensions.fujicoin,
     },
   ],
   [
-    'FLASH',
+    "FLASH",
     {
-      symbol: 'FLASH',
-      name: 'FLASH - Flashcoin',
+      symbol: "FLASH",
+      name: "FLASH - Flashcoin",
       network: _networksExtensions.flashcoin,
     },
   ],
   [
-    'FRST',
+    "FRST",
     {
-      symbol: 'FRST',
-      name: 'FRST - Firstcoin',
+      symbol: "FRST",
+      name: "FRST - Firstcoin",
       network: _networksExtensions.firstcoin,
     },
   ],
   [
-    'FTC',
+    "FTC",
     {
-      symbol: 'FTC',
-      name: 'FTC - Feathercoin',
+      symbol: "FTC",
+      name: "FTC - Feathercoin",
       network: _networksExtensions.feathercoin,
     },
   ],
   [
-    'GAME',
+    "GAME",
     {
-      symbol: 'GAME',
-      name: 'GAME - GameCredits',
+      symbol: "GAME",
+      name: "GAME - GameCredits",
       network: _networksExtensions.game,
     },
   ],
   [
-    'GBX',
+    "GBX",
     {
-      symbol: 'GBX',
-      name: 'GBX - Gobyte',
+      symbol: "GBX",
+      name: "GBX - Gobyte",
       network: _networksExtensions.gobyte,
     },
   ],
   [
-    'GCR',
+    "GCR",
     {
-      symbol: 'GCR',
-      name: 'GCR - GCRCoin',
+      symbol: "GCR",
+      name: "GCR - GCRCoin",
       network: _networksExtensions.gcr,
     },
   ],
   [
-    'GRC',
+    "GRC",
     {
-      symbol: 'GRC',
-      name: 'GRC - Gridcoin',
+      symbol: "GRC",
+      name: "GRC - Gridcoin",
       network: _networksExtensions.gridcoin,
     },
   ],
   [
-    'GRS',
+    "GRS",
     {
-      symbol: 'GRS',
-      name: 'GRS - Groestlcoin',
+      symbol: "GRS",
+      name: "GRS - Groestlcoin",
       network: _networksExtensions.groestlcoin,
     },
   ],
   [
-    'GRS-T',
+    "GRS-T",
     {
-      symbol: 'GRS',
-      name: 'GRS - Groestlcoin Testnet',
+      symbol: "GRS",
+      name: "GRS - Groestlcoin Testnet",
       network: _networksExtensions.groestlcointestnet,
     },
   ],
 
   [
-    'HNS',
+    "HNS",
     {
-      symbol: 'HNS',
-      name: 'HNS - Handshake',
+      symbol: "HNS",
+      name: "HNS - Handshake",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'HUSH',
+    "HUSH",
     {
-      symbol: 'HUSH',
-      name: 'HUSH - Hush (Legacy)',
+      symbol: "HUSH",
+      name: "HUSH - Hush (Legacy)",
       network: _networksExtensions.hush,
     },
   ],
   [
-    'HUSH3',
+    "HUSH3",
     {
-      symbol: 'HUSH',
-      name: 'HUSH - Hush3',
+      symbol: "HUSH",
+      name: "HUSH - Hush3",
       network: _networksExtensions.hush3,
     },
   ],
   [
-    'INSN',
+    "INSN",
     {
-      symbol: 'INSN',
-      name: 'INSN - Insane',
+      symbol: "INSN",
+      name: "INSN - Insane",
       network: _networksExtensions.insane,
     },
   ],
   [
-    'IOP',
+    "IOP",
     {
-      symbol: 'IOP',
-      name: 'IOP - Iop',
+      symbol: "IOP",
+      name: "IOP - Iop",
       network: _networksExtensions.iop,
     },
   ],
   [
-    'IOV',
+    "IOV",
     {
-      symbol: 'IOV',
-      name: 'IOV - Starname',
+      symbol: "IOV",
+      name: "IOV - Starname",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'IXC',
+    "IXC",
     {
-      symbol: 'IXC',
-      name: 'IXC - Ixcoin',
+      symbol: "IXC",
+      name: "IXC - Ixcoin",
       network: _networksExtensions.ixcoin,
     },
   ],
   [
-    'JBS',
+    "JBS",
     {
-      symbol: 'JBS',
-      name: 'JBS - Jumbucks',
+      symbol: "JBS",
+      name: "JBS - Jumbucks",
       network: _networksExtensions.jumbucks,
     },
   ],
   [
-    'KMD',
+    "KMD",
     {
-      symbol: 'KMD',
-      name: 'KMD - Komodo',
+      symbol: "KMD",
+      name: "KMD - Komodo",
       network: _networksExtensions.komodo,
     },
   ],
   [
-    'KOBO',
+    "KOBO",
     {
-      symbol: 'KOBO',
-      name: 'KOBO - Kobocoin',
+      symbol: "KOBO",
+      name: "KOBO - Kobocoin",
       network: _networksExtensions.kobocoin,
     },
   ],
   [
-    'LBC',
+    "LBC",
     {
-      symbol: 'LBC',
-      name: 'LBC - Library Credits',
+      symbol: "LBC",
+      name: "LBC - Library Credits",
       network: _networksExtensions.lbry,
     },
   ],
   [
-    'LCC',
+    "LCC",
     {
-      symbol: 'LCC',
-      name: 'LCC - Litecoincash',
+      symbol: "LCC",
+      name: "LCC - Litecoincash",
       network: _networksExtensions.litecoincash,
     },
   ],
   [
-    'LDCN',
+    "LDCN",
     {
-      symbol: 'LDCN',
-      name: 'LDCN - Landcoin',
+      symbol: "LDCN",
+      name: "LDCN - Landcoin",
       network: _networksExtensions.landcoin,
     },
   ],
   [
-    'LINX',
+    "LINX",
     {
-      symbol: 'LINX',
-      name: 'LINX - Linx',
+      symbol: "LINX",
+      name: "LINX - Linx",
       network: _networksExtensions.linx,
     },
   ],
   [
-    'LKR',
+    "LKR",
     {
-      symbol: 'LKR',
-      name: 'LKR - Lkrcoin',
+      symbol: "LKR",
+      name: "LKR - Lkrcoin",
       network: _networksExtensions.lkrcoin,
     },
   ],
   [
-    'LTC',
+    "LTC",
     {
-      symbol: 'LTC',
-      name: 'LTC - Litecoin',
+      symbol: "LTC",
+      name: "LTC - Litecoin",
       network: _networksExtensions.litecoin,
     },
   ],
   [
-    'LTCt',
+    "LTCt",
     {
-      symbol: 'LTCt',
-      name: 'LTCt - Litecoin Testnet',
+      symbol: "LTCt",
+      name: "LTCt - Litecoin Testnet",
       network: _networksExtensions.litecointestnet,
     },
   ],
   [
-    'LTZ',
+    "LTZ",
     {
-      symbol: 'LTZ',
-      name: 'LTZ - LitecoinZ',
+      symbol: "LTZ",
+      name: "LTZ - LitecoinZ",
       network: _networksExtensions.litecoinz,
     },
   ],
   [
-    'LUNA',
+    "LUNA",
     {
-      symbol: 'LUNA',
-      name: 'LUNA - Terra',
+      symbol: "LUNA",
+      name: "LUNA - Terra",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'LYNX',
+    "LYNX",
     {
-      symbol: 'LYNX',
-      name: 'LYNX - Lynx',
+      symbol: "LYNX",
+      name: "LYNX - Lynx",
       network: _networksExtensions.lynx,
     },
   ],
   [
-    'MAZA',
+    "MAZA",
     {
-      symbol: 'MAZA',
-      name: 'MAZA - Maza',
+      symbol: "MAZA",
+      name: "MAZA - Maza",
       network: _networksExtensions.maza,
     },
   ],
   [
-    'MEC',
+    "MEC",
     {
-      symbol: 'MEC',
-      name: 'MEC - Megacoin',
+      symbol: "MEC",
+      name: "MEC - Megacoin",
       network: _networksExtensions.megacoin,
     },
   ],
   [
-    'MIX',
+    "MIX",
     {
-      symbol: 'MIX',
-      name: 'MIX - MIX',
+      symbol: "MIX",
+      name: "MIX - MIX",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'MNX',
+    "MNX",
     {
-      symbol: 'MNX',
-      name: 'MNX - Minexcoin',
+      symbol: "MNX",
+      name: "MNX - Minexcoin",
       network: _networksExtensions.minexcoin,
     },
   ],
   [
-    'MONA',
+    "MONA",
     {
-      symbol: 'MONA',
-      name: 'MONA - Monacoin',
+      symbol: "MONA",
+      name: "MONA - Monacoin",
       network: _networksExtensions.monacoin,
     },
   ],
   [
-    'MONK',
+    "MONK",
     {
-      symbol: 'MONK',
-      name: 'MONK - Monkey Project',
+      symbol: "MONK",
+      name: "MONK - Monkey Project",
       network: _networksExtensions.monkeyproject,
     },
   ],
   [
-    'MOAC',
+    "MOAC",
     {
-      symbol: 'MOAC',
-      name: 'MOAC - MOAC',
+      symbol: "MOAC",
+      name: "MOAC - MOAC",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'MUSIC',
+    "MUSIC",
     {
-      symbol: 'MUSIC',
-      name: 'MUSIC - Musicoin',
+      symbol: "MUSIC",
+      name: "MUSIC - Musicoin",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'NANO',
+    "NANO",
     {
-      symbol: 'NANO',
-      name: 'NANO - Nano',
+      symbol: "NANO",
+      name: "NANO - Nano",
       network: _networksExtensions.dummyNetwork,
     },
   ],
   [
-    'NAV',
+    "NAV",
     {
-      symbol: 'NAV',
-      name: 'NAV - Navcoin',
+      symbol: "NAV",
+      name: "NAV - Navcoin",
       network: _networksExtensions.navcoin,
     },
   ],
   [
-    'NAS',
+    "NAS",
     {
-      symbol: 'NAS',
-      name: 'NAS - Nebulas',
+      symbol: "NAS",
+      name: "NAS - Nebulas",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'NEBL',
+    "NEBL",
     {
-      symbol: 'NEBL',
-      name: 'NEBL - Neblio',
+      symbol: "NEBL",
+      name: "NEBL - Neblio",
       network: _networksExtensions.neblio,
     },
   ],
   [
-    'NEOS',
+    "NEOS",
     {
-      symbol: 'NEOS',
-      name: 'NEOS - Neoscoin',
+      symbol: "NEOS",
+      name: "NEOS - Neoscoin",
       network: _networksExtensions.neoscoin,
     },
   ],
   [
-    'NIX',
+    "NIX",
     {
-      symbol: 'NIX',
-      name: 'NIX - NIX Platform',
+      symbol: "NIX",
+      name: "NIX - NIX Platform",
       network: _networksExtensions.nix,
     },
   ],
   [
-    'NLG',
+    "NLG",
     {
-      symbol: 'NLG',
-      name: 'NLG - Gulden',
+      symbol: "NLG",
+      name: "NLG - Gulden",
       network: _networksExtensions.gulden,
     },
   ],
   [
-    'NMC',
+    "NMC",
     {
-      symbol: 'NMC',
-      name: 'NMC - Namecoin',
+      symbol: "NMC",
+      name: "NMC - Namecoin",
       network: _networksExtensions.namecoin,
     },
   ],
   [
-    'NRG',
+    "NRG",
     {
-      symbol: 'NRG',
-      name: 'NRG - Energi',
+      symbol: "NRG",
+      name: "NRG - Energi",
       network: _networksExtensions.energi,
     },
   ],
   [
-    'NRO',
+    "NRO",
     {
-      symbol: 'NRO',
-      name: 'NRO - Neurocoin',
+      symbol: "NRO",
+      name: "NRO - Neurocoin",
       network: _networksExtensions.neurocoin,
     },
   ],
   [
-    'NSR',
+    "NSR",
     {
-      symbol: 'NSR',
-      name: 'NSR - Nushares',
+      symbol: "NSR",
+      name: "NSR - Nushares",
       network: _networksExtensions.nushares,
     },
   ],
   [
-    'NYC',
+    "NYC",
     {
-      symbol: 'NYC',
-      name: 'NYC - Newyorkc',
+      symbol: "NYC",
+      name: "NYC - Newyorkc",
       network: _networksExtensions.newyorkc,
     },
   ],
   [
-    'NVC',
+    "NVC",
     {
-      symbol: 'NVC',
-      name: 'NVC - Novacoin',
+      symbol: "NVC",
+      name: "NVC - Novacoin",
       network: _networksExtensions.novacoin,
     },
   ],
   [
-    'OK',
+    "OK",
     {
-      symbol: 'OK',
-      name: 'OK - Okcash',
+      symbol: "OK",
+      name: "OK - Okcash",
       network: _networksExtensions.okcash,
     },
   ],
   [
-    'OMNI',
+    "OMNI",
     {
-      symbol: 'OMNI',
-      name: 'OMNI - Omnicore',
+      symbol: "OMNI",
+      name: "OMNI - Omnicore",
       network: _networksExtensions.omnicore,
     },
   ],
   [
-    'ONION',
+    "ONION",
     {
-      symbol: 'ONION',
-      name: 'ONION - DeepOnion',
+      symbol: "ONION",
+      name: "ONION - DeepOnion",
       network: _networksExtensions.deeponion,
     },
   ],
   [
-    'ONX',
+    "ONX",
     {
-      symbol: 'ONX',
-      name: 'ONX - Onixcoin',
+      symbol: "ONX",
+      name: "ONX - Onixcoin",
       network: _networksExtensions.onixcoin,
     },
   ],
   [
-    'PART',
+    "PART",
     {
-      symbol: 'PART',
-      name: 'PART - Particl',
+      symbol: "PART",
+      name: "PART - Particl",
       network: _networksExtensions.particl,
     },
   ],
   [
-    'PHR',
+    "PHR",
     {
-      symbol: 'PHR',
-      name: 'PHR - Phore',
+      symbol: "PHR",
+      name: "PHR - Phore",
       network: _networksExtensions.phore,
     },
   ],
   [
-    'PINK',
+    "PINK",
     {
-      symbol: 'PINK',
-      name: 'PINK - Pinkcoin',
+      symbol: "PINK",
+      name: "PINK - Pinkcoin",
       network: _networksExtensions.pinkcoin,
     },
   ],
   [
-    'PIRL',
+    "PIRL",
     {
-      symbol: 'PIRL',
-      name: 'PIRL - Pirl',
+      symbol: "PIRL",
+      name: "PIRL - Pirl",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'PIVX',
+    "PIVX",
     {
-      symbol: 'PIVX',
-      name: 'PIVX - PIVX',
+      symbol: "PIVX",
+      name: "PIVX - PIVX",
       network: _networksExtensions.pivx,
     },
   ],
   [
-    'PIVX-T',
+    "PIVX-T",
     {
-      symbol: 'PIVX',
-      name: 'PIVX - PIVX Testnet',
+      symbol: "PIVX",
+      name: "PIVX - PIVX Testnet",
       network: _networksExtensions.pivxtestnet,
     },
   ],
   [
-    'POA',
+    "POA",
     {
-      symbol: 'POA',
-      name: 'POA - Poa',
+      symbol: "POA",
+      name: "POA - Poa",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'POSW',
+    "POSW",
     {
-      symbol: 'POSW',
-      name: 'POSW - POSWcoin',
+      symbol: "POSW",
+      name: "POSW - POSWcoin",
       network: _networksExtensions.poswcoin,
     },
   ],
   [
-    'POT',
+    "POT",
     {
-      symbol: 'POT',
-      name: 'POT - Potcoin',
+      symbol: "POT",
+      name: "POT - Potcoin",
       network: _networksExtensions.potcoin,
     },
   ],
   [
-    'PPC',
+    "PPC",
     {
-      symbol: 'PPC',
-      name: 'PPC - Peercoin',
+      symbol: "PPC",
+      name: "PPC - Peercoin",
       network: _networksExtensions.peercoin,
     },
   ],
   [
-    'PRJ',
+    "PRJ",
     {
-      symbol: 'PRJ',
-      name: 'PRJ - ProjectCoin',
+      symbol: "PRJ",
+      name: "PRJ - ProjectCoin",
       network: _networksExtensions.projectcoin,
     },
   ],
   [
-    'PSB',
+    "PSB",
     {
-      symbol: 'PSB',
-      name: 'PSB - Pesobit',
+      symbol: "PSB",
+      name: "PSB - Pesobit",
       network: _networksExtensions.pesobit,
     },
   ],
   [
-    'PUT',
+    "PUT",
     {
-      symbol: 'PUT',
-      name: 'PUT - Putincoin',
+      symbol: "PUT",
+      name: "PUT - Putincoin",
       network: _networksExtensions.putincoin,
     },
   ],
   [
-    'RPD',
+    "RPD",
     {
-      symbol: 'RPD',
-      name: 'RPD - Rapids',
+      symbol: "RPD",
+      name: "RPD - Rapids",
       network: _networksExtensions.rapids,
     },
   ],
   [
-    'RVN',
+    "RVN",
     {
-      symbol: 'RVN',
-      name: 'RVN - Ravencoin',
+      symbol: "RVN",
+      name: "RVN - Ravencoin",
       network: _networksExtensions.ravencoin,
     },
   ],
   [
-    'R',
+    "R",
     {
-      symbol: 'R',
-      name: 'R-BTC - RSK',
+      symbol: "R",
+      name: "R-BTC - RSK",
       network: _networksExtensions.rsk,
     },
   ],
   [
-    'tR',
+    "tR",
     {
-      symbol: 'tR',
-      name: 'tR-BTC - RSK Testnet',
+      symbol: "tR",
+      name: "tR-BTC - RSK Testnet",
       network: _networksExtensions.rsktestnet,
     },
   ],
   [
-    'RBY',
+    "RBY",
     {
-      symbol: 'RBY',
-      name: 'RBY - Rubycoin',
+      symbol: "RBY",
+      name: "RBY - Rubycoin",
       network: _networksExtensions.rubycoin,
     },
   ],
   [
-    'RDD',
+    "RDD",
     {
-      symbol: 'RDD',
-      name: 'RDD - Reddcoin',
+      symbol: "RDD",
+      name: "RDD - Reddcoin",
       network: _networksExtensions.reddcoin,
     },
   ],
   [
-    'RITO',
+    "RITO",
     {
-      symbol: 'RITO',
-      name: 'RITO - Ritocoin',
+      symbol: "RITO",
+      name: "RITO - Ritocoin",
       network: _networksExtensions.ritocoin,
     },
   ],
   [
-    'RUNE',
+    "RUNE",
     {
-      symbol: 'RUNE',
-      name: 'RUNE - THORChain',
+      symbol: "RUNE",
+      name: "RUNE - THORChain",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'RVR',
+    "RVR",
     {
-      symbol: 'RVR',
-      name: 'RVR - RevolutionVR',
+      symbol: "RVR",
+      name: "RVR - RevolutionVR",
       network: _networksExtensions.revolutionvr,
     },
   ],
   [
-    'SAFE',
+    "SAFE",
     {
-      symbol: 'SAFE',
-      name: 'SAFE - Safecoin',
+      symbol: "SAFE",
+      name: "SAFE - Safecoin",
       network: _networksExtensions.safecoin,
     },
   ],
   [
-    'SCRIBE',
+    "SCRIBE",
     {
-      symbol: 'SCRIBE',
-      name: 'SCRIBE - Scribe',
+      symbol: "SCRIBE",
+      name: "SCRIBE - Scribe",
       network: _networksExtensions.scribe,
     },
   ],
   [
-    'SLS',
+    "SLS",
     {
-      symbol: 'SLS',
-      name: 'SLS - Salus',
+      symbol: "SLS",
+      name: "SLS - Salus",
       network: _networksExtensions.salus,
     },
   ],
   [
-    'SDC',
+    "SDC",
     {
-      symbol: 'SDC',
-      name: 'SDC - ShadowCash',
+      symbol: "SDC",
+      name: "SDC - ShadowCash",
       network: _networksExtensions.shadow,
     },
   ],
   [
-    'SDC-T',
+    "SDC-T",
     {
-      symbol: 'SDC',
-      name: 'SDC - ShadowCash Testnet',
+      symbol: "SDC",
+      name: "SDC - ShadowCash Testnet",
       network: _networksExtensions.shadowtn,
     },
   ],
   [
-    'SLM',
+    "SLM",
     {
-      symbol: 'SLM',
-      name: 'SLM - Slimcoin',
+      symbol: "SLM",
+      name: "SLM - Slimcoin",
       network: _networksExtensions.slimcoin,
     },
   ],
   [
-    'SLM-T',
+    "SLM-T",
     {
-      symbol: 'SLM',
-      name: 'SLM - Slimcoin Testnet',
+      symbol: "SLM",
+      name: "SLM - Slimcoin Testnet",
       network: _networksExtensions.slimcointn,
     },
   ],
   [
-    'SLP',
+    "SLP",
     {
-      symbol: 'SLP',
-      name: 'SLP - Simple Ledger Protocol',
+      symbol: "SLP",
+      name: "SLP - Simple Ledger Protocol",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'SLR',
+    "SLR",
     {
-      symbol: 'SLR',
-      name: 'SLR - Solarcoin',
+      symbol: "SLR",
+      name: "SLR - Solarcoin",
       network: _networksExtensions.solarcoin,
     },
   ],
   [
-    'SMLY',
+    "SMLY",
     {
-      symbol: 'SMLY',
-      name: 'SMLY - Smileycoin',
+      symbol: "SMLY",
+      name: "SMLY - Smileycoin",
       network: _networksExtensions.smileycoin,
     },
   ],
   [
-    'STASH',
+    "STASH",
     {
-      symbol: 'STASH',
-      name: 'STASH - Stash',
+      symbol: "STASH",
+      name: "STASH - Stash",
       network: _networksExtensions.stash,
     },
   ],
   [
-    'STASH-T',
+    "STASH-T",
     {
-      symbol: 'STASH',
-      name: 'STASH - Stash Testnet',
+      symbol: "STASH",
+      name: "STASH - Stash Testnet",
       network: _networksExtensions.stashtn,
     },
   ],
   [
-    'STRAT',
+    "STRAT",
     {
-      symbol: 'STRAT',
-      name: 'STRAT - Stratis',
+      symbol: "STRAT",
+      name: "STRAT - Stratis",
       network: _networksExtensions.stratis,
     },
   ],
   [
-    'SUGAR',
+    "SUGAR",
     {
-      symbol: 'SUGAR',
-      name: 'SUGAR - Sugarchain',
+      symbol: "SUGAR",
+      name: "SUGAR - Sugarchain",
       network: _networksExtensions.sugarchain,
     },
   ],
   [
-    'TUGAR',
+    "TUGAR",
     {
-      symbol: 'TUGAR',
-      name: 'TUGAR - Sugarchain Testnet',
+      symbol: "TUGAR",
+      name: "TUGAR - Sugarchain Testnet",
       network: _networksExtensions.sugarchaintestnet,
     },
   ],
   [
-    'SWTC',
+    "SWTC",
     {
-      symbol: 'SWTC',
-      name: 'SWTC - Jingtum',
+      symbol: "SWTC",
+      name: "SWTC - Jingtum",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'TSTRAT',
+    "TSTRAT",
     {
-      symbol: 'TSTRAT',
-      name: 'TSTRAT - Stratis Testnet',
+      symbol: "TSTRAT",
+      name: "TSTRAT - Stratis Testnet",
       network: _networksExtensions.stratistest,
     },
   ],
   [
-    'SYS',
+    "SYS",
     {
-      symbol: 'SYS',
-      name: 'SYS - Syscoin',
+      symbol: "SYS",
+      name: "SYS - Syscoin",
       network: _networksExtensions.syscoin,
     },
   ],
   [
-    'THC',
+    "THC",
     {
-      symbol: 'THC',
-      name: 'THC - Hempcoin',
+      symbol: "THC",
+      name: "THC - Hempcoin",
       network: _networksExtensions.hempcoin,
     },
   ],
   [
-    'THT',
+    "THT",
     {
-      symbol: 'THT',
-      name: 'THT - Thought',
+      symbol: "THT",
+      name: "THT - Thought",
       network: _networksExtensions.thought,
     },
   ],
   [
-    'TOA',
+    "TOA",
     {
-      symbol: 'TOA',
-      name: 'TOA - Toa',
+      symbol: "TOA",
+      name: "TOA - Toa",
       network: _networksExtensions.toa,
     },
   ],
   [
-    'TRX',
+    "TRX",
     {
-      symbol: 'TRX',
-      name: 'TRX - Tron',
+      symbol: "TRX",
+      name: "TRX - Tron",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'TWINS',
+    "TWINS",
     {
-      symbol: 'TWINS',
-      name: 'TWINS - TWINS Testnet',
+      symbol: "TWINS",
+      name: "TWINS - TWINS Testnet",
       network: _networksExtensions.twinstestnet,
     },
   ],
   [
-    'USC',
+    "USC",
     {
-      symbol: 'USC',
-      name: 'USC - Ultimatesecurecash',
+      symbol: "USC",
+      name: "USC - Ultimatesecurecash",
       network: _networksExtensions.ultimatesecurecash,
     },
   ],
   [
-    'USNBT',
+    "USNBT",
     {
-      symbol: 'USNBT',
-      name: 'USNBT - NuBits',
+      symbol: "USNBT",
+      name: "USNBT - NuBits",
       network: _networksExtensions.nubits,
     },
   ],
   [
-    'UNO',
+    "UNO",
     {
-      symbol: 'UNO',
-      name: 'UNO - Unobtanium',
+      symbol: "UNO",
+      name: "UNO - Unobtanium",
       network: _networksExtensions.unobtanium,
     },
   ],
   [
-    'VASH',
+    "VASH",
     {
-      symbol: 'VASH',
-      name: 'VASH - Vpncoin',
+      symbol: "VASH",
+      name: "VASH - Vpncoin",
       network: _networksExtensions.vpncoin,
     },
   ],
   [
-    'VET',
+    "VET",
     {
-      symbol: 'VET',
-      name: 'VET - VeChain',
+      symbol: "VET",
+      name: "VET - VeChain",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'VIA',
+    "VIA",
     {
-      symbol: 'VIA',
-      name: 'VIA - Viacoin',
+      symbol: "VIA",
+      name: "VIA - Viacoin",
       network: _networksExtensions.viacoin,
     },
   ],
   [
-    'VIA-T',
+    "VIA-T",
     {
-      symbol: 'VIA',
-      name: 'VIA - Viacoin Testnet',
+      symbol: "VIA",
+      name: "VIA - Viacoin Testnet",
       network: _networksExtensions.viacointestnet,
     },
   ],
   [
-    'VIVO',
+    "VIVO",
     {
-      symbol: 'VIVO',
-      name: 'VIVO - Vivo',
+      symbol: "VIVO",
+      name: "VIVO - Vivo",
       network: _networksExtensions.vivo,
     },
   ],
   [
-    'VTC',
+    "VTC",
     {
-      symbol: 'VTC',
-      name: 'VTC - Vertcoin',
+      symbol: "VTC",
+      name: "VTC - Vertcoin",
       network: _networksExtensions.vertcoin,
     },
   ],
   [
-    'WGR',
+    "WGR",
     {
-      symbol: 'WGR',
-      name: 'WGR - Wagerr',
+      symbol: "WGR",
+      name: "WGR - Wagerr",
       network: _networksExtensions.wagerr,
     },
   ],
   [
-    'WC',
+    "WC",
     {
-      symbol: 'WC',
-      name: 'WC - Wincoin',
+      symbol: "WC",
+      name: "WC - Wincoin",
       network: _networksExtensions.wincoin,
     },
   ],
   [
-    'XAX',
+    "XAX",
     {
-      symbol: 'XAX',
-      name: 'XAX - Artax',
+      symbol: "XAX",
+      name: "XAX - Artax",
       network: _networksExtensions.artax,
     },
   ],
   [
-    'XBC',
+    "XBC",
     {
-      symbol: 'XBC',
-      name: 'XBC - Bitcoinplus',
+      symbol: "XBC",
+      name: "XBC - Bitcoinplus",
       network: _networksExtensions.bitcoinplus,
     },
   ],
   [
-    'XLM',
+    "XLM",
     {
-      symbol: 'XLM',
-      name: 'XLM - Stellar',
+      symbol: "XLM",
+      name: "XLM - Stellar",
       network: _networksExtensions.dummyNetwork,
     },
   ],
   [
-    'XMY',
+    "XMY",
     {
-      symbol: 'XMY',
-      name: 'XMY - Myriadcoin',
+      symbol: "XMY",
+      name: "XMY - Myriadcoin",
       network: _networksExtensions.myriadcoin,
     },
   ],
   [
-    'XRP',
+    "XRP",
     {
-      symbol: 'XRP',
-      name: 'XRP - Ripple',
+      symbol: "XRP",
+      name: "XRP - Ripple",
       network: _networksExtensions.bitcoin,
     },
   ],
   [
-    'XVC',
+    "XVC",
     {
-      symbol: 'XVC',
-      name: 'XVC - Vcash',
+      symbol: "XVC",
+      name: "XVC - Vcash",
       network: _networksExtensions.vcash,
     },
   ],
   [
-    'XVG',
+    "XVG",
     {
-      symbol: 'XVG',
-      name: 'XVG - Verge',
+      symbol: "XVG",
+      name: "XVG - Verge",
       network: _networksExtensions.verge,
     },
   ],
   [
-    'XUEZ',
+    "XUEZ",
     {
-      symbol: 'XUEZ',
-      name: 'XUEZ - Xuez',
+      symbol: "XUEZ",
+      name: "XUEZ - Xuez",
       network: _networksExtensions.xuez,
     },
   ],
   [
-    'XWCC',
+    "XWCC",
     {
-      symbol: 'XWCC',
-      name: 'XWCC - Whitecoin Classic',
+      symbol: "XWCC",
+      name: "XWCC - Whitecoin Classic",
       network: _networksExtensions.whitecoin,
     },
   ],
   [
-    'XZC',
+    "XZC",
     {
-      symbol: 'XZC',
-      name: 'XZC - Zcoin (rebranded to Firo)',
+      symbol: "XZC",
+      name: "XZC - Zcoin (rebranded to Firo)",
       network: _networksExtensions.zcoin,
     },
   ],
   [
-    'ZBC',
+    "ZBC",
     {
-      symbol: 'ZBC',
-      name: 'ZBC - ZooBlockchain',
+      symbol: "ZBC",
+      name: "ZBC - ZooBlockchain",
       network: _networksExtensions.zoobc,
     },
   ],
   [
-    'ZCL',
+    "ZCL",
     {
-      symbol: 'ZCL',
-      name: 'ZCL - Zclassic',
+      symbol: "ZCL",
+      name: "ZCL - Zclassic",
       network: _networksExtensions.zclassic,
     },
   ],
   [
-    'ZEC',
+    "ZEC",
     {
-      symbol: 'ZEC',
-      name: 'ZEC - Zcash',
+      symbol: "ZEC",
+      name: "ZEC - Zcash",
       network: _networksExtensions.zcash,
     },
   ],
   [
-    'ZEN',
+    "ZEN",
     {
-      symbol: 'ZEN',
-      name: 'ZEN - Horizen',
+      symbol: "ZEN",
+      name: "ZEN - Horizen",
       network: _networksExtensions.zencash,
     },
   ],
   [
-    'XWC',
+    "XWC",
     {
-      symbol: 'XWC',
-      name: 'XWC - Whitecoin',
+      symbol: "XWC",
+      name: "XWC - Whitecoin",
       network: _networksExtensions.bitcoin,
     },
   ],
 ]);
 export enum COIN_SYMBOL {
-  ETH = 'ETH',
-  TRX = 'TRX',
+  ETH = "ETH",
+  TRX = "TRX",
   // AC = 'AC',
   // ACC = 'ACC',
   // AGM = 'AGM',
@@ -3760,26 +3587,26 @@ export const getNetWorkInfo = (symbol: COIN_SYMBOL) => {
 export const networkIsEthereum = (symbol: COIN_SYMBOL) => {
   const name = getNetWorkInfo(symbol).name;
   return (
-    name == 'ETH - Ethereum' ||
-    name == 'ETC - Ethereum Classic' ||
-    name == 'EWT - EnergyWeb' ||
-    name == 'PIRL - Pirl' ||
-    name == 'MIX - MIX' ||
-    name == 'MOAC - MOAC' ||
-    name == 'MUSIC - Musicoin' ||
-    name == 'POA - Poa' ||
-    name == 'EXP - Expanse' ||
-    name == 'CLO - Callisto' ||
-    name == 'DXN - DEXON' ||
-    name == 'ELLA - Ellaism' ||
-    name == 'ESN - Ethersocial Network' ||
-    name == 'VET - VeChain' ||
-    name == 'ERE - EtherCore' ||
-    name == 'BSC - Binance Smart Chain'
+    name == "ETH - Ethereum" ||
+    name == "ETC - Ethereum Classic" ||
+    name == "EWT - EnergyWeb" ||
+    name == "PIRL - Pirl" ||
+    name == "MIX - MIX" ||
+    name == "MOAC - MOAC" ||
+    name == "MUSIC - Musicoin" ||
+    name == "POA - Poa" ||
+    name == "EXP - Expanse" ||
+    name == "CLO - Callisto" ||
+    name == "DXN - DEXON" ||
+    name == "ELLA - Ellaism" ||
+    name == "ESN - Ethersocial Network" ||
+    name == "VET - VeChain" ||
+    name == "ERE - EtherCore" ||
+    name == "BSC - Binance Smart Chain"
   );
 };
 
 export const networkIsRsk = (symbol: COIN_SYMBOL) => {
   const name = getNetWorkInfo(symbol).name;
-  return name == 'R-BTC - RSK' || name == 'tR-BTC - RSK Testnet';
+  return name == "R-BTC - RSK" || name == "tR-BTC - RSK Testnet";
 };
