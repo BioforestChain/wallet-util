@@ -1,6 +1,7 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.testEcc = void 0;
+//@ts-ignore
 const h = (hex) => Buffer.from(hex, 'hex');
 function testEcc(ecc) {
   assert(
@@ -44,6 +45,7 @@ function testEcc(ecc) {
   );
   // 1 + 0 == 1
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.privateAdd(
         h('0000000000000000000000000000000000000000000000000000000000000001'),
@@ -61,6 +63,7 @@ function testEcc(ecc) {
     ) === null,
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.privateAdd(
         h('e211078564db65c3ce7704f08262b1f38f1ef412ad15b5ac2d76657a63b2c500'),
@@ -71,6 +74,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.privateNegate(
         h('0000000000000000000000000000000000000000000000000000000000000001'),
@@ -80,6 +84,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.privateNegate(
         h('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036413e'),
@@ -89,6 +94,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.privateNegate(
         h('b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af'),
@@ -98,6 +104,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.pointCompress(
         h(
@@ -110,6 +117,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.pointCompress(
         h(
@@ -124,6 +132,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.pointCompress(
         h('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'),
@@ -134,6 +143,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.pointCompress(
         h('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'),
@@ -146,6 +156,7 @@ function testEcc(ecc) {
     ),
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.pointFromScalar(
         h('b1121e4088a66a28f5b6b0f5844943ecd9f610196d7bb83b25214b60452c09af'),
@@ -165,6 +176,7 @@ function testEcc(ecc) {
     h('a8397a935f0dfceba6ba9618f6451ef4d80637abf4e6af2669fbc9de6a8fd2ac'),
   );
   assert(
+    //@ts-ignore
     Buffer.from(xOnlyRes.xOnlyPubkey).equals(
       h('e478f99dab91052ab39a33ea35fd5e6e4933f4d28023cd597c9a1f6760346adf'),
     ) && xOnlyRes.parity === 1,
@@ -174,11 +186,13 @@ function testEcc(ecc) {
     h('823c3cd2142744b075a87eade7e1b8678ba308d566226a0056ca2b7a76f86b47'),
   );
   assert(
+    //@ts-ignore
     Buffer.from(xOnlyRes.xOnlyPubkey).equals(
       h('9534f8dc8c6deda2dc007655981c78b49c5d96c778fbf363462a11ec9dfd948c'),
     ) && xOnlyRes.parity === 0,
   );
   assert(
+    //@ts-ignore
     Buffer.from(
       ecc.sign(
         h('5e9f0a0d593efdcf78ac923bc3313e4e7d408d574354ee2b3288c0da9fbba6ed'),
@@ -201,6 +215,7 @@ function testEcc(ecc) {
   );
   if (ecc.signSchnorr) {
     assert(
+      //@ts-ignore
       Buffer.from(
         ecc.signSchnorr(
           h('7e2d58d8b3bcdf1abadec7829054f90dda9805aab56c77333024b9d0a508b75c'),

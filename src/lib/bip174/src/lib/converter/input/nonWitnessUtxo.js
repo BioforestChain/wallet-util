@@ -13,6 +13,7 @@ function decode(keyVal) {
 exports.decode = decode;
 function encode(data) {
   return {
+    //@ts-ignore
     key: Buffer.from([typeFields_1.InputTypes.NON_WITNESS_UTXO]),
     value: data,
   };
@@ -20,6 +21,7 @@ function encode(data) {
 exports.encode = encode;
 exports.expected = 'Buffer';
 function check(data) {
+  //@ts-ignore
   return Buffer.isBuffer(data);
 }
 exports.check = check;

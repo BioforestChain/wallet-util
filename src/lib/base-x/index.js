@@ -5,7 +5,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file LICENSE or http://www.opensource.org/licenses/mit-license.php.
 
-import { Buffer } from '../buffer';
+import { Buffer } from '../buffer/index.js';
 export function base(ALPHABET) {
   if (ALPHABET.length >= 255) {
     throw new TypeError('Alphabet too long');
@@ -28,6 +28,7 @@ export function base(ALPHABET) {
   var iFACTOR = Math.log(256) / Math.log(BASE); // log(256) / log(BASE), rounded up
   function encode(source) {
     if (Array.isArray(source) || source instanceof Uint8Array) {
+      //@ts-ignore
       source = Buffer.from(source);
     }
     if (!Buffer.isBuffer(source)) {

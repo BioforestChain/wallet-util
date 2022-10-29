@@ -44,6 +44,7 @@ function reverseBuffer(buffer) {
 }
 exports.reverseBuffer = reverseBuffer;
 function cloneBuffer(buffer) {
+  //@ts-ignore
   const clone = Buffer.allocUnsafe(buffer.length);
   buffer.copy(clone);
   return clone;
@@ -59,6 +60,7 @@ class BufferWriter {
     typeforce(types.tuple(types.Buffer, types.UInt32), [buffer, offset]);
   }
   static withCapacity(size) {
+    //@ts-ignore
     return new BufferWriter(Buffer.alloc(size));
   }
   writeUInt8(i) {

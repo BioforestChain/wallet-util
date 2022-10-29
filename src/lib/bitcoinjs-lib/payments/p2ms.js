@@ -30,6 +30,7 @@ function p2ms(a, opts) {
       (opts.allowIncomplete && x === OPS.OP_0) !== undefined
     );
   }
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),
@@ -113,6 +114,7 @@ function p2ms(a, opts) {
         throw new TypeError('Output is invalid');
       if (o.m <= 0 || o.n > 16 || o.m > o.n || o.n !== chunks.length - 3)
         throw new TypeError('Output is invalid');
+      //@ts-ignore
       if (!o.pubkeys.every(x => (0, types_1.isPoint)(x)))
         throw new TypeError('Output is invalid');
       if (a.m !== undefined && a.m !== o.m) throw new TypeError('m mismatch');

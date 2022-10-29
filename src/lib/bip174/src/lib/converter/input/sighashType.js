@@ -12,7 +12,9 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(data) {
+  //@ts-ignore
   const key = Buffer.from([typeFields_1.InputTypes.SIGHASH_TYPE]);
+  //@ts-ignore
   const value = Buffer.allocUnsafe(4);
   value.writeUInt32LE(data, 0);
   return {

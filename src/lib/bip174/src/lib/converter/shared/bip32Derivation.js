@@ -38,9 +38,12 @@ function makeConverter(TYPE_BYTE, isValidPubkey = isValidDERKey) {
     return data;
   }
   function encode(data) {
+    //@ts-ignore
     const head = Buffer.from([TYPE_BYTE]);
+    //@ts-ignore
     const key = Buffer.concat([head, data.pubkey]);
     const splitPath = data.path.split('/');
+    //@ts-ignore
     const value = Buffer.allocUnsafe(splitPath.length * 4);
     data.masterFingerprint.copy(value, 0);
     let offset = 4;
@@ -60,7 +63,9 @@ function makeConverter(TYPE_BYTE, isValidPubkey = isValidDERKey) {
     '{ masterFingerprint: Buffer; pubkey: Buffer; path: string; }';
   function check(data) {
     return (
+      //@ts-ignore
       Buffer.isBuffer(data.pubkey) &&
+      //@ts-ignore
       Buffer.isBuffer(data.masterFingerprint) &&
       typeof data.path === 'string' &&
       isValidPubkey(data.pubkey) &&

@@ -18,18 +18,21 @@ function encode (number, buffer, offset) {
   // 8 bit
   if (number < 0xfd) {
     buffer.writeUInt8(number, offset)
+    //@ts-ignore
     encode.bytes = 1
 
   // 16 bit
   } else if (number <= 0xffff) {
     buffer.writeUInt8(0xfd, offset)
     buffer.writeUInt16LE(number, offset + 1)
+    //@ts-ignore
     encode.bytes = 3
 
   // 32 bit
   } else if (number <= 0xffffffff) {
     buffer.writeUInt8(0xfe, offset)
     buffer.writeUInt32LE(number, offset + 1)
+    //@ts-ignore
     encode.bytes = 5
 
   // 64 bit
@@ -37,6 +40,7 @@ function encode (number, buffer, offset) {
     buffer.writeUInt8(0xff, offset)
     buffer.writeUInt32LE(number >>> 0, offset + 1)
     buffer.writeUInt32LE((number / 0x100000000) | 0, offset + 5)
+    //@ts-ignore
     encode.bytes = 9
   }
 
@@ -51,21 +55,25 @@ function decode (buffer, offset) {
 
   // 8 bit
   if (first < 0xfd) {
+    //@ts-ignore
     decode.bytes = 1
     return first
 
   // 16 bit
   } else if (first === 0xfd) {
+    //@ts-ignore
     decode.bytes = 3
     return buffer.readUInt16LE(offset + 1)
 
   // 32 bit
   } else if (first === 0xfe) {
+    //@ts-ignore
     decode.bytes = 5
     return buffer.readUInt32LE(offset + 1)
 
   // 64 bit
   } else {
+    //@ts-ignore
     decode.bytes = 9
     var lo = buffer.readUInt32LE(offset + 1)
     var hi = buffer.readUInt32LE(offset + 5)

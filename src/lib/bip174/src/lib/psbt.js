@@ -13,10 +13,12 @@ class Psbt {
     };
   }
   static fromBase64(data, txFromBuffer) {
+    //@ts-ignore
     const buffer = Buffer.from(data, 'base64');
     return this.fromBuffer(buffer, txFromBuffer);
   }
   static fromHex(data, txFromBuffer) {
+    //@ts-ignore
     const buffer = Buffer.from(data, 'hex');
     return this.fromBuffer(buffer, txFromBuffer);
   }

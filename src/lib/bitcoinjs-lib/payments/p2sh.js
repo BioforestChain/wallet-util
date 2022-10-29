@@ -21,6 +21,7 @@ function p2sh(a, opts) {
   if (!a.address && !a.hash && !a.output && !a.redeem && !a.input)
     throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),
@@ -61,6 +62,7 @@ function p2sh(a, opts) {
     const lastChunk = chunks[chunks.length - 1];
     return {
       network,
+      //@ts-ignore
       output: lastChunk === OPS.OP_FALSE ? Buffer.from([]) : lastChunk,
       input: bscript.compile(chunks.slice(0, -1)),
       witness: a.witness || [],
@@ -69,6 +71,7 @@ function p2sh(a, opts) {
   // output dependents
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
+    //@ts-ignore
     const payload = Buffer.allocUnsafe(21);
     payload.writeUInt8(o.network.scriptHash, 0);
     o.hash.copy(payload, 1);
@@ -106,6 +109,7 @@ function p2sh(a, opts) {
     return nameParts.join('-');
   });
   if (opts.validate) {
+    //@ts-ignore
     let hash = Buffer.from([]);
     if (a.address) {
       if (_address().version !== network.scriptHash)
@@ -160,6 +164,7 @@ function p2sh(a, opts) {
     if (a.input) {
       const chunks = _chunks();
       if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
+      //@ts-ignore
       if (!Buffer.isBuffer(_redeem().output))
         throw new TypeError('Input is invalid');
       checkRedeem(_redeem());

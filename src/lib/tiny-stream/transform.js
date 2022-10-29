@@ -102,10 +102,12 @@ function Transform(options) {
   // that Readable wants before the first _read call, so unset the
   // sync guard flag.
 
+  //@ts-ignore
   this._readableState.sync = false
   this[kCallback] = null
 
   if (options) {
+    //@ts-ignore
     if (typeof options.transform === 'function') this._transform = options.transform
     if (typeof options.flush === 'function') this._flush = options.flush
   } // When the writable side finishes, then flush out anything remaining.
@@ -113,6 +115,7 @@ function Transform(options) {
   // instead of or in addition to _flush. By using 'prefinish' instead of
   // implementing _final we continue supporting this unfortunate use case.
 
+  //@ts-ignore
   this.on('prefinish', prefinish)
 }
 
@@ -154,14 +157,18 @@ function prefinish() {
   }
 }
 
+//@ts-ignore
 Transform.prototype._final = final
 
+//@ts-ignore
 Transform.prototype._transform = function (chunk, encoding, callback) {
   throw new ERR_METHOD_NOT_IMPLEMENTED('_transform()')
 }
 
 Transform.prototype._write = function (chunk, encoding, callback) {
+  //@ts-ignore
   const rState = this._readableState
+  //@ts-ignore
   const wState = this._writableState
   const length = rState.length
 
@@ -172,6 +179,7 @@ Transform.prototype._write = function (chunk, encoding, callback) {
     }
 
     if (val != null) {
+      //@ts-ignore
       this.push(val)
     }
 

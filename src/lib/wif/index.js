@@ -27,6 +27,7 @@ function decodeRaw (buffer, version) {
 }
 
 function encodeRaw (version, privateKey, compressed) {
+  //@ts-ignore
   var result = new Buffer(compressed ? 34 : 33)
 
   result.writeUInt8(version, 0)

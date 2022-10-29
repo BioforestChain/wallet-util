@@ -4,6 +4,7 @@ function tfNoThrow (type, value, strict) {
   try {
     return typeforce(type, value, strict)
   } catch (e) {
+    //@ts-ignore
     tfNoThrow.error = e
     return false
   }

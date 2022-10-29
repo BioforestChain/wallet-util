@@ -100,6 +100,7 @@ function E(code, message, Base) {
     }
   })
   NodeError.prototype.code = code
+  //@ts-ignore
   NodeError.prototype[kIsNodeError] = true
   codes[code] = NodeError
 }
@@ -122,7 +123,9 @@ function aggregateTwoErrors(innerError, outerError) {
       return outerError
     }
 
+    //@ts-ignore
     const err = new AggregateError([outerError, innerError], outerError.message)
+    //@ts-ignore
     err.code = outerError.code
     return err
   }
@@ -136,6 +139,7 @@ class AbortError extends Error {
       throw new codes.ERR_INVALID_ARG_TYPE('options', 'Object', options)
     }
 
+    //@ts-ignore
     super(message, options)
     this.code = 'ABORT_ERR'
     this.name = 'AbortError'
@@ -184,6 +188,7 @@ E(
       const pos = types.indexOf('object')
 
       if (pos !== -1) {
+        //@ts-ignore
         types.splice(types, pos, 1)
         instances.push('Object')
       }
@@ -267,17 +272,21 @@ E(
       ) {
         msg += `. Received an instance of ${actual.constructor.name}`
       } else {
+        //@ts-ignore
         const inspected = inspect(actual, {
           depth: -1
         })
         msg += `. Received ${inspected}`
       }
     } else {
+      //@ts-ignore
       let inspected = inspect(actual, {
         colors: false
       })
 
+      //@ts-ignore
       if (inspected.length > 25) {
+        //@ts-ignore
         inspected = `${inspected.slice(0, 25)}...`
       }
 
@@ -293,7 +302,9 @@ E(
   (name, value, reason = 'is invalid') => {
     let inspected = inspect(value)
 
+    //@ts-ignore
     if (inspected.length > 128) {
+      //@ts-ignore
       inspected = inspected.slice(0, 128) + '...'
     }
 
@@ -325,20 +336,24 @@ E(
     assert(args.length > 0, 'At least one arg needs to be specified')
     let msg
     const len = args.length
+    //@ts-ignore
     args = (Array.isArray(args) ? args : [args]).map((a) => `"${a}"`).join(' or ')
 
     switch (len) {
       case 1:
+        //@ts-ignore
         msg += `The ${args[0]} argument`
         break
 
       case 2:
+        //@ts-ignore
         msg += `The ${args[0]} and ${args[1]} arguments`
         break
 
       default:
         {
           const last = args.pop()
+          //@ts-ignore
           msg += `The ${args.join(', ')}, and ${last} arguments`
         }
         break

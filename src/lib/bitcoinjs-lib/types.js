@@ -27,11 +27,13 @@ function isPoint(p) {
 exports.isPoint = isPoint;
 const UINT31_MAX = Math.pow(2, 31) - 1;
 function UInt31(value) {
+  //@ts-ignore
   return exports.typeforce.UInt32(value) && value <= UINT31_MAX;
 }
 exports.UInt31 = UInt31;
 function BIP32Path(value) {
   return (
+    //@ts-ignore
     exports.typeforce.String(value) && !!value.match(/^(m\/)?(\d+'?\/)*\d+'?$/)
   );
 }
@@ -41,6 +43,7 @@ BIP32Path.toJSON = () => {
 };
 function Signer(obj) {
   return (
+    //@ts-ignore
     (exports.typeforce.Buffer(obj.publicKey) ||
       typeof obj.getPublicKey === 'function') &&
     typeof obj.sign === 'function'
@@ -49,39 +52,66 @@ function Signer(obj) {
 exports.Signer = Signer;
 const SATOSHI_MAX = 21 * 1e14;
 function Satoshi(value) {
+  //@ts-ignore
   return exports.typeforce.UInt53(value) && value <= SATOSHI_MAX;
 }
 exports.Satoshi = Satoshi;
 // external dependent types
+//@ts-ignore
 exports.ECPoint = exports.typeforce.quacksLike('Point');
 // exposed, external API
 exports.Network = exports.typeforce.compile({
+  //@ts-ignore
   messagePrefix: exports.typeforce.oneOf(
+    //@ts-ignore
     exports.typeforce.Buffer,
+    //@ts-ignore
     exports.typeforce.String,
   ),
   bip32: {
+    //@ts-ignore
     public: exports.typeforce.UInt32,
+    //@ts-ignore
     private: exports.typeforce.UInt32,
   },
+  //@ts-ignore
   pubKeyHash: exports.typeforce.UInt8,
+  //@ts-ignore
   scriptHash: exports.typeforce.UInt8,
+  //@ts-ignore
   wif: exports.typeforce.UInt8,
 });
+//@ts-ignore
 exports.Buffer256bit = exports.typeforce.BufferN(32);
+//@ts-ignore
 exports.Hash160bit = exports.typeforce.BufferN(20);
+//@ts-ignore
 exports.Hash256bit = exports.typeforce.BufferN(32);
+//@ts-ignore
 exports.Number = exports.typeforce.Number; // tslint:disable-line variable-name
+//@ts-ignore
 exports.Array = exports.typeforce.Array;
+//@ts-ignore
 exports.Boolean = exports.typeforce.Boolean; // tslint:disable-line variable-name
+//@ts-ignore
 exports.String = exports.typeforce.String; // tslint:disable-line variable-name
+//@ts-ignore
 exports.Buffer = exports.typeforce.Buffer;
+//@ts-ignore
 exports.Hex = exports.typeforce.Hex;
+//@ts-ignore
 exports.maybe = exports.typeforce.maybe;
+//@ts-ignore
 exports.tuple = exports.typeforce.tuple;
+//@ts-ignore
 exports.UInt8 = exports.typeforce.UInt8;
+//@ts-ignore
 exports.UInt32 = exports.typeforce.UInt32;
+//@ts-ignore
 exports.Function = exports.typeforce.Function;
+//@ts-ignore
 exports.BufferN = exports.typeforce.BufferN;
+//@ts-ignore
 exports.Null = exports.typeforce.Null;
+//@ts-ignore
 exports.oneOf = exports.typeforce.oneOf;

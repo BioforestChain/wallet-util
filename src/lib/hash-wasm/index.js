@@ -60,6 +60,7 @@ class Mutex {
     let begin = () => {};
     this.mutex = this.mutex.then(() => new Promise(begin));
     return new Promise((res) => {
+      //@ts-ignore
       begin = res;
     });
   }
@@ -83,6 +84,7 @@ function getGlobal() {
   // eslint-disable-next-line no-restricted-globals
   if (typeof self !== 'undefined') return self;
   if (typeof window !== 'undefined') return window;
+  //@ts-ignore
   return global;
 }
 const globalObject = getGlobal();
@@ -411,6 +413,7 @@ function WASMInterface(binary, hashLength) {
     }
     // shorthand for (init + update + digest) for better performance
     const calculate = (data, initParam = null, digestParam = null) => {
+      //@ts-ignore
       if (!canSimplify(data, initParam)) {
         init(initParam);
         update(data);
@@ -1806,7 +1809,6 @@ function xxhash32(data, seed = 0) {
 }
 /**
  * Creates a new xxHash32 hash instance
- * @param data Input data (string, Buffer or TypedArray)
  * @param seed Number used to initialize the internal state of the algorithm (defaults to 0)
  */
 function createXXHash32(seed = 0) {

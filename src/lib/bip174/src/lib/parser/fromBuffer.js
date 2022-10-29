@@ -122,6 +122,7 @@ function psbtFromBuffer(buffer, txGetter) {
 }
 exports.psbtFromBuffer = psbtFromBuffer;
 function checkKeyBuffer(type, keyBuf, keyNum) {
+  //@ts-ignore
   if (!keyBuf.equals(Buffer.from([keyNum]))) {
     throw new Error(
       `Format Error: Invalid ${type} key: ${keyBuf.toString('hex')}`,

@@ -55,11 +55,13 @@ class Block {
     return block;
   }
   static fromHex(hex) {
+    //@ts-ignore
     return Block.fromBuffer(Buffer.from(hex, 'hex'));
   }
   static calculateTarget(bits) {
     const exponent = ((bits & 0xff000000) >> 24) - 3;
     const mantissa = bits & 0x007fffff;
+    //@ts-ignore
     const target = Buffer.alloc(32, 0);
     target.writeUIntBE(mantissa, 29 - exponent, 3);
     return target;
@@ -72,9 +74,11 @@ class Block {
     const hashes = transactions.map(transaction =>
       transaction.getHash(forWitness),
     );
+    //@ts-ignore
     const rootHash = (0, merkle_1.fastMerkleRoot)(hashes, bcrypto.hash256);
     return forWitness
       ? bcrypto.hash256(
+          //@ts-ignore
           Buffer.concat([rootHash, transactions[0].ins[0].witness[0]]),
         )
       : rootHash;
@@ -87,17 +91,20 @@ class Block {
     // If multiple commits are found, the output with highest index is assumed.
     const witnessCommits = this.transactions[0].outs
       .filter(out =>
+        //@ts-ignore
         out.script.slice(0, 6).equals(Buffer.from('6a24aa21a9ed', 'hex')),
       )
       .map(out => out.script.slice(6, 38));
     if (witnessCommits.length === 0) return null;
     // Use the commit with the highest output (should only be one though)
     const result = witnessCommits[witnessCommits.length - 1];
+    //@ts-ignore
     if (!(result instanceof Buffer && result.length === 32)) return null;
     return result;
   }
   hasWitnessCommit() {
     if (
+      //@ts-ignore
       this.witnessCommit instanceof Buffer &&
       this.witnessCommit.length === 32
     )
@@ -125,6 +132,7 @@ class Block {
     return bcrypto.hash256(this.toBuffer(true));
   }
   getId() {
+    //@ts-ignore
     return (0, bufferutils_1.reverseBuffer)(this.getHash()).toString('hex');
   }
   getUTCDate() {
@@ -134,6 +142,7 @@ class Block {
   }
   // TODO: buffer, offset compatibility
   toBuffer(headersOnly) {
+    //@ts-ignore
     const buffer = Buffer.allocUnsafe(this.byteLength(headersOnly));
     const bufferWriter = new bufferutils_1.BufferWriter(buffer);
     bufferWriter.writeInt32(this.version);
@@ -170,6 +179,7 @@ class Block {
     );
   }
   checkProofOfWork() {
+    //@ts-ignore
     const hash = (0, bufferutils_1.reverseBuffer)(this.getHash());
     const target = Block.calculateTarget(this.bits);
     return hash.compare(target) <= 0;

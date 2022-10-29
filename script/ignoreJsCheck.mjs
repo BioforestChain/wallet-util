@@ -11,7 +11,15 @@ const resolveTo2 = createResolveTo(
     resolveTo('../dist/tsconfig.js.tsbuildinfo.json')
 );
 const tree = new (class Tree {
+    /**
+     * @type {Map<string,string>}
+     */
     cache = new Map();
+    /**
+     *
+     * @param {string} filepath
+     * @returns
+     */
     read(filepath) {
         let content = this.cache.get(filepath);
         if (content === undefined) {
@@ -53,16 +61,19 @@ for (const module_dig of jsbuildinfo.program.semanticDiagnosticsPerFile) {
             if (lastLineIndex === -1) {
                 fileContent = '//@ts-ignore\n' + fileContent;
             } else {
+                const lastLine = errorBeforeContent.slice(lastLineIndex + 1);
                 const lastLineSpaceWidth =
-                    errorBeforeContent
-                        .slice(lastLineIndex + 1)
-                        .match(/^\s+/)?.[0].length ?? 0;
+                    lastLine.match(/^\s+/)?.[0].length ?? 0;
+                if (lastLine.slice(lastLineSpaceWidth) === '* @param') {
+                    continue;
+                }
                 fileContent =
                     errorBeforeContent.slice(0, lastLineIndex) +
                     '\n' +
                     ' '.repeat(lastLineSpaceWidth) +
                     '//@ts-ignore' +
-                    errorBeforeContent.slice(lastLineIndex);
+                    errorBeforeContent.slice(lastLineIndex) +
+                    fileContent.slice(dig.start);
             }
             tree.write(filepath, fileContent);
         }

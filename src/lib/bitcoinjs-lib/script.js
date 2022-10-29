@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+//@ts-ignore
 exports.signature = exports.number = exports.isCanonicalScriptSignature = exports.isDefinedHashType = exports.isCanonicalPubKey = exports.toStack = exports.fromASM = exports.toASM = exports.decompile = exports.compile = exports.isPushOnly = exports.OPS = void 0;
 const bip66 = require('./bip66.js');
 const ops_1 = require('./ops.js');
@@ -37,12 +38,14 @@ function asMinimalOP(buffer) {
   if (buffer[0] === 0x81) return ops_1.OPS.OP_1NEGATE;
 }
 function chunksIsBuffer(buf) {
+  //@ts-ignore
   return Buffer.isBuffer(buf);
 }
 function chunksIsArray(buf) {
   return types.Array(buf);
 }
 function singleChunkIsBuffer(buf) {
+  //@ts-ignore
   return Buffer.isBuffer(buf);
 }
 function compile(chunks) {
@@ -61,6 +64,7 @@ function compile(chunks) {
     // opcode
     return accum + 1;
   }, 0.0);
+  //@ts-ignore
   const buffer = Buffer.allocUnsafe(bufferSize);
   let offset = 0;
   chunks.forEach(chunk => {
@@ -146,6 +150,7 @@ function fromASM(asm) {
       if (ops_1.OPS[chunkStr] !== undefined) return ops_1.OPS[chunkStr];
       typeforce(types.Hex, chunkStr);
       // data!
+      //@ts-ignore
       return Buffer.from(chunkStr, 'hex');
     }),
   );
@@ -156,6 +161,7 @@ function toStack(chunks) {
   typeforce(isPushOnly, chunks);
   return chunks.map(op => {
     if (singleChunkIsBuffer(op)) return op;
+    //@ts-ignore
     if (op === ops_1.OPS.OP_0) return Buffer.allocUnsafe(0);
     return scriptNumber.encode(op - OP_INT_BASE);
   });
@@ -172,6 +178,7 @@ function isDefinedHashType(hashType) {
 }
 exports.isDefinedHashType = isDefinedHashType;
 function isCanonicalScriptSignature(buffer) {
+  //@ts-ignore
   if (!Buffer.isBuffer(buffer)) return false;
   if (!isDefinedHashType(buffer[buffer.length - 1])) return false;
   return bip66.check(buffer.slice(0, -1));

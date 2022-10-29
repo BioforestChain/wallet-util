@@ -1,5 +1,8 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
 exports.networks = exports.ECPairFactory = exports.default = void 0;
 var ecpair_1 = require('./ecpair.js');
 Object.defineProperty(exports, 'default', {

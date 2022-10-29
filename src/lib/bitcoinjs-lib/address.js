@@ -64,12 +64,14 @@ function fromBech32(address) {
   return {
     version,
     prefix: result.prefix,
+    //@ts-ignore
     data: Buffer.from(data),
   };
 }
 exports.fromBech32 = fromBech32;
 function toBase58Check(hash, version) {
   typeforce(types.tuple(types.Hash160bit, types.UInt8), arguments);
+  //@ts-ignore
   const payload = Buffer.allocUnsafe(21);
   payload.writeUInt8(version, 0);
   hash.copy(payload, 1);

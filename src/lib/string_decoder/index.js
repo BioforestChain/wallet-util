@@ -86,6 +86,7 @@ function StringDecoder(encoding) {
       nb = 4;
       break;
     case 'utf8':
+      //@ts-ignore
       this.fillLast = utf8FillLast;
       nb = 4;
       break;
@@ -95,6 +96,7 @@ function StringDecoder(encoding) {
       nb = 3;
       break;
     default:
+      //@ts-ignore
       this.write = simpleWrite;
       this.end = simpleEnd;
       return;
@@ -104,6 +106,7 @@ function StringDecoder(encoding) {
   this.lastChar = Buffer.allocUnsafe(nb);
 }
 
+//@ts-ignore
 StringDecoder.prototype.write = function (buf) {
   if (buf.length === 0) return '';
   var r;
@@ -126,6 +129,7 @@ StringDecoder.prototype.end = utf8End;
 StringDecoder.prototype.text = utf8Text;
 
 // Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+//@ts-ignore
 StringDecoder.prototype.fillLast = function (buf) {
   if (this.lastNeed <= buf.length) {
     buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
@@ -215,9 +219,12 @@ function utf8FillLast(buf) {
 // number of bytes are available.
 function utf8Text(buf, i) {
   var total = utf8CheckIncomplete(this, buf, i);
+  //@ts-ignore
   if (!this.lastNeed) return buf.toString('utf8', i);
   this.lastTotal = total;
+  //@ts-ignore
   var end = buf.length - (total - this.lastNeed);
+  //@ts-ignore
   buf.copy(this.lastChar, 0, end);
   return buf.toString('utf8', i, end);
 }
@@ -242,7 +249,9 @@ function utf16Text(buf, i) {
       if (c >= 0xD800 && c <= 0xDBFF) {
         this.lastNeed = 2;
         this.lastTotal = 4;
+        //@ts-ignore
         this.lastChar[0] = buf[buf.length - 2];
+        //@ts-ignore
         this.lastChar[1] = buf[buf.length - 1];
         return r.slice(0, -1);
       }
@@ -251,6 +260,7 @@ function utf16Text(buf, i) {
   }
   this.lastNeed = 1;
   this.lastTotal = 2;
+  //@ts-ignore
   this.lastChar[0] = buf[buf.length - 1];
   return buf.toString('utf16le', i, buf.length - 1);
 }
@@ -272,9 +282,12 @@ function base64Text(buf, i) {
   this.lastNeed = 3 - n;
   this.lastTotal = 3;
   if (n === 1) {
+    //@ts-ignore
     this.lastChar[0] = buf[buf.length - 1];
   } else {
+    //@ts-ignore
     this.lastChar[0] = buf[buf.length - 2];
+    //@ts-ignore
     this.lastChar[1] = buf[buf.length - 1];
   }
   return buf.toString('base64', i, buf.length - n);

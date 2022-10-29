@@ -1,5 +1,6 @@
 'use strict';
 
+//@ts-ignore
 var hash = require('../hash.js/index.js');
 var utils = require('../minimalistic-crypto-utils/index.js');
 var {assert} = require('../minimalistic-assert/index.js');

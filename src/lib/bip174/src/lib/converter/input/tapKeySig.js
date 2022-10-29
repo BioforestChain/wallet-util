@@ -20,12 +20,14 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(value) {
+  //@ts-ignore
   const key = Buffer.from([typeFields_1.InputTypes.TAP_KEY_SIG]);
   return { key, value };
 }
 exports.encode = encode;
 exports.expected = 'Buffer';
 function check(data) {
+  //@ts-ignore
   return Buffer.isBuffer(data) && (data.length === 64 || data.length === 65);
 }
 exports.check = check;

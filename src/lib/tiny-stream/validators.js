@@ -10,7 +10,9 @@ const {
   NumberMAX_SAFE_INTEGER,
   NumberMIN_SAFE_INTEGER,
   NumberParseInt,
+  //@ts-ignore
   ObjectPrototypeHasOwnProperty,
+  //@ts-ignore
   RegExpPrototypeExec,
   String,
   StringPrototypeToUpperCase,
@@ -28,6 +30,7 @@ const {
   },
 } = require('./errors.js');
 
+//@ts-ignore
 const { normalizeEncoding } = require('./util.js');
 
 const { isAsyncFunction, isArrayBufferView } = require('./util.js').types;
@@ -199,14 +202,17 @@ function validateNumber(value, name, min = undefined, max) {
   }
 }
 /**
- * @callback validateOneOf
  * @template T
+ * @callback validateOneOf
  * @param {T} value
  * @param {string} name
  * @param {T[]} oneOf
  */
 
-/** @type {validateOneOf} */
+/** 
+ * @template T
+ * @type {validateOneOf<T>}
+ */
 
 const validateOneOf = hideStackFrames((value, name, oneOf) => {
   if (!ArrayPrototypeIncludes(oneOf, value)) {
@@ -365,6 +371,7 @@ function validatePort(port, name = 'Port', allowZero = true) {
     throw new ERR_SOCKET_BAD_PORT(name, port, allowZero);
   }
 
+  //@ts-ignore
   return port | 0;
 }
 /**

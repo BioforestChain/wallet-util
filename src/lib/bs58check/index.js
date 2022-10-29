@@ -5,7 +5,9 @@ var bs58checkBase = require('./base.js')
 
 // SHA256(SHA256(buffer))
 function sha256x2 (buffer) {
+  //@ts-ignore
   var tmp = createHash('sha256').update(buffer).digest()
+  //@ts-ignore
   return createHash('sha256').update(tmp).digest()
 }
 

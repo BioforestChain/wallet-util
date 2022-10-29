@@ -27,10 +27,14 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(tScript) {
+  //@ts-ignore
   const head = Buffer.from([typeFields_1.InputTypes.TAP_LEAF_SCRIPT]);
+  //@ts-ignore
   const verBuf = Buffer.from([tScript.leafVersion]);
   return {
+    //@ts-ignore
     key: Buffer.concat([head, tScript.controlBlock]),
+    //@ts-ignore
     value: Buffer.concat([tScript.script, verBuf]),
   };
 }
@@ -39,9 +43,11 @@ exports.expected =
   '{ controlBlock: Buffer; leafVersion: number, script: Buffer; }';
 function check(data) {
   return (
+    //@ts-ignore
     Buffer.isBuffer(data.controlBlock) &&
     (data.controlBlock.length - 1) % 32 === 0 &&
     (data.controlBlock[0] & 0xfe) === data.leafVersion &&
+    //@ts-ignore
     Buffer.isBuffer(data.script)
   );
 }

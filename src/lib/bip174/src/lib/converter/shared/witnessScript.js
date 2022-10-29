@@ -11,6 +11,7 @@ function makeConverter(TYPE_BYTE) {
     return keyVal.value;
   }
   function encode(data) {
+    //@ts-ignore
     const key = Buffer.from([TYPE_BYTE]);
     return {
       key,
@@ -19,6 +20,7 @@ function makeConverter(TYPE_BYTE) {
   }
   const expected = 'Buffer';
   function check(data) {
+    //@ts-ignore
     return Buffer.isBuffer(data);
   }
   function canAdd(currentData, newData) {

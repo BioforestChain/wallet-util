@@ -12,6 +12,7 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(data) {
+  //@ts-ignore
   const key = Buffer.from([typeFields_1.InputTypes.FINAL_SCRIPTWITNESS]);
   return {
     key,
@@ -21,6 +22,7 @@ function encode(data) {
 exports.encode = encode;
 exports.expected = 'Buffer';
 function check(data) {
+  //@ts-ignore
   return Buffer.isBuffer(data);
 }
 exports.check = check;

@@ -34,6 +34,7 @@ if (R && typeof R.ownKeys === 'function') {
 } else if (Object.getOwnPropertySymbols) {
   ReflectOwnKeys = function ReflectOwnKeys(target) {
     return Object.getOwnPropertyNames(target)
+      //@ts-ignore
       .concat(Object.getOwnPropertySymbols(target));
   };
 } else {
@@ -140,6 +141,7 @@ EventEmitter.prototype.emit = function emit(type) {
     }
     // At least give some kind of context to the user
     var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    //@ts-ignore
     err.context = er;
     throw err; // Unhandled 'error' event
   }
@@ -213,8 +215,11 @@ function _addListener(target, type, listener, prepend) {
                           'added. Use emitter.setMaxListeners() to ' +
                           'increase limit');
       w.name = 'MaxListenersExceededWarning';
+      //@ts-ignore
       w.emitter = target;
+      //@ts-ignore
       w.type = type;
+      //@ts-ignore
       w.count = existing.length;
       ProcessEmitWarning(w);
     }
@@ -236,10 +241,17 @@ EventEmitter.prototype.prependListener =
 
 function onceWrapper() {
   if (!this.fired) {
+    //@ts-ignore
+    //@ts-ignore
+    //@ts-ignore
     this.target.removeListener(this.type, this.wrapFn);
     this.fired = true;
     if (arguments.length === 0)
+      //@ts-ignore
+      //@ts-ignore
       return this.listener.call(this.target);
+    //@ts-ignore
+    //@ts-ignore
     return this.listener.apply(this.target, arguments);
   }
 }

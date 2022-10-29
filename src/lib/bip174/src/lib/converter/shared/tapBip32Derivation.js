@@ -21,8 +21,10 @@ function makeConverter(TYPE_BYTE) {
   function encode(data) {
     const base = parent.encode(data);
     const nHashesLen = varuint.encodingLength(data.leafHashes.length);
+    //@ts-ignore
     const nHashesBuf = Buffer.allocUnsafe(nHashesLen);
     varuint.encode(data.leafHashes.length, nHashesBuf);
+    //@ts-ignore
     const value = Buffer.concat([nHashesBuf, ...data.leafHashes, base.value]);
     return Object.assign({}, base, { value });
   }
@@ -37,6 +39,7 @@ function makeConverter(TYPE_BYTE) {
     return (
       Array.isArray(data.leafHashes) &&
       data.leafHashes.every(
+        //@ts-ignore
         leafHash => Buffer.isBuffer(leafHash) && leafHash.length === 32,
       ) &&
       parent.check(data)

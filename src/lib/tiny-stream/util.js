@@ -72,6 +72,7 @@ module.exports = {
           return reject(err)
         }
 
+        //@ts-ignore
         return resolve(...args)
       })
     })
@@ -145,4 +146,5 @@ module.exports = {
   },
   isBlob
 }
+//@ts-ignore
 module.exports.promisify.custom = Symbol.for('nodejs.util.promisify.custom')

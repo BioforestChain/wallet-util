@@ -17,7 +17,9 @@ function reverseBuffer(buffer) {
 exports.reverseBuffer = reverseBuffer;
 function keyValsToBuffer(keyVals) {
   const buffers = keyVals.map(keyValToBuffer);
+  //@ts-ignore
   buffers.push(Buffer.from([0]));
+  //@ts-ignore
   return Buffer.concat(buffers);
 }
 exports.keyValsToBuffer = keyValsToBuffer;
@@ -26,6 +28,7 @@ function keyValToBuffer(keyVal) {
   const valLen = keyVal.value.length;
   const keyVarIntLen = varuint.encodingLength(keyLen);
   const valVarIntLen = varuint.encodingLength(valLen);
+  //@ts-ignore
   const buffer = Buffer.allocUnsafe(
     keyVarIntLen + keyLen + valVarIntLen + valLen,
   );

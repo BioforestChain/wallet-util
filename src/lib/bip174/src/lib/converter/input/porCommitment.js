@@ -12,9 +12,11 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(data) {
+  //@ts-ignore
   const key = Buffer.from([typeFields_1.InputTypes.POR_COMMITMENT]);
   return {
     key,
+    //@ts-ignore
     value: Buffer.from(data, 'utf8'),
   };
 }

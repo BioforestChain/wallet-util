@@ -57,10 +57,14 @@ Hmac.prototype._final = function () {
  * @returns 
  */
 module.exports = function createHmac (alg, key) {
+  //@ts-ignore
   alg = alg.toLowerCase()
+  //@ts-ignore
+  //@ts-ignore
   if (alg === 'rmd160' || alg === 'ripemd160') {
     return new Hmac('rmd160', key)
   }
+  //@ts-ignore
   if (alg === 'md5') {
     return new Legacy(md5, key)
   }

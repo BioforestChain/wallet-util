@@ -7,11 +7,15 @@ const typeforce = require('../typeforce/index.js');
 const wif = require('../wif/index.js');
 function BIP32Factory(ecc) {
     testecc_1.testEcc(ecc);
+    //@ts-ignore
     const UINT256_TYPE = typeforce.BufferN(32);
     const NETWORK_TYPE = typeforce.compile({
+        //@ts-ignore
         wif: typeforce.UInt8,
         bip32: {
+            //@ts-ignore
             public: typeforce.UInt32,
+            //@ts-ignore
             private: typeforce.UInt32,
         },
     });
@@ -29,9 +33,11 @@ function BIP32Factory(ecc) {
     const HIGHEST_BIT = 0x80000000;
     const UINT31_MAX = Math.pow(2, 31) - 1;
     function BIP32Path(value) {
+        //@ts-ignore
         return (typeforce.String(value) && value.match(/^(m\/)?(\d+'?\/)*\d+'?$/) !== null);
     }
     function UInt31(value) {
+        //@ts-ignore
         return typeforce.UInt32(value) && value <= UINT31_MAX;
     }
     function toXOnly(pubKey) {
@@ -45,6 +51,7 @@ function BIP32Factory(ecc) {
         }
         get publicKey() {
             if (this.__Q === undefined)
+                //@ts-ignore
                 this.__Q = Buffer.from(ecc.pointFromScalar(this.__D, true));
             return this.__Q;
         }
@@ -57,10 +64,13 @@ function BIP32Factory(ecc) {
             if (lowR === undefined)
                 lowR = this.lowR;
             if (lowR === false) {
+                //@ts-ignore
                 return Buffer.from(ecc.sign(hash, this.privateKey));
             }
             else {
+                //@ts-ignore
                 let sig = Buffer.from(ecc.sign(hash, this.privateKey));
+                //@ts-ignore
                 const extraData = Buffer.alloc(32, 0);
                 let counter = 0;
                 // if first try is lowR, skip the loop
@@ -68,6 +78,7 @@ function BIP32Factory(ecc) {
                 while (sig[0] > 0x7f) {
                     counter++;
                     extraData.writeUIntLE(counter, 0, 6);
+                    //@ts-ignore
                     sig = Buffer.from(ecc.sign(hash, this.privateKey, extraData));
                 }
                 return sig;
@@ -78,6 +89,7 @@ function BIP32Factory(ecc) {
                 throw new Error('Missing private key');
             if (!ecc.signSchnorr)
                 throw new Error('signSchnorr not supported by ecc library');
+            //@ts-ignore
             return Buffer.from(ecc.signSchnorr(hash, this.privateKey));
         }
         verify(hash, signature) {
@@ -130,6 +142,7 @@ function BIP32Factory(ecc) {
             const version = !this.isNeutered()
                 ? network.bip32.private
                 : network.bip32.public;
+            //@ts-ignore
             const buffer = Buffer.allocUnsafe(78);
             // 4 bytes: version bytes
             buffer.writeUInt32BE(version, 0);
@@ -162,8 +175,10 @@ function BIP32Factory(ecc) {
         }
         // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions
         derive(index) {
+            //@ts-ignore
             typeforce(typeforce.UInt32, index);
             const isHardened = index >= HIGHEST_BIT;
+            //@ts-ignore
             const data = Buffer.allocUnsafe(37);
             // Hardened child
             if (isHardened) {
@@ -191,6 +206,7 @@ function BIP32Factory(ecc) {
             let hd;
             if (!this.isNeutered()) {
                 // ki = parse256(IL) + kpar (mod n)
+                //@ts-ignore
                 const ki = Buffer.from(ecc.privateAdd(this.privateKey, IL));
                 // In case ki == 0, proceed with the next value for i
                 if (ki == null)
@@ -201,6 +217,7 @@ function BIP32Factory(ecc) {
             else {
                 // Ki = point(parse256(IL)) + Kpar
                 //    = G*IL + Kpar
+                //@ts-ignore
                 const Ki = Buffer.from(ecc.pointAddScalar(this.publicKey, IL, true));
                 // In case Ki is the point at infinity, proceed with the next value for i
                 if (Ki === null)
@@ -244,9 +261,11 @@ function BIP32Factory(ecc) {
             const tweakedPublicKey = ecc.xOnlyPointAddTweak(xOnlyPubKey, t);
             if (!tweakedPublicKey || tweakedPublicKey.xOnlyPubkey === null)
                 throw new Error('Cannot tweak public key!');
+            //@ts-ignore
             const parityByte = Buffer.from([
                 tweakedPublicKey.parity === 0 ? 0x02 : 0x03,
             ]);
+            //@ts-ignore
             const tweakedPublicKeyCompresed = Buffer.concat([
                 parityByte,
                 tweakedPublicKey.xOnlyPubkey,
@@ -262,6 +281,7 @@ function BIP32Factory(ecc) {
             const tweakedPrivateKey = ecc.privateAdd(privateKey, t);
             if (!tweakedPrivateKey)
                 throw new Error('Invalid tweaked private key!');
+            //@ts-ignore
             return new Bip32Signer(Buffer.from(tweakedPrivateKey), undefined);
         }
     }
@@ -322,6 +342,7 @@ function BIP32Factory(ecc) {
     }
     function fromPublicKeyLocal(publicKey, chainCode, network, depth, index, parentFingerprint) {
         typeforce({
+            //@ts-ignore
             publicKey: typeforce.BufferN(33),
             chainCode: UINT256_TYPE,
         }, { publicKey, chainCode });
@@ -332,12 +353,14 @@ function BIP32Factory(ecc) {
         return new BIP32(undefined, publicKey, chainCode, network, depth, index, parentFingerprint);
     }
     function fromSeed(seed, network) {
+        //@ts-ignore
         typeforce(typeforce.Buffer, seed);
         if (seed.length < 16)
             throw new TypeError('Seed should be at least 128 bits');
         if (seed.length > 64)
             throw new TypeError('Seed should be at most 512 bits');
         network = network || BITCOIN;
+        //@ts-ignore
         const I = crypto.hmacSHA512(Buffer.from('Bitcoin seed', 'utf8'), seed);
         const IL = I.slice(0, 32);
         const IR = I.slice(32);

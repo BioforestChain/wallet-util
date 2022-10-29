@@ -30,9 +30,11 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(tree) {
+  //@ts-ignore
   const key = Buffer.from([typeFields_1.OutputTypes.TAP_TREE]);
   const bufs = [].concat(
     ...tree.leaves.map(tapLeaf => [
+      //@ts-ignore
       Buffer.of(tapLeaf.depth, tapLeaf.leafVersion),
       varuint.encode(tapLeaf.script.length),
       tapLeaf.script,
@@ -40,6 +42,7 @@ function encode(tree) {
   );
   return {
     key,
+    //@ts-ignore
     value: Buffer.concat(bufs),
   };
 }
@@ -54,6 +57,7 @@ function check(data) {
         tapLeaf.depth >= 0 &&
         tapLeaf.depth <= 128 &&
         (tapLeaf.leafVersion & 0xfe) === tapLeaf.leafVersion &&
+        //@ts-ignore
         Buffer.isBuffer(tapLeaf.script),
     )
   );

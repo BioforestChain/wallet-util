@@ -1,5 +1,12 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
 exports.p2wsh = exports.p2wpkh = exports.p2sh = exports.p2pkh = exports.p2pk = exports.p2ms = exports.embed = void 0;
 const embed_1 = require('./embed.js');
 Object.defineProperty(exports, 'embed', {

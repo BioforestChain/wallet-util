@@ -1,5 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
+//@ts-ignore
 exports.Transaction = exports.opcodes = exports.Psbt = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.address = void 0;
 const address = require('./address.js');
 exports.address = address;

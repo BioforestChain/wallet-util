@@ -60,6 +60,7 @@ const DEFAULT_OPTS = {
  *   Transaction object. Such as fee rate not being larger than maximumFeeRate etc.
  */
 class Psbt {
+  //@ts-ignore
   constructor(opts = {}, data = new bip174_1.Psbt(new PsbtTransaction())) {
     this.data = data;
     // set defaults
@@ -90,14 +91,17 @@ class Psbt {
     dpew(this, 'opts', false, true);
   }
   static fromBase64(data, opts = {}) {
+    //@ts-ignore
     const buffer = Buffer.from(data, 'base64');
     return this.fromBuffer(buffer, opts);
   }
   static fromHex(data, opts = {}) {
+    //@ts-ignore
     const buffer = Buffer.from(data, 'hex');
     return this.fromBuffer(buffer, opts);
   }
   static fromBuffer(buffer, opts = {}) {
+    //@ts-ignore
     const psbtBase = bip174_1.Psbt.fromBuffer(buffer, transactionFromBuffer);
     const psbt = new Psbt(opts, psbtBase);
     checkTxForDupeIns(psbt.__CACHE.__TX, psbt.__CACHE);
@@ -120,6 +124,7 @@ class Psbt {
   }
   get txInputs() {
     return this.__CACHE.__TX.ins.map(input => ({
+      //@ts-ignore
       hash: (0, bufferutils_1.cloneBuffer)(input.hash),
       index: input.index,
       sequence: input.sequence,
@@ -129,12 +134,14 @@ class Psbt {
     return this.__CACHE.__TX.outs.map(output => {
       let address;
       try {
+        //@ts-ignore
         address = (0, address_1.fromOutputScript)(
           output.script,
           this.opts.network,
         );
       } catch (_) {}
       return {
+        //@ts-ignore
         script: (0, bufferutils_1.cloneBuffer)(output.script),
         value: output.value,
         address,
@@ -234,6 +241,7 @@ class Psbt {
     const { address } = outputData;
     if (typeof address === 'string') {
       const { network } = this.opts;
+      //@ts-ignore
       const script = (0, address_1.toOutputScript)(address, network);
       outputData = Object.assign(outputData, { script });
     }
@@ -267,11 +275,13 @@ class Psbt {
     return getTxCacheValue('__FEE', 'fee', this.data.inputs, this.__CACHE);
   }
   finalizeAllInputs() {
+    //@ts-ignore
     (0, utils_1.checkForInput)(this.data.inputs, 0); // making sure we have at least one
     range(this.data.inputs.length).forEach(idx => this.finalizeInput(idx));
     return this;
   }
   finalizeInput(inputIndex, finalScriptsFunc = getFinalScripts) {
+    //@ts-ignore
     const input = (0, utils_1.checkForInput)(this.data.inputs, inputIndex);
     const { script, isP2SH, isP2WSH, isSegwit } = getScriptFromInput(
       inputIndex,
@@ -297,6 +307,7 @@ class Psbt {
     return this;
   }
   getInputType(inputIndex) {
+    //@ts-ignore
     const input = (0, utils_1.checkForInput)(this.data.inputs, inputIndex);
     const script = getScriptFromUtxo(inputIndex, input, this.__CACHE);
     const result = getMeaningfulScript(
@@ -312,10 +323,12 @@ class Psbt {
     return type + mainType;
   }
   inputHasPubkey(inputIndex, pubkey) {
+    //@ts-ignore
     const input = (0, utils_1.checkForInput)(this.data.inputs, inputIndex);
     return pubkeyInInput(pubkey, input, inputIndex, this.__CACHE);
   }
   inputHasHDKey(inputIndex, root) {
+    //@ts-ignore
     const input = (0, utils_1.checkForInput)(this.data.inputs, inputIndex);
     const derivationIsMine = bip32DerivationIsMine(root);
     return (
@@ -323,10 +336,12 @@ class Psbt {
     );
   }
   outputHasPubkey(outputIndex, pubkey) {
+    //@ts-ignore
     const output = (0, utils_1.checkForOutput)(this.data.outputs, outputIndex);
     return pubkeyInOutput(pubkey, output, outputIndex, this.__CACHE);
   }
   outputHasHDKey(outputIndex, root) {
+    //@ts-ignore
     const output = (0, utils_1.checkForOutput)(this.data.outputs, outputIndex);
     const derivationIsMine = bip32DerivationIsMine(root);
     return (
@@ -334,6 +349,7 @@ class Psbt {
     );
   }
   validateSignaturesOfAllInputs(validator) {
+    //@ts-ignore
     (0, utils_1.checkForInput)(this.data.inputs, 0); // making sure we have at least one
     const results = range(this.data.inputs.length).map(idx =>
       this.validateSignaturesOfInput(idx, validator),
@@ -622,6 +638,7 @@ const transactionFromBuffer = buffer => new PsbtTransaction(buffer);
  * It contains a bitcoinjs-lib Transaction object.
  */
 class PsbtTransaction {
+  //@ts-ignore
   constructor(buffer = Buffer.from([2, 0, 0, 0, 0, 0, 0, 0, 0, 0])) {
     this.tx = transaction_1.Transaction.fromBuffer(buffer);
     checkTxEmpty(this.tx);
@@ -640,6 +657,7 @@ class PsbtTransaction {
     if (
       input.hash === undefined ||
       input.index === undefined ||
+      //@ts-ignore
       (!Buffer.isBuffer(input.hash) && typeof input.hash !== 'string') ||
       typeof input.index !== 'number'
     ) {
@@ -647,6 +665,8 @@ class PsbtTransaction {
     }
     const hash =
       typeof input.hash === 'string'
+        //@ts-ignore
+        //@ts-ignore
         ? (0, bufferutils_1.reverseBuffer)(Buffer.from(input.hash, 'hex'))
         : input.hash;
     this.tx.addInput(hash, input.index, input.sequence);
@@ -655,6 +675,7 @@ class PsbtTransaction {
     if (
       output.script === undefined ||
       output.value === undefined ||
+      //@ts-ignore
       !Buffer.isBuffer(output.script) ||
       typeof output.value !== 'number'
     ) {
@@ -821,6 +842,8 @@ function checkTxForDupeIns(tx, cache) {
 }
 function checkTxInputCache(cache, input) {
   const key =
+    //@ts-ignore
+    //@ts-ignore
     (0, bufferutils_1.reverseBuffer)(Buffer.from(input.hash)).toString('hex') +
     ':' +
     input.index;
@@ -916,6 +939,7 @@ function getHashAndSighashType(
   cache,
   sighashTypes,
 ) {
+  //@ts-ignore
   const input = (0, utils_1.checkForInput)(inputs, inputIndex);
   const { hash, sighashType, script } = getHashForSig(
     inputIndex,
@@ -1063,6 +1087,7 @@ function getPsigsFromInputFinalScripts(input) {
   return scriptItems
     .concat(witnessItems)
     .filter(item => {
+      //@ts-ignore
       return Buffer.isBuffer(item) && bscript.isCanonicalScriptSignature(item);
     })
     .map(sig => ({ signature: sig }));
@@ -1100,6 +1125,7 @@ function getScriptFromInput(inputIndex, input, cache) {
   return res;
 }
 function getSignersFromHD(inputIndex, inputs, hdKeyPair) {
+  //@ts-ignore
   const input = (0, utils_1.checkForInput)(inputs, inputIndex);
   if (!input.bip32Derivation || input.bip32Derivation.length === 0) {
     throw new Error('Need bip32Derivation to sign with HD');
@@ -1151,6 +1177,7 @@ function scriptWitnessToWitnessStack(buffer) {
   }
   function readVarInt() {
     const vi = varuint.decode(buffer, offset);
+    //@ts-ignore
     offset += varuint.decode.bytes;
     return vi;
   }
@@ -1185,13 +1212,18 @@ function sighashTypeToString(sighashType) {
   return text;
 }
 function witnessStackToScriptWitness(witness) {
+  //@ts-ignore
   let buffer = Buffer.allocUnsafe(0);
   function writeSlice(slice) {
+    //@ts-ignore
+    //@ts-ignore
     buffer = Buffer.concat([buffer, Buffer.from(slice)]);
   }
   function writeVarInt(i) {
     const currentLen = buffer.length;
     const varintLen = varuint.encodingLength(i);
+    //@ts-ignore
+    //@ts-ignore
     buffer = Buffer.concat([buffer, Buffer.allocUnsafe(varintLen)]);
     varuint.encode(i, buffer, currentLen);
   }
@@ -1309,6 +1341,7 @@ function redeemFromFinalScriptSig(finalScript) {
   if (!decomp) return;
   const lastItem = decomp[decomp.length - 1];
   if (
+    //@ts-ignore
     !Buffer.isBuffer(lastItem) ||
     isPubkeyLike(lastItem) ||
     isSigLike(lastItem)
@@ -1391,6 +1424,7 @@ function checkInvalidP2WSH(script) {
   }
 }
 function pubkeyInScript(pubkey, script) {
+  //@ts-ignore
   const pubkeyHash = (0, crypto_1.hash160)(pubkey);
   const decompiled = bscript.decompile(script);
   if (decompiled === null) throw new Error('Unknown script error');

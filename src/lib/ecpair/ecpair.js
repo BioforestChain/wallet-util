@@ -4,6 +4,7 @@ exports.ECPairFactory = exports.networks = void 0;
 const networks = require('./networks.js');
 exports.networks = networks;
 const types = require('./types.js');
+//@ts-ignore
 const randomBytes = require('../crypto.mts').randomBytes;
 const wif = require('../wif/index.js');
 const testecc_1 = require('./testecc.js');
@@ -16,6 +17,7 @@ const isOptions = types.typeforce.maybe(
 const toXOnly = (pubKey) =>
   pubKey.length === 32 ? pubKey : pubKey.slice(1, 33);
 function ECPairFactory(ecc) {
+  //@ts-ignore
   (0, testecc_1.testEcc)(ecc);
   function isPoint(maybePoint) {
     return ecc.isPoint(maybePoint);
@@ -79,6 +81,7 @@ function ECPairFactory(ecc) {
         options.compressed === undefined ? true : options.compressed;
       this.network = options.network || networks.bitcoin;
       if (__Q !== undefined)
+        //@ts-ignore
         this.__Q = Buffer.from(ecc.pointCompress(__Q, this.compressed));
     }
     get privateKey() {
@@ -91,6 +94,7 @@ function ECPairFactory(ecc) {
         const p = ecc.pointFromScalar(this.__D, this.compressed);
         // It is not possible for `p` to be null.
         // `fromPrivateKey()` checks that `__D` is a valid scalar.
+        //@ts-ignore
         this.__Q = Buffer.from(p);
       }
       return this.__Q;
@@ -107,9 +111,11 @@ function ECPairFactory(ecc) {
       if (!this.__D) throw new Error('Missing private key');
       if (lowR === undefined) lowR = this.lowR;
       if (lowR === false) {
+        //@ts-ignore
         return Buffer.from(ecc.sign(hash, this.__D));
       } else {
         let sig = ecc.sign(hash, this.__D);
+        //@ts-ignore
         const extraData = Buffer.alloc(32, 0);
         let counter = 0;
         // if first try is lowR, skip the loop
@@ -119,6 +125,7 @@ function ECPairFactory(ecc) {
           extraData.writeUIntLE(counter, 0, 6);
           sig = ecc.sign(hash, this.__D, extraData);
         }
+        //@ts-ignore
         return Buffer.from(sig);
       }
     }
@@ -126,6 +133,7 @@ function ECPairFactory(ecc) {
       if (!this.privateKey) throw new Error('Missing private key');
       if (!ecc.signSchnorr)
         throw new Error('signSchnorr not supported by ecc library');
+      //@ts-ignore
       return Buffer.from(ecc.signSchnorr(hash, this.privateKey));
     }
     verify(hash, signature) {
@@ -141,10 +149,12 @@ function ECPairFactory(ecc) {
       const tweakedPublicKey = ecc.xOnlyPointAddTweak(xOnlyPubKey, t);
       if (!tweakedPublicKey || tweakedPublicKey.xOnlyPubkey === null)
         throw new Error('Cannot tweak public key!');
+      //@ts-ignore
       const parityByte = Buffer.from([
         tweakedPublicKey.parity === 0 ? 0x02 : 0x03,
       ]);
       return fromPublicKey(
+        //@ts-ignore
         Buffer.concat([parityByte, tweakedPublicKey.xOnlyPubkey]),
         { network: this.network, compressed: this.compressed },
       );
@@ -158,6 +168,7 @@ function ECPairFactory(ecc) {
         : this.privateKey;
       const tweakedPrivateKey = ecc.privateAdd(privateKey, t);
       if (!tweakedPrivateKey) throw new Error('Invalid tweaked private key!');
+      //@ts-ignore
       return fromPrivateKey(Buffer.from(tweakedPrivateKey), {
         network: this.network,
         compressed: this.compressed,

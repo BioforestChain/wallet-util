@@ -12,41 +12,46 @@ for (const { filepath } of walkDir(resolveTo('../src'))) {
     }
     const fileContent = fs.readFileSync(filepath, 'utf-8');
     const fileResolveTo = createResolveTo(filepath);
-
-    const newFileContent = fileContent.replace(
-        /require\('([^\)]+?)'\)/g,
-        /**
-         *
-         * @param {string} _
-         * @param {string} somepath
-         * @returns
-         */
-        (_, somepath) => {
-            for (const maybepath of [
-                somepath.endsWith('.mjs')
-                    ? somepath.replace(/mjs$/, 'mts')
-                    : undefined,
-                somepath,
-                somepath + '.js',
-                somepath + '/index.js',
-            ]) {
-                if (!maybepath) {
-                    continue;
-                }
-                try {
-                    if (fs.statSync(fileResolveTo(maybepath)).isFile()) {
-                        return `require('${maybepath}')`;
-                    }
-                } catch {}
+    /**
+     *
+     * @param {string} somepath
+     */
+    const doReplace = (somepath) => {
+        for (const maybepath of [
+            somepath.endsWith('.mjs')
+                ? somepath.replace(/mjs$/, 'mts')
+                : undefined,
+            somepath,
+            somepath + '.js',
+            somepath + '/index.js',
+        ]) {
+            if (!maybepath) {
+                continue;
             }
-            throw new Error(
-                `could not resolve:'${somepath}' in '${path.relative(
-                    process.cwd(),
-                    filepath
-                )}'`
-            );
+            try {
+                if (fs.statSync(fileResolveTo(maybepath)).isFile()) {
+                    return maybepath;
+                }
+            } catch {}
         }
-    );
+        throw new Error(
+            `could not resolve:'${somepath}' in '${path.relative(
+                process.cwd(),
+                filepath
+            )}'`
+        );
+    };
+
+    const newFileContent = fileContent
+        .replace(
+            /require\('([^\']+?)'\)/g,
+
+            (_, somepath) => `require('${doReplace(somepath)}')`
+        )
+        .replace(
+            /from '([^\']+?)'/g,
+            (_, somepath) => `from '${doReplace(somepath)}'`
+        );
     if (newFileContent !== fileContent) {
         fs.writeFileSync(filepath, newFileContent);
     }

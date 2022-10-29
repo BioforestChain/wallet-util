@@ -6,14 +6,17 @@ const RipeMd160 = require('../ripemd160/index.js');
 function ripemd160(buffer) {
   try {
     return createHash('rmd160')
+      //@ts-ignore
       .update(buffer)
       .digest();
   } catch (err) {
     try {
       return createHash('ripemd160')
+        //@ts-ignore
         .update(buffer)
         .digest();
     } catch (err2) {
+      //@ts-ignore
       return new RipeMd160().update(buffer).digest();
     }
   }
@@ -21,12 +24,14 @@ function ripemd160(buffer) {
 exports.ripemd160 = ripemd160;
 function sha1(buffer) {
   return createHash('sha1')
+    //@ts-ignore
     .update(buffer)
     .digest();
 }
 exports.sha1 = sha1;
 function sha256(buffer) {
   return createHash('sha256')
+    //@ts-ignore
     .update(buffer)
     .digest();
 }
@@ -53,11 +58,14 @@ const TAGS = [
 /** An object mapping tags to their tagged hash prefix of [SHA256(tag) | SHA256(tag)] */
 const TAGGED_HASH_PREFIXES = Object.fromEntries(
   TAGS.map(tag => {
+    //@ts-ignore
     const tagHash = sha256(Buffer.from(tag));
+    //@ts-ignore
     return [tag, Buffer.concat([tagHash, tagHash])];
   }),
 );
 function taggedHash(prefix, data) {
+  //@ts-ignore
   return sha256(Buffer.concat([TAGGED_HASH_PREFIXES[prefix], data]));
 }
 exports.taggedHash = taggedHash;

@@ -25,8 +25,10 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(pSig) {
+  //@ts-ignore
   const head = Buffer.from([typeFields_1.InputTypes.PARTIAL_SIG]);
   return {
+    //@ts-ignore
     key: Buffer.concat([head, pSig.pubkey]),
     value: pSig.signature,
   };
@@ -35,7 +37,9 @@ exports.encode = encode;
 exports.expected = '{ pubkey: Buffer; signature: Buffer; }';
 function check(data) {
   return (
+    //@ts-ignore
     Buffer.isBuffer(data.pubkey) &&
+    //@ts-ignore
     Buffer.isBuffer(data.signature) &&
     [33, 65].includes(data.pubkey.length) &&
     [2, 3, 4].includes(data.pubkey[0]) &&
@@ -44,6 +48,7 @@ function check(data) {
 }
 exports.check = check;
 function isDerSigWithSighash(buf) {
+  //@ts-ignore
   if (!Buffer.isBuffer(buf) || buf.length < 9) return false;
   if (buf[0] !== 0x30) return false;
   if (buf.length !== buf[1] + 3) return false;

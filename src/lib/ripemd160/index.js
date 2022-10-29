@@ -55,6 +55,7 @@ inherits(RIPEMD160, HashBase)
 
 RIPEMD160.prototype._update = function () {
   var words = ARRAY16
+  //@ts-ignore
   for (var j = 0; j < 16; ++j) words[j] = this._block.readInt32LE(j * 4)
 
   var al = this._a | 0
@@ -114,15 +115,22 @@ RIPEMD160.prototype._update = function () {
 
 RIPEMD160.prototype._digest = function () {
   // create padding and handle blocks
+  //@ts-ignore
   this._block[this._blockOffset++] = 0x80
   if (this._blockOffset > 56) {
+    //@ts-ignore
     this._block.fill(0, this._blockOffset, 64)
     this._update()
     this._blockOffset = 0
   }
 
+  //@ts-ignore
   this._block.fill(0, this._blockOffset, 56)
+  //@ts-ignore
+  //@ts-ignore
   this._block.writeUInt32LE(this._length[0], 56)
+  //@ts-ignore
+  //@ts-ignore
   this._block.writeUInt32LE(this._length[1], 60)
   this._update()
 

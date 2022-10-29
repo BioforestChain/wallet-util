@@ -143,6 +143,7 @@ SHA512.prototype._update = function _update(msg, start) {
     var c0_lo = hl;
     var c1_hi = s1_512_hi(eh, el);
     var c1_lo = s1_512_lo(eh, el);
+    //@ts-ignore
     var c2_hi = ch64_hi(eh, el, fh, fl, gh, gl);
     var c2_lo = ch64_lo(eh, el, fh, fl, gh, gl);
     var c3_hi = this.k[i];
@@ -165,6 +166,7 @@ SHA512.prototype._update = function _update(msg, start) {
 
     c0_hi = s0_512_hi(ah, al);
     c0_lo = s0_512_lo(ah, al);
+    //@ts-ignore
     c1_hi = maj64_hi(ah, al, bh, bl, ch, cl);
     c1_lo = maj64_lo(ah, al, bh, bl, ch, cl);
 

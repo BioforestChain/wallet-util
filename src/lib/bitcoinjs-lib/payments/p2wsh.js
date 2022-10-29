@@ -8,6 +8,7 @@ const types_1 = require('../types.js');
 const lazy = require('./lazy.js');
 const bech32_1 = require('../../bech32/index.js');
 const OPS = bscript.OPS;
+//@ts-ignore
 const EMPTY_BUFFER = Buffer.alloc(0);
 function stacksEqual(a, b) {
   if (a.length !== b.length) return false;
@@ -17,9 +18,11 @@ function stacksEqual(a, b) {
 }
 function chunkHasUncompressedPubkey(chunk) {
   if (
+    //@ts-ignore
     Buffer.isBuffer(chunk) &&
     chunk.length === 65 &&
     chunk[0] === 0x04 &&
+    //@ts-ignore
     (0, types_1.isPoint)(chunk)
   ) {
     return true;
@@ -34,6 +37,7 @@ function p2wsh(a, opts) {
   if (!a.address && !a.hash && !a.output && !a.redeem && !a.witness)
     throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),
@@ -62,6 +66,7 @@ function p2wsh(a, opts) {
     return {
       version,
       prefix: result.prefix,
+      //@ts-ignore
       data: Buffer.from(data),
     };
   });
@@ -128,6 +133,7 @@ function p2wsh(a, opts) {
   });
   // extended validation
   if (opts.validate) {
+    //@ts-ignore
     let hash = Buffer.from([]);
     if (a.address) {
       if (_address().prefix !== network.bech32)

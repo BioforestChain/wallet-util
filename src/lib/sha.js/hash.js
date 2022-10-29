@@ -31,6 +31,7 @@ Hash.prototype.update = function (data, enc) {
     offset += remainder
 
     if ((accum % blockSize) === 0) {
+      //@ts-ignore
       this._update(block)
     }
   }
@@ -49,6 +50,7 @@ Hash.prototype.digest = function (enc) {
   this._block.fill(0, rem + 1)
 
   if (rem >= this._finalSize) {
+    //@ts-ignore
     this._update(this._block)
     this._block.fill(0)
   }
@@ -68,7 +70,9 @@ Hash.prototype.digest = function (enc) {
     this._block.writeUInt32BE(lowBits, this._blockSize - 4)
   }
 
+  //@ts-ignore
   this._update(this._block)
+  //@ts-ignore
   var hash = this._hash()
 
   return enc ? hash.toString(enc) : hash

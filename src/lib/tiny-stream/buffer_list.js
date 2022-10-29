@@ -169,6 +169,7 @@ module.exports = class BufferList {
   } // Make sure the linked list only shows the minimal necessary information.
 
   [Symbol.for('nodejs.util.inspect.custom')](_, options) {
+    //@ts-ignore
     return inspect(this, {
       ...options,
       // Only inspect one level.

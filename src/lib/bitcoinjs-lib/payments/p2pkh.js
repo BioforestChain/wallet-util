@@ -14,6 +14,7 @@ function p2pkh(a, opts) {
   if (!a.address && !a.hash && !a.output && !a.pubkey && !a.input)
     throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),
@@ -39,6 +40,7 @@ function p2pkh(a, opts) {
   const o = { name: 'p2pkh', network };
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
+    //@ts-ignore
     const payload = Buffer.allocUnsafe(21);
     payload.writeUInt8(network.pubKeyHash, 0);
     o.hash.copy(payload, 1);
@@ -78,6 +80,7 @@ function p2pkh(a, opts) {
   });
   // extended validation
   if (opts.validate) {
+    //@ts-ignore
     let hash = Buffer.from([]);
     if (a.address) {
       if (_address().version !== network.pubKeyHash)
@@ -116,6 +119,7 @@ function p2pkh(a, opts) {
       if (chunks.length !== 2) throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(chunks[0]))
         throw new TypeError('Input has invalid signature');
+      //@ts-ignore
       if (!(0, types_1.isPoint)(chunks[1]))
         throw new TypeError('Input has invalid pubkey');
       if (a.signature && !a.signature.equals(chunks[0]))

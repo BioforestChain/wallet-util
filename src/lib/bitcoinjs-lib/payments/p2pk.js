@@ -12,6 +12,7 @@ function p2pk(a, opts) {
   if (!a.input && !a.output && !a.pubkey && !a.input && !a.signature)
     throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),
@@ -52,6 +53,7 @@ function p2pk(a, opts) {
     if (a.output) {
       if (a.output[a.output.length - 1] !== OPS.OP_CHECKSIG)
         throw new TypeError('Output is invalid');
+      //@ts-ignore
       if (!(0, types_1.isPoint)(o.pubkey))
         throw new TypeError('Output pubkey is invalid');
       if (a.pubkey && !a.pubkey.equals(o.pubkey))

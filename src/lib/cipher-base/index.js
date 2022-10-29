@@ -25,6 +25,7 @@ CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
     data = Buffer.from(data, inputEnc)
   }
 
+  //@ts-ignore
   var outData = this._update(data)
   if (this.hashMode) return this
 
@@ -52,8 +53,11 @@ CipherBase.prototype._transform = function (data, _, next) {
   var err
   try {
     if (this.hashMode) {
+      //@ts-ignore
       this._update(data)
     } else {
+      //@ts-ignore
+      //@ts-ignore
       this.push(this._update(data))
     }
   } catch (e) {
@@ -65,6 +69,7 @@ CipherBase.prototype._transform = function (data, _, next) {
 CipherBase.prototype._flush = function (done) {
   var err
   try {
+    //@ts-ignore
     this.push(this.__final())
   } catch (e) {
     err = e

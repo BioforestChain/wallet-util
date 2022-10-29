@@ -51,6 +51,7 @@ const { addAbortSignal } = require('./add-abort-signal.js')
 
 const eos = require('./end-of-stream.js')
 
+//@ts-ignore
 let debug = require('./util.js').debuglog('stream', (fn) => {
   debug = fn
 })
@@ -177,7 +178,9 @@ function Readable(options) {
   this._readableState = new ReadableState(options, this, isDuplex)
 
   if (options) {
+    //@ts-ignore
     if (typeof options.read === 'function') this._read = options.read
+    //@ts-ignore
     if (typeof options.destroy === 'function') this._destroy = options.destroy
     if (typeof options.construct === 'function') this._construct = options.construct
     if (options.signal && !isDuplex) addAbortSignal(options.signal, this)
@@ -192,12 +195,15 @@ function Readable(options) {
 }
 
 Readable.prototype.destroy = destroyImpl.destroy
+//@ts-ignore
 Readable.prototype._undestroy = destroyImpl.undestroy
 
+//@ts-ignore
 Readable.prototype._destroy = function (err, cb) {
   cb(err)
 }
 
+//@ts-ignore
 Readable.prototype[EE.captureRejectionSymbol] = function (err) {
   this.destroy(err)
 } // Manually shove something into the read() buffer.
@@ -214,6 +220,7 @@ Readable.prototype.unshift = function (chunk, encoding) {
 }
 
 function readableAddChunk(stream, chunk, encoding, addToFront) {
+  //@ts-ignore
   debug('readableAddChunk', chunk)
   const state = stream._readableState
   let err
@@ -234,7 +241,9 @@ function readableAddChunk(stream, chunk, encoding, addToFront) {
       }
     } else if (chunk instanceof Buffer) {
       encoding = ''
+    //@ts-ignore
     } else if (Stream._isUint8Array(chunk)) {
+      //@ts-ignore
       chunk = Stream._uint8ArrayToBuffer(chunk)
       encoding = ''
     } else if (chunk != null) {
@@ -360,6 +369,7 @@ function howMuchToRead(n, state) {
 } // You can override either this method, or the async _read(n) below.
 
 Readable.prototype.read = function (n) {
+  //@ts-ignore
   debug('read', n) // Same as parseInt(undefined, 10), however V8 7.3 performance regressed
   // in this scenario, so we are doing it manually.
 
@@ -382,6 +392,7 @@ Readable.prototype.read = function (n) {
     state.needReadable &&
     ((state.highWaterMark !== 0 ? state.length >= state.highWaterMark : state.length > 0) || state.ended)
   ) {
+    //@ts-ignore
     debug('read: emitReadable', state.length, state.ended)
     if (state.length === 0 && state.ended) endReadable(this)
     else emitReadable(this)
@@ -417,10 +428,12 @@ Readable.prototype.read = function (n) {
   // if we need a readable event, then we need to do some reading.
 
   let doRead = state.needReadable
+  //@ts-ignore
   debug('need readable', doRead) // If we currently have less than the highWaterMark, then also read some.
 
   if (state.length === 0 || state.length - n < state.highWaterMark) {
     doRead = true
+    //@ts-ignore
     debug('length less than watermark', doRead)
   } // However, if we've ended, then there's no point, if we're already
   // reading, then it's unnecessary, if we're constructing we have to wait,
@@ -428,8 +441,10 @@ Readable.prototype.read = function (n) {
 
   if (state.ended || state.reading || state.destroyed || state.errored || !state.constructed) {
     doRead = false
+    //@ts-ignore
     debug('reading, ended or constructing', doRead)
   } else if (doRead) {
+    //@ts-ignore
     debug('do read')
     state.reading = true
     state.sync = true // If the length is currently zero, then we *need* a readable event.
@@ -475,6 +490,7 @@ Readable.prototype.read = function (n) {
 
   if (ret !== null && !state.errorEmitted && !state.closeEmitted) {
     state.dataEmitted = true
+    //@ts-ignore
     this.emit('data', ret)
   }
 
@@ -482,6 +498,7 @@ Readable.prototype.read = function (n) {
 }
 
 function onEofChunk(stream, state) {
+  //@ts-ignore
   debug('onEofChunk')
   if (state.ended) return
 
@@ -515,10 +532,12 @@ function onEofChunk(stream, state) {
 
 function emitReadable(stream) {
   const state = stream._readableState
+  //@ts-ignore
   debug('emitReadable', state.needReadable, state.emittedReadable)
   state.needReadable = false
 
   if (!state.emittedReadable) {
+    //@ts-ignore
     debug('emitReadable', state.flowing)
     state.emittedReadable = true
     process.nextTick(emitReadable_, stream)
@@ -527,6 +546,7 @@ function emitReadable(stream) {
 
 function emitReadable_(stream) {
   const state = stream._readableState
+  //@ts-ignore
   debug('emitReadable_', state.destroyed, state.length, state.ended)
 
   if (!state.destroyed && !state.errored && (state.length || state.ended)) {
@@ -585,6 +605,7 @@ function maybeReadMore_(stream, state) {
     (state.length < state.highWaterMark || (state.flowing && state.length === 0))
   ) {
     const len = state.length
+    //@ts-ignore
     debug('maybeReadMore read 0')
     stream.read(0)
     if (len === state.length)
@@ -592,12 +613,14 @@ function maybeReadMore_(stream, state) {
       break
   }
 
+  //@ts-ignore
   state.readingMore = false
 } // Abstract method.  to be overridden in specific implementation classes.
 // call cb(er, data) where data is <= n in length.
 // for virtual (non-string, non-buffer) streams, "length" is somewhat
 // arbitrary, and perhaps not very meaningful.
 
+//@ts-ignore
 Readable.prototype._read = function (n) {
   throw new ERR_METHOD_NOT_IMPLEMENTED('_read()')
 }
@@ -614,14 +637,19 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   }
 
   state.pipes.push(dest)
+  //@ts-ignore
   debug('pipe count=%d opts=%j', state.pipes.length, pipeOpts)
+  //@ts-ignore
+  //@ts-ignore
   const doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr
   const endFn = doEnd ? onend : unpipe
   if (state.endEmitted) process.nextTick(endFn)
+  //@ts-ignore
   else src.once('end', endFn)
   dest.on('unpipe', onunpipe)
 
   function onunpipe(readable, unpipeInfo) {
+    //@ts-ignore
     debug('onunpipe')
 
     if (readable === src) {
@@ -633,6 +661,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   }
 
   function onend() {
+    //@ts-ignore
     debug('onend')
     dest.end()
   }
@@ -641,6 +670,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   let cleanedUp = false
 
   function cleanup() {
+    //@ts-ignore
     debug('cleanup') // Cleanup event handlers once the pipe is broken.
 
     dest.removeListener('close', onclose)
@@ -671,10 +701,12 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
     // => Check whether `dest` is still a piping destination.
     if (!cleanedUp) {
       if (state.pipes.length === 1 && state.pipes[0] === dest) {
+        //@ts-ignore
         debug('false write response, pause', 0)
         state.awaitDrainWriters = dest
         state.multiAwaitDrain = false
       } else if (state.pipes.length > 1 && state.pipes.includes(dest)) {
+        //@ts-ignore
         debug('false write response, pause', state.awaitDrainWriters.size)
         state.awaitDrainWriters.add(dest)
       }
@@ -695,8 +727,10 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   src.on('data', ondata)
 
   function ondata(chunk) {
+    //@ts-ignore
     debug('ondata')
     const ret = dest.write(chunk)
+    //@ts-ignore
     debug('dest.write', ret)
 
     if (ret === false) {
@@ -706,6 +740,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   // However, don't suppress the throwing behavior for this.
 
   function onerror(er) {
+    //@ts-ignore
     debug('onerror', er)
     unpipe()
     dest.removeListener('error', onerror)
@@ -732,6 +767,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   dest.once('close', onclose)
 
   function onfinish() {
+    //@ts-ignore
     debug('onfinish')
     dest.removeListener('close', onclose)
     unpipe()
@@ -740,6 +776,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
   dest.once('finish', onfinish)
 
   function unpipe() {
+    //@ts-ignore
     debug('unpipe')
     src.unpipe(dest)
   } // Tell the dest that it's being piped to.
@@ -751,6 +788,7 @@ Readable.prototype.pipe = function (dest, pipeOpts) {
       pause()
     }
   } else if (!state.flowing) {
+    //@ts-ignore
     debug('pipe resume')
     src.resume()
   }
@@ -765,9 +803,11 @@ function pipeOnDrain(src, dest) {
     // so we use the real dest here.
 
     if (state.awaitDrainWriters === dest) {
+      //@ts-ignore
       debug('pipeOnDrain', 1)
       state.awaitDrainWriters = null
     } else if (state.multiAwaitDrain) {
+      //@ts-ignore
       debug('pipeOnDrain', state.awaitDrainWriters.size)
       state.awaitDrainWriters.delete(dest)
     }
@@ -816,6 +856,7 @@ Readable.prototype.on = function (ev, fn) {
   if (ev === 'data') {
     // Update readableListening so that resume() may be a no-op
     // a few lines down. This is needed to support once('readable').
+    //@ts-ignore
     state.readableListening = this.listenerCount('readable') > 0 // Try start flowing on next tick if stream isn't explicitly paused.
 
     if (state.flowing !== false) this.resume()
@@ -824,6 +865,7 @@ Readable.prototype.on = function (ev, fn) {
       state.readableListening = state.needReadable = true
       state.flowing = false
       state.emittedReadable = false
+      //@ts-ignore
       debug('on readable', state.length, state.reading)
 
       if (state.length) {
@@ -889,6 +931,7 @@ function updateReadableListening(self) {
 }
 
 function nReadingNextTick(self) {
+  //@ts-ignore
   debug('readable nexttick read 0')
   self.read(0)
 } // pause() and resume() are remnants of the legacy readable stream API
@@ -898,6 +941,7 @@ Readable.prototype.resume = function () {
   const state = this._readableState
 
   if (!state.flowing) {
+    //@ts-ignore
     debug('resume') // We flow only if there is no one listening
     // for readable, but we still have to call
     // resume().
@@ -918,6 +962,7 @@ function resume(stream, state) {
 }
 
 function resume_(stream, state) {
+  //@ts-ignore
   debug('resume', state.reading)
 
   if (!state.reading) {
@@ -931,11 +976,14 @@ function resume_(stream, state) {
 }
 
 Readable.prototype.pause = function () {
+  //@ts-ignore
   debug('call pause flowing=%j', this._readableState.flowing)
 
   if (this._readableState.flowing !== false) {
+    //@ts-ignore
     debug('pause')
     this._readableState.flowing = false
+    //@ts-ignore
     this.emit('pause')
   }
 
@@ -945,6 +993,7 @@ Readable.prototype.pause = function () {
 
 function flow(stream) {
   const state = stream._readableState
+  //@ts-ignore
   debug('flow', state.flowing)
 
   while (state.flowing && stream.read() !== null);
@@ -1016,6 +1065,7 @@ function streamToAsyncIterator(stream, options) {
   }
 
   const iter = createAsyncIterator(stream, options)
+  //@ts-ignore
   iter.stream = stream
   return iter
 }
@@ -1257,6 +1307,7 @@ function fromList(n, state) {
 
 function endReadable(stream) {
   const state = stream._readableState
+  //@ts-ignore
   debug('endReadable', state.endEmitted)
 
   if (!state.endEmitted) {
@@ -1266,6 +1317,7 @@ function endReadable(stream) {
 }
 
 function endReadableNT(state, stream) {
+  //@ts-ignore
   debug('endReadableNT', state.endEmitted, state.length) // Check that we didn't get one last unshift.
 
   if (!state.errored && !state.closeEmitted && !state.endEmitted && state.length === 0) {

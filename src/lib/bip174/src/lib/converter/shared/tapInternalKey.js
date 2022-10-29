@@ -16,11 +16,13 @@ function makeConverter(TYPE_BYTE) {
     return keyVal.value;
   }
   function encode(value) {
+    //@ts-ignore
     const key = Buffer.from([TYPE_BYTE]);
     return { key, value };
   }
   const expected = 'Buffer';
   function check(data) {
+    //@ts-ignore
     return Buffer.isBuffer(data) && data.length === 32;
   }
   function canAdd(currentData, newData) {

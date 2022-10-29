@@ -16,7 +16,9 @@ function getValue (value) {
 }
 
 function captureStackTrace (e, t) {
+  //@ts-ignore
   if (Error.captureStackTrace) {
+    //@ts-ignore
     Error.captureStackTrace(e, t)
   }
 }
@@ -100,11 +102,9 @@ function tfSubError (e, property, label) {
   return e
 }
 
-module.exports = {
-  TfTypeError: TfTypeError,
-  TfPropertyTypeError: TfPropertyTypeError,
-  tfCustomError: tfCustomError,
-  tfSubError: tfSubError,
-  tfJSON: tfJSON,
-  getValueTypeName: getValueTypeName
-}
+exports.TfTypeError= TfTypeError
+exports.TfPropertyTypeError= TfPropertyTypeError
+exports.tfCustomError= tfCustomError
+exports.tfSubError= tfSubError
+exports.tfJSON= tfJSON
+exports.getValueTypeName= getValueTypeName

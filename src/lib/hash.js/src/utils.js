@@ -1,9 +1,9 @@
 'use strict';
 
 var {assert} = require('../../minimalistic-assert/index.js');
-var inherits = require('../../inherits/index.js');
+exports.inherits = require('../../inherits/index.js');
 
-exports.inherits = inherits;
+// exports.inherits = inherits;
 
 function isSurrogatePair(msg, i) {
   if ((msg.charCodeAt(i) & 0xFC00) !== 0xD800) {

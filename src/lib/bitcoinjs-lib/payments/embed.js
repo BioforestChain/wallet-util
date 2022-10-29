@@ -16,6 +16,7 @@ function stacksEqual(a, b) {
 function p2data(a, opts) {
   if (!a.data && !a.output) throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       network: types_1.typeforce.maybe(types_1.typeforce.Object),

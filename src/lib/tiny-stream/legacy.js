@@ -15,15 +15,21 @@ Stream.prototype.pipe = function (dest, options) {
   const source = this
 
   function ondata(chunk) {
+    //@ts-ignore
     if (dest.writable && dest.write(chunk) === false && source.pause) {
+      //@ts-ignore
       source.pause()
     }
   }
 
+  //@ts-ignore
   source.on('data', ondata)
 
   function ondrain() {
+    //@ts-ignore
+    //@ts-ignore
     if (source.readable && source.resume) {
+      //@ts-ignore
       source.resume()
     }
   }
@@ -32,7 +38,9 @@ Stream.prototype.pipe = function (dest, options) {
   // source gets the 'end' or 'close' events.  Only dest.end() once.
 
   if (!dest._isStdio && (!options || options.end !== false)) {
+    //@ts-ignore
     source.on('end', onend)
+    //@ts-ignore
     source.on('close', onclose)
   }
 
@@ -62,18 +70,26 @@ Stream.prototype.pipe = function (dest, options) {
   prependListener(dest, 'error', onerror) // Remove all the event listeners that were added.
 
   function cleanup() {
+    //@ts-ignore
     source.removeListener('data', ondata)
     dest.removeListener('drain', ondrain)
+    //@ts-ignore
     source.removeListener('end', onend)
+    //@ts-ignore
     source.removeListener('close', onclose)
+    //@ts-ignore
     source.removeListener('error', onerror)
     dest.removeListener('error', onerror)
+    //@ts-ignore
     source.removeListener('end', cleanup)
+    //@ts-ignore
     source.removeListener('close', cleanup)
     dest.removeListener('close', cleanup)
   }
 
+  //@ts-ignore
   source.on('end', cleanup)
+  //@ts-ignore
   source.on('close', cleanup)
   dest.on('close', cleanup)
   dest.emit('pipe', source) // Allow for unix-like usage: A.pipe(B).pipe(C)

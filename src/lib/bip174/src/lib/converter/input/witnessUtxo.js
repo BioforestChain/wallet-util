@@ -27,11 +27,13 @@ exports.decode = decode;
 function encode(data) {
   const { script, value } = data;
   const varintLen = varuint.encodingLength(script.length);
+  //@ts-ignore
   const result = Buffer.allocUnsafe(8 + varintLen + script.length);
   tools_1.writeUInt64LE(result, value, 0);
   varuint.encode(script.length, result, 8);
   script.copy(result, 8 + varintLen);
   return {
+    //@ts-ignore
     key: Buffer.from([typeFields_1.InputTypes.WITNESS_UTXO]),
     value: result,
   };
@@ -39,6 +41,7 @@ function encode(data) {
 exports.encode = encode;
 exports.expected = '{ script: Buffer; value: number; }';
 function check(data) {
+  //@ts-ignore
   return Buffer.isBuffer(data.script) && typeof data.value === 'number';
 }
 exports.check = check;

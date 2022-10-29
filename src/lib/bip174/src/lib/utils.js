@@ -121,6 +121,7 @@ function addOutputAttributes(outputs, data) {
 }
 exports.addOutputAttributes = addOutputAttributes;
 function defaultVersionSetter(version, txBuf) {
+  //@ts-ignore
   if (!Buffer.isBuffer(txBuf) || txBuf.length < 4) {
     throw new Error('Set Version: Invalid Transaction');
   }
@@ -129,6 +130,7 @@ function defaultVersionSetter(version, txBuf) {
 }
 exports.defaultVersionSetter = defaultVersionSetter;
 function defaultLocktimeSetter(locktime, txBuf) {
+  //@ts-ignore
   if (!Buffer.isBuffer(txBuf) || txBuf.length < 4) {
     throw new Error('Set Locktime: Invalid Transaction');
   }

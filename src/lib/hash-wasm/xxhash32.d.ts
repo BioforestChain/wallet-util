@@ -9,7 +9,6 @@ import { IDataType } from './util';
 export declare function xxhash32(data: IDataType, seed?: number): Promise<string>;
 /**
  * Creates a new xxHash32 hash instance
- * @param data Input data (string, Buffer or TypedArray)
  * @param seed Number used to initialize the internal state of the algorithm (defaults to 0)
  */
 export declare function createXXHash32(seed?: number): Promise<IHasher>;

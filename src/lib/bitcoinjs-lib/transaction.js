@@ -20,16 +20,20 @@ function vectorSize(someVector) {
     }, 0)
   );
 }
+//@ts-ignore
 const EMPTY_BUFFER = Buffer.allocUnsafe(0);
 const EMPTY_WITNESS = [];
+//@ts-ignore
 const ZERO = Buffer.from(
   '0000000000000000000000000000000000000000000000000000000000000000',
   'hex',
 );
+//@ts-ignore
 const ONE = Buffer.from(
   '0000000000000000000000000000000000000000000000000000000000000001',
   'hex',
 );
+//@ts-ignore
 const VALUE_UINT64_MAX = Buffer.from('ffffffffffffffff', 'hex');
 const BLANK_OUTPUT = {
   script: EMPTY_BUFFER,
@@ -92,6 +96,7 @@ class Transaction {
     return tx;
   }
   static fromHex(hex) {
+    //@ts-ignore
     return Transaction.fromBuffer(Buffer.from(hex, 'hex'), false);
   }
   static isCoinbaseHash(buffer) {
@@ -252,6 +257,7 @@ class Transaction {
       txTmp.ins[inIndex].script = ourScript;
     }
     // serialize and hash
+    //@ts-ignore
     const buffer = Buffer.allocUnsafe(txTmp.byteLength(false) + 4);
     buffer.writeInt32LE(hashType, buffer.length - 4);
     txTmp.__toBuffer(buffer, 0, false);
@@ -389,6 +395,8 @@ class Transaction {
     // https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki#cite_note-19
     return bcrypto.taggedHash(
       'TapSighash',
+      //@ts-ignore
+      //@ts-ignore
       Buffer.concat([Buffer.of(0x00), sigMsgWriter.end()]),
     );
   }
@@ -397,12 +405,14 @@ class Transaction {
       types.tuple(types.UInt32, types.Buffer, types.Satoshi, types.UInt32),
       arguments,
     );
+    //@ts-ignore
     let tbuffer = Buffer.from([]);
     let bufferWriter;
     let hashOutputs = ZERO;
     let hashPrevouts = ZERO;
     let hashSequence = ZERO;
     if (!(hashType & Transaction.SIGHASH_ANYONECANPAY)) {
+      //@ts-ignore
       tbuffer = Buffer.allocUnsafe(36 * this.ins.length);
       bufferWriter = new bufferutils_1.BufferWriter(tbuffer, 0);
       this.ins.forEach(txIn => {
@@ -416,6 +426,7 @@ class Transaction {
       (hashType & 0x1f) !== Transaction.SIGHASH_SINGLE &&
       (hashType & 0x1f) !== Transaction.SIGHASH_NONE
     ) {
+      //@ts-ignore
       tbuffer = Buffer.allocUnsafe(4 * this.ins.length);
       bufferWriter = new bufferutils_1.BufferWriter(tbuffer, 0);
       this.ins.forEach(txIn => {
@@ -430,6 +441,7 @@ class Transaction {
       const txOutsSize = this.outs.reduce((sum, output) => {
         return sum + 8 + varSliceSize(output.script);
       }, 0);
+      //@ts-ignore
       tbuffer = Buffer.allocUnsafe(txOutsSize);
       bufferWriter = new bufferutils_1.BufferWriter(tbuffer, 0);
       this.outs.forEach(out => {
@@ -442,12 +454,14 @@ class Transaction {
       inIndex < this.outs.length
     ) {
       const output = this.outs[inIndex];
+      //@ts-ignore
       tbuffer = Buffer.allocUnsafe(8 + varSliceSize(output.script));
       bufferWriter = new bufferutils_1.BufferWriter(tbuffer, 0);
       bufferWriter.writeUInt64(output.value);
       bufferWriter.writeVarSlice(output.script);
       hashOutputs = bcrypto.hash256(tbuffer);
     }
+    //@ts-ignore
     tbuffer = Buffer.allocUnsafe(156 + varSliceSize(prevOutScript));
     bufferWriter = new bufferutils_1.BufferWriter(tbuffer, 0);
     const input = this.ins[inIndex];
@@ -466,11 +480,13 @@ class Transaction {
   }
   getHash(forWitness) {
     // wtxid for coinbase is always 32 bytes of 0x00
+    //@ts-ignore
     if (forWitness && this.isCoinbase()) return Buffer.alloc(32, 0);
     return bcrypto.hash256(this.__toBuffer(undefined, undefined, forWitness));
   }
   getId() {
     // transaction hash's are displayed in reverse order
+    //@ts-ignore
     return (0, bufferutils_1.reverseBuffer)(this.getHash(false)).toString(
       'hex',
     );
@@ -490,6 +506,7 @@ class Transaction {
     this.ins[index].witness = witness;
   }
   __toBuffer(buffer, initialOffset, _ALLOW_WITNESS = false) {
+    //@ts-ignore
     if (!buffer) buffer = Buffer.allocUnsafe(this.byteLength(_ALLOW_WITNESS));
     const bufferWriter = new bufferutils_1.BufferWriter(
       buffer,

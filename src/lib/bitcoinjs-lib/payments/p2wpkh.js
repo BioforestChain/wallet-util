@@ -8,6 +8,7 @@ const types_1 = require('../types.js');
 const lazy = require('./lazy.js');
 const bech32_1 = require('../../bech32/index.js');
 const OPS = bscript.OPS;
+//@ts-ignore
 const EMPTY_BUFFER = Buffer.alloc(0);
 // witness: {signature} {pubKey}
 // input: <>
@@ -16,6 +17,7 @@ function p2wpkh(a, opts) {
   if (!a.address && !a.hash && !a.output && !a.pubkey && !a.witness)
     throw new TypeError('Not enough data');
   opts = Object.assign({ validate: true }, opts || {});
+  //@ts-ignore
   (0, types_1.typeforce)(
     {
       address: types_1.typeforce.maybe(types_1.typeforce.String),
@@ -38,6 +40,7 @@ function p2wpkh(a, opts) {
     return {
       version,
       prefix: result.prefix,
+      //@ts-ignore
       data: Buffer.from(data),
     };
   });
@@ -78,6 +81,7 @@ function p2wpkh(a, opts) {
   });
   // extended validation
   if (opts.validate) {
+    //@ts-ignore
     let hash = Buffer.from([]);
     if (a.address) {
       if (network && network.bech32 !== _address().prefix)
@@ -109,6 +113,7 @@ function p2wpkh(a, opts) {
       if (hash.length > 0 && !hash.equals(pkh))
         throw new TypeError('Hash mismatch');
       else hash = pkh;
+      //@ts-ignore
       if (!(0, types_1.isPoint)(a.pubkey) || a.pubkey.length !== 33)
         throw new TypeError('Invalid pubkey for p2wpkh');
     }
@@ -116,6 +121,7 @@ function p2wpkh(a, opts) {
       if (a.witness.length !== 2) throw new TypeError('Witness is invalid');
       if (!bscript.isCanonicalScriptSignature(a.witness[0]))
         throw new TypeError('Witness has invalid signature');
+      //@ts-ignore
       if (!(0, types_1.isPoint)(a.witness[1]) || a.witness[1].length !== 33)
         throw new TypeError('Witness has invalid pubkey');
       if (a.signature && !a.signature.equals(a.witness[0]))

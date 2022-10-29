@@ -8,7 +8,9 @@ function checkUInt53(n) {
 }
 function encode(_number, buffer, offset) {
   checkUInt53(_number);
+  //@ts-ignore
   if (!buffer) buffer = Buffer.allocUnsafe(encodingLength(_number));
+  //@ts-ignore
   if (!Buffer.isBuffer(buffer))
     throw new TypeError('buffer must be a Buffer instance');
   if (!offset) offset = 0;
@@ -37,6 +39,7 @@ function encode(_number, buffer, offset) {
 }
 exports.encode = encode;
 function decode(buffer, offset) {
+  //@ts-ignore
   if (!Buffer.isBuffer(buffer))
     throw new TypeError('buffer must be a Buffer instance');
   if (!offset) offset = 0;

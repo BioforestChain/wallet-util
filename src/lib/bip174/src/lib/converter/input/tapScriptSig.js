@@ -30,8 +30,10 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(tSig) {
+  //@ts-ignore
   const head = Buffer.from([typeFields_1.InputTypes.TAP_SCRIPT_SIG]);
   return {
+    //@ts-ignore
     key: Buffer.concat([head, tSig.pubkey, tSig.leafHash]),
     value: tSig.signature,
   };
@@ -40,8 +42,11 @@ exports.encode = encode;
 exports.expected = '{ pubkey: Buffer; leafHash: Buffer; signature: Buffer; }';
 function check(data) {
   return (
+    //@ts-ignore
     Buffer.isBuffer(data.pubkey) &&
+    //@ts-ignore
     Buffer.isBuffer(data.leafHash) &&
+    //@ts-ignore
     Buffer.isBuffer(data.signature) &&
     data.pubkey.length === 32 &&
     data.leafHash.length === 32 &&

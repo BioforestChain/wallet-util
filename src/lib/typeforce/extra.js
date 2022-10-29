@@ -2,6 +2,7 @@ var NATIVE = require('./native.js')
 var ERRORS = require('./errors.js')
 
 function _Buffer (value) {
+  //@ts-ignore
   return Buffer.isBuffer(value)
 }
 

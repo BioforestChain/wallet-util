@@ -36,9 +36,12 @@ function decode(keyVal) {
 }
 exports.decode = decode;
 function encode(data) {
+  //@ts-ignore
   const head = Buffer.from([typeFields_1.GlobalTypes.GLOBAL_XPUB]);
+  //@ts-ignore
   const key = Buffer.concat([head, data.extendedPubkey]);
   const splitPath = data.path.split('/');
+  //@ts-ignore
   const value = Buffer.allocUnsafe(splitPath.length * 4);
   data.masterFingerprint.copy(value, 0);
   let offset = 4;
@@ -62,9 +65,11 @@ function check(data) {
   const mfp = data.masterFingerprint;
   const p = data.path;
   return (
+    //@ts-ignore
     Buffer.isBuffer(epk) &&
     epk.length === 78 &&
     [2, 3].indexOf(epk[45]) > -1 &&
+    //@ts-ignore
     Buffer.isBuffer(mfp) &&
     mfp.length === 4 &&
     typeof p === 'string' &&

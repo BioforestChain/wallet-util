@@ -6,9 +6,13 @@ var {assert} = require('../../minimalistic-assert/index.js');
 function BlockHash() {
   this.pending = null;
   this.pendingTotal = 0;
+  //@ts-ignore
   this.blockSize = this.constructor.blockSize;
+  //@ts-ignore
   this.outSize = this.constructor.outSize;
+  //@ts-ignore
   this.hmacStrength = this.constructor.hmacStrength;
+  //@ts-ignore
   this.padLength = this.constructor.padLength / 8;
   this.endian = 'big';
 
@@ -38,6 +42,7 @@ BlockHash.prototype.update = function update(msg, enc) {
 
     msg = utils.join32(msg, 0, msg.length - r, this.endian);
     for (var i = 0; i < msg.length; i += this._delta32)
+      //@ts-ignore
       this._update(msg, i, i + this._delta32);
   }
 
@@ -48,6 +53,7 @@ BlockHash.prototype.digest = function digest(enc) {
   this.update(this._pad());
   assert(this.pending === null);
 
+  //@ts-ignore
   return this._digest(enc);
 };
 

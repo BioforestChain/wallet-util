@@ -57,15 +57,22 @@ function Duplex(options) {
     this.allowHalfOpen = options.allowHalfOpen !== false
 
     if (options.readable === false) {
+      //@ts-ignore
       this._readableState.readable = false
+      //@ts-ignore
       this._readableState.ended = true
+      //@ts-ignore
       this._readableState.endEmitted = true
     }
 
     if (options.writable === false) {
+      //@ts-ignore
       this._writableState.writable = false
+      //@ts-ignore
       this._writableState.ending = true
+      //@ts-ignore
       this._writableState.ended = true
+      //@ts-ignore
       this._writableState.finished = true
     }
   } else {

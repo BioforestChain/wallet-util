@@ -176,6 +176,8 @@ function resetBuffer(state) {
 }
 
 WritableState.prototype.getBuffer = function getBuffer() {
+  //@ts-ignore
+  //@ts-ignore
   return ArrayPrototypeSlice(this.buffered, this.bufferedIndex)
 }
 
@@ -202,8 +204,10 @@ function Writable(options) {
   this._writableState = new WritableState(options, this, isDuplex)
 
   if (options) {
+    //@ts-ignore
     if (typeof options.write === 'function') this._write = options.write
     if (typeof options.writev === 'function') this._writev = options.writev
+    //@ts-ignore
     if (typeof options.destroy === 'function') this._destroy = options.destroy
     if (typeof options.final === 'function') this._final = options.final
     if (typeof options.construct === 'function') this._construct = options.construct
@@ -257,7 +261,9 @@ function _write(stream, chunk, encoding, cb) {
       }
     } else if (chunk instanceof Buffer) {
       encoding = 'buffer'
+    //@ts-ignore
     } else if (Stream._isUint8Array(chunk)) {
+      //@ts-ignore
       chunk = Stream._uint8ArrayToBuffer(chunk)
       encoding = 'buffer'
     } else {
@@ -532,6 +538,7 @@ function clearBuffer(stream, state) {
       buffered.splice(0, i)
       state.bufferedIndex = 0
     } else {
+      //@ts-ignore
       state.bufferedIndex = i
     }
   }
@@ -539,6 +546,7 @@ function clearBuffer(stream, state) {
   state.bufferProcessing = false
 }
 
+//@ts-ignore
 Writable.prototype._write = function (chunk, encoding, cb) {
   if (this._writev) {
     this._writev(
@@ -867,12 +875,15 @@ Writable.prototype.destroy = function (err, cb) {
   return this
 }
 
+//@ts-ignore
 Writable.prototype._undestroy = destroyImpl.undestroy
 
+//@ts-ignore
 Writable.prototype._destroy = function (err, cb) {
   cb(err)
 }
 
+//@ts-ignore
 Writable.prototype[EE.captureRejectionSymbol] = function (err) {
   this.destroy(err)
 }
