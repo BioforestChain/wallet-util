@@ -1,7 +1,9 @@
-import { Buffer } from './buffer/index.js';
-import * as ecc from './tiny-secp256k1/index.js';
+import node_buffer from './buffer/index.cjs';
+const { Buffer } = node_buffer;
+import * as ecc from './tiny-secp256k1/index.mjs';
 
-import { keccak as keccakHex, createKeccak } from './hash-wasm/index.js';
+import hashWasm from './hash-wasm/index.cjs';
+const { keccak: keccakHex, createKeccak } = hashWasm;
 export { keccakHex };
 
 export const keccak256Buffer = async (publicKey: Uint8Array) => {

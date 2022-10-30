@@ -1,4 +1,4 @@
-const crypto = self.crypto;
+const crypto = globalThis.crypto;
 const subtle = crypto?.subtle;
 
 function utf8ToBytes(str: string): Uint8Array {
@@ -47,6 +47,5 @@ export async function pbkdf2(
   return new Uint8Array(arrayBuffer);
 }
 
-export function randomBytes(byteLength: number = 32) {
-  return crypto.getRandomValues(new Uint8Array(byteLength));
-}
+import rand_cjs from './tiny-crypto/rand/index.cjs';
+export const randomBytes = rand_cjs.randomBytes;

@@ -1,23 +1,19 @@
-import { base as basex } from './base-x/index.js';
+import basex from './base-x/index.cjs';
 import * as ethUtil from './ethUtil.mjs';
 
+import bip32_cjs from './bip32/bip32.cjs';
+import * as bitcoin from './bitcoinjs-lib/index.cjs';
+import buffer_cjs from './buffer/index.cjs';
 import { pbkdf2, randomBytes, sha } from './crypto.mjs';
-import {
-  COIN_SYMBOL,
-  getNetWorkInfo,
-  networkIsEthereum,
-  networkIsRsk,
-} from './networks.mjs';
+import ecpair_cjs from './ecpair/ecpair.cjs';
+import { COIN_SYMBOL, getNetWorkInfo, networkIsEthereum } from './networks.mjs';
+import * as ecc from './tiny-secp256k1/index.mjs';
 import { assert, binaryToByte, bytesToBinary } from './utils.mjs';
-import english from './wordlists/english.json' assert { type: 'json' };
-import BIP32Factory from './bip32/index.js';
-import * as ecc from './tiny-secp256k1/index.js';
-import { Buffer } from './buffer/index.js';
-import * as bitcoin from './bitcoinjs-lib/index.js';
-import { ECPairFactory } from './ecpair/index.js';
+import english from './wordlists/english.mjs';
 
-const bip32 = BIP32Factory(ecc);
-const ecpair = ECPairFactory(ecc);
+const { Buffer } = buffer_cjs;
+const bip32 = bip32_cjs.BIP32Factory(ecc);
+const ecpair = ecpair_cjs.ECPairFactory(ecc);
 
 // declare const libs: typeof import("../assets/bip39-libs.js");
 // const libsLoader = async () => libs;
@@ -90,7 +86,7 @@ export async function generateMnemonic(
 }
 
 const hasStrongRandom = () => {
-  return 'crypto' in self && self['crypto'] !== null;
+  return globalThis.crypto?.getRandomValues != null;
 };
 export const bytesToHexString = (byteArray: Uint8Array) => {
   return Array.from(byteArray, (byte) => {
@@ -243,16 +239,16 @@ async function convertRippleAdrr(address: string) {
   );
 }
 
-async function convertRipplePriv(priv: string) {
-  return basex('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
-    .decode(priv)
-    .toString('hex')
-    .slice(2, 66);
-}
+// async function convertRipplePriv(priv: string) {
+//   return basex('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
+//     .decode(priv)
+//     .toString('hex')
+//     .slice(2, 66);
+// }
 
 function calcBip32ExtendedKey(
-  // bip32RootKey: import('../assets/bip39-libs.js').HDNode,
-  bip32RootKey: import('./bip32/index.js').BIP32Interface,
+  // bip32RootKey: import('../assets/bip39-libs.cjs').HDNode,
+  bip32RootKey: import('./bip32/index.cjs').BIP32Interface,
   path: DERIVATION_PATH
 ) {
   const pathBits = path.split('/');

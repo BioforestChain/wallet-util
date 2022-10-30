@@ -6,15 +6,30 @@ specifiers:
   '@rollup/plugin-node-resolve': ^15.0.1
   '@rollup/plugin-typescript': ^9.0.2
   '@rollup/plugin-wasm': ^6.0.1
+  '@types/node': ^18.11.7
+  base-x: ^4.0.0
   ecpair: ^2.1.0
+  esm: ^3.2.25
+  hash-base: ^3.1.0
+  hash.js: ^1.1.7
+  inherits: ^2.0.4
+  md5.js: ^1.3.5
+  prettier: ^2.7.1
   rollup: ^3.2.3
+  sha.js: ^2.4.11
   tiny-secp256k1: ^2.2.1
   ts-node: ^10.9.1
   tslib: ^2.4.0
   typescript: ^4.8.4
 
 dependencies:
+  base-x: 4.0.0
   ecpair: 2.1.0
+  hash-base: 3.1.0
+  hash.js: 1.1.7
+  inherits: 2.0.4
+  md5.js: 1.3.5
+  sha.js: 2.4.11
   tiny-secp256k1: 2.2.1
 
 devDependencies:
@@ -23,8 +38,11 @@ devDependencies:
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.3
   '@rollup/plugin-typescript': 9.0.2_bvn3ed5hy3sfde644tygjdj4ia
   '@rollup/plugin-wasm': 6.0.1_rollup@3.2.3
+  '@types/node': 18.11.7
+  esm: 3.2.25
+  prettier: 2.7.1
   rollup: 3.2.3
-  ts-node: 10.9.1_typescript@4.8.4
+  ts-node: 10.9.1_evej5wzm4hojmu6uzxwpspdmsu
   tslib: 2.4.0
   typescript: 4.8.4
 
@@ -169,6 +187,10 @@ packages:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
+  /@types/node/18.11.7:
+    resolution: {integrity: sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==}
+    dev: true
+
   /@types/resolve/1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: true
@@ -196,6 +218,10 @@ packages:
     resolution: {integrity: sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ==}
     dependencies:
       safe-buffer: 5.2.1
+    dev: false
+
+  /base-x/4.0.0:
+    resolution: {integrity: sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==}
     dev: false
 
   /brace-expansion/2.0.1:
@@ -267,6 +293,11 @@ packages:
       wif: 2.0.6
     dev: false
 
+  /esm/3.2.25:
+    resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==}
+    engines: {node: '>=6'}
+    dev: true
+
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
     dev: true
@@ -312,6 +343,13 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.0
       safe-buffer: 5.2.1
+    dev: false
+
+  /hash.js/1.1.7:
+    resolution: {integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==}
+    dependencies:
+      inherits: 2.0.4
+      minimalistic-assert: 1.0.1
     dev: false
 
   /inflight/1.0.6:
@@ -366,6 +404,10 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /minimalistic-assert/1.0.1:
+    resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
+    dev: false
+
   /minimatch/5.1.0:
     resolution: {integrity: sha512-9TPBGGak4nHfGZsPBohm9AWg6NoT7QTCehS3BIJABslyZbzxfV78QM2Y6+i741OPZIafFAaiiEMh5OyIrJPgtg==}
     engines: {node: '>=10'}
@@ -386,6 +428,12 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+    dev: true
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /randombytes/2.1.0:
@@ -461,7 +509,7 @@ packages:
       uint8array-tools: 0.0.7
     dev: false
 
-  /ts-node/10.9.1_typescript@4.8.4:
+  /ts-node/10.9.1_evej5wzm4hojmu6uzxwpspdmsu:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -480,6 +528,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
+      '@types/node': 18.11.7
       acorn: 8.8.1
       acorn-walk: 8.2.0
       arg: 4.1.3
