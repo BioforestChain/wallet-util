@@ -1,4 +1,4 @@
-import networks from './bitcoinjs-lib/networks.cjs';
+import networks from '../../assets/bitcoinjs-lib/networks.cjs';
 const _networksExtensions = {
   bitcoin: networks.bitcoin,
   regtest: networks.regtest,

@@ -1,6 +1,6 @@
 var NATIVE = require('./native.cjs');
 var ERRORS = require('./errors.cjs');
-var Buffer = require('../buffer/index.cjs')
+var { Buffer } = require('../buffer/index.cjs');
 
 function _Buffer(value) {
   return Buffer.isBuffer(value);
@@ -19,7 +19,7 @@ function _LengthN(type, length) {
 
     throw ERRORS.tfCustomError(
       name + '(Length: ' + length + ')',
-      name + '(Length: ' + value.length + ')'
+      name + '(Length: ' + value.length + ')',
     );
   }
   Length.toJSON = function () {

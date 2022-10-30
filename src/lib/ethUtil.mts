@@ -1,8 +1,8 @@
-import node_buffer from './buffer/index.cjs';
+import node_buffer from '../../assets/buffer/index.cjs';
+import hashWasm from '../../assets/hash-wasm/index.cjs';
 const { Buffer } = node_buffer;
-import * as ecc from './tiny-secp256k1/index.mjs';
 
-import hashWasm from './hash-wasm/index.cjs';
+import { pointCompress } from './tiny-secp256k1/index.mjs';
 const { keccak: keccakHex, createKeccak } = hashWasm;
 export { keccakHex };
 
@@ -13,7 +13,7 @@ export const keccak256Buffer = async (publicKey: Uint8Array) => {
 
 export const importPublic = async (publickKey: Uint8Array) => {
   if (publickKey.length !== 64) {
-    publickKey = ecc.pointCompress(publickKey, false).slice(1);
+    publickKey = pointCompress(publickKey, false).slice(1);
   }
   return publickKey;
 };

@@ -1,11 +1,11 @@
-import basex from './base-x/index.cjs';
-import * as ethUtil from './ethUtil.mjs';
+import basex from '../../assets/base-x/index.cjs';
+import bip32_cjs, { BIP32Interface } from '../../assets/bip32/bip32.cjs';
+import * as bitcoin from '../../assets/bitcoinjs-lib/index.cjs';
+import buffer_cjs from '../../assets/buffer/index.cjs';
+import ecpair_cjs from '../../assets/ecpair/ecpair.cjs';
 
-import bip32_cjs from './bip32/bip32.cjs';
-import * as bitcoin from './bitcoinjs-lib/index.cjs';
-import buffer_cjs from './buffer/index.cjs';
 import { pbkdf2, randomBytes, sha } from './crypto.mjs';
-import ecpair_cjs from './ecpair/ecpair.cjs';
+import * as ethUtil from './ethUtil.mjs';
 import { COIN_SYMBOL, getNetWorkInfo, networkIsEthereum } from './networks.mjs';
 import * as ecc from './tiny-secp256k1/index.mjs';
 import { assert, binaryToByte, bytesToBinary } from './utils.mjs';
@@ -247,8 +247,7 @@ async function convertRippleAdrr(address: string) {
 // }
 
 function calcBip32ExtendedKey(
-  // bip32RootKey: import('../assets/bip39-libs.cjs').HDNode,
-  bip32RootKey: import('./bip32/index.cjs').BIP32Interface,
+  bip32RootKey: BIP32Interface,
   path: DERIVATION_PATH
 ) {
   const pathBits = path.split('/');

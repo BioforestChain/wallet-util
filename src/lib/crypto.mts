@@ -47,5 +47,5 @@ export async function pbkdf2(
   return new Uint8Array(arrayBuffer);
 }
 
-import rand_cjs from './tiny-crypto/rand/index.cjs';
+import rand_cjs from '../../assets/tiny-crypto/rand/index.cjs';
 export const randomBytes = rand_cjs.randomBytes;

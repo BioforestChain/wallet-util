@@ -1,4 +1,3 @@
-const { Buffer } = require('index.cjs'); // auto-inject!
 /*!
  * The buffer module from node.js, for the browser.
  *

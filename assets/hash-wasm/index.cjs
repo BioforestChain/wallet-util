@@ -1,5 +1,3 @@
-const { Buffer } = require('../buffer/index.cjs'); // auto-inject!
-/* eslint-disable */
 /*!
  * hash-wasm (https://www.npmjs.com/package/hash-wasm)
  * (c) Dani Biro
@@ -7,19 +5,21 @@ const { Buffer } = require('../buffer/index.cjs'); // auto-inject!
  */
 
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
+  Copyright (c) Microsoft Corporation.
 
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+
+const { Buffer } = require('../buffer/index.cjs');
 
 function __awaiter(thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -107,7 +107,7 @@ function writeHexToUInt8(buf, str) {
     const index = i << 1;
     buf[i] = hexCharCodesToInt(
       str.charCodeAt(index),
-      str.charCodeAt(index + 1)
+      str.charCodeAt(index + 1),
     );
   }
 }
@@ -289,7 +289,7 @@ function WASMInterface(binary, hashLength) {
           // },
         });
         // wasmInstance.exports._start();
-      })
+      }),
     );
     const setupInterface = () =>
       __awaiter(this, void 0, void 0, function* () {
@@ -336,7 +336,7 @@ function WASMInterface(binary, hashLength) {
     const save = () => {
       if (!initialized) {
         throw new Error(
-          'save() can only be called after init() and before digest()'
+          'save() can only be called after init() and before digest()',
         );
       }
       const stateOffset = wasmInstance.exports.Hash_GetState();
@@ -345,7 +345,7 @@ function WASMInterface(binary, hashLength) {
       const internalState = new Uint8Array(
         memoryBuffer,
         stateOffset,
-        stateLength
+        stateLength,
       );
       // prefix is 4 bytes from SHA1 hash of the WASM binary
       // it is used to detect incompatible internal states between different versions of hash-wasm
@@ -364,17 +364,17 @@ function WASMInterface(binary, hashLength) {
       const memoryBuffer = wasmInstance.exports.memory.buffer;
       if (state.length !== overallLength) {
         throw new Error(
-          `Bad state length (expected ${overallLength} bytes, got ${state.length})`
+          `Bad state length (expected ${overallLength} bytes, got ${state.length})`,
         );
       }
       if (
         !hexStringEqualsUInt8(
           binary.hash,
-          state.subarray(0, WASM_FUNC_HASH_LENGTH)
+          state.subarray(0, WASM_FUNC_HASH_LENGTH),
         )
       ) {
         throw new Error(
-          'This state was written by an incompatible hash implementation'
+          'This state was written by an incompatible hash implementation',
         );
       }
       const internalState = state.subarray(WASM_FUNC_HASH_LENGTH);
@@ -422,7 +422,7 @@ function WASMInterface(binary, hashLength) {
       wasmInstance.exports.Hash_Calculate(
         buffer.length,
         initParam,
-        digestParam
+        digestParam,
       );
       return getDigestHex(digestChars, memoryView, hashLength);
     };
@@ -648,7 +648,7 @@ function encodeResult(salt, options, res) {
   ].join(',');
   return `$argon2${options.hashType}$v=19$${parameters}$${encodeBase64(
     salt,
-    false
+    false,
   )}$${encodeBase64(res, false)}`;
 }
 const uint32View = new DataView(new ArrayBuffer(4));
@@ -751,7 +751,7 @@ function argon2Internal(options) {
     const C = new Uint8Array(1024);
     writeHexToUInt8(
       C,
-      argon2Interface.calculate(new Uint8Array([]), memorySize)
+      argon2Interface.calculate(new Uint8Array([]), memorySize),
     );
     const res = yield hashFunc(blake512, C, hashLength);
     if (options.outputType === 'hex') {
@@ -803,7 +803,7 @@ const validateOptions$3 = (options) => {
   }
   if (!['hex', 'binary', 'encoded'].includes(options.outputType)) {
     throw new Error(
-      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary', 'encoded']`
+      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary', 'encoded']`,
     );
   }
 };
@@ -815,7 +815,7 @@ function argon2i(options) {
   return __awaiter(this, void 0, void 0, function* () {
     validateOptions$3(options);
     return argon2Internal(
-      Object.assign(Object.assign({}, options), { hashType: 'i' })
+      Object.assign(Object.assign({}, options), { hashType: 'i' }),
     );
   });
 }
@@ -827,7 +827,7 @@ function argon2id(options) {
   return __awaiter(this, void 0, void 0, function* () {
     validateOptions$3(options);
     return argon2Internal(
-      Object.assign(Object.assign({}, options), { hashType: 'id' })
+      Object.assign(Object.assign({}, options), { hashType: 'id' }),
     );
   });
 }
@@ -839,7 +839,7 @@ function argon2d(options) {
   return __awaiter(this, void 0, void 0, function* () {
     validateOptions$3(options);
     return argon2Internal(
-      Object.assign(Object.assign({}, options), { hashType: 'd' })
+      Object.assign(Object.assign({}, options), { hashType: 'd' }),
     );
   });
 }
@@ -1807,6 +1807,7 @@ function xxhash32(data, seed = 0) {
 }
 /**
  * Creates a new xxHash32 hash instance
+ * @param data Input data (string, Buffer or TypedArray)
  * @param seed Number used to initialize the internal state of the algorithm (defaults to 0)
  */
 function createXXHash32(seed = 0) {
@@ -1853,7 +1854,7 @@ const seedBuffer$2 = new ArrayBuffer(8);
 function validateSeed$2(seed) {
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) {
     return new Error(
-      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).'
+      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).',
     );
   }
   return null;
@@ -1955,7 +1956,7 @@ const seedBuffer$1 = new ArrayBuffer(8);
 function validateSeed$1(seed) {
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) {
     return new Error(
-      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).'
+      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).',
     );
   }
   return null;
@@ -2057,7 +2058,7 @@ const seedBuffer = new ArrayBuffer(8);
 function validateSeed(seed) {
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) {
     return new Error(
-      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).'
+      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).',
     );
   }
   return null;
@@ -2262,7 +2263,7 @@ function calculateHmac(hasher, key) {
 function createHMAC(hash, key) {
   if (!hash || !hash.then) {
     throw new Error(
-      'Invalid hash function is provided! Usage: createHMAC(createMD5(), "key").'
+      'Invalid hash function is provided! Usage: createHMAC(createMD5(), "key").',
     );
   }
   return hash.then((hasher) => calculateHmac(hasher, key));
@@ -2277,7 +2278,7 @@ function calculatePBKDF2(digest, salt, iterations, hashLength, outputType) {
     const saltUIntBuffer = new Uint8Array(
       saltBuffer.buffer,
       saltBuffer.byteOffset,
-      saltBuffer.length
+      saltBuffer.length,
     );
     block1.set(saltUIntBuffer);
     let destPos = 0;
@@ -2315,7 +2316,7 @@ const validateOptions$2 = (options) => {
   }
   if (!options.hashFunction || !options.hashFunction.then) {
     throw new Error(
-      'Invalid hash function is provided! Usage: pbkdf2("password", "salt", 1000, 32, createSHA1()).'
+      'Invalid hash function is provided! Usage: pbkdf2("password", "salt", 1000, 32, createSHA1()).',
     );
   }
   if (!Number.isInteger(options.iterations) || options.iterations < 1) {
@@ -2329,7 +2330,7 @@ const validateOptions$2 = (options) => {
   }
   if (!['hex', 'binary'].includes(options.outputType)) {
     throw new Error(
-      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary']`
+      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary']`,
     );
   }
 };
@@ -2345,7 +2346,7 @@ function pbkdf2(options) {
       options.salt,
       options.iterations,
       options.hashLength,
-      options.outputType
+      options.outputType,
     );
   });
 }
@@ -2426,7 +2427,7 @@ const validateOptions$1 = (options) => {
   }
   if (!['hex', 'binary'].includes(options.outputType)) {
     throw new Error(
-      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary']`
+      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary']`,
     );
   }
 };
@@ -2503,7 +2504,7 @@ const validateOptions = (options) => {
   }
   if (!['hex', 'binary', 'encoded'].includes(options.outputType)) {
     throw new Error(
-      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary', 'encoded']`
+      `Insupported output type ${options.outputType}. Valid values: ['hex', 'binary', 'encoded']`,
     );
   }
 };
@@ -2684,58 +2685,56 @@ function createSM3() {
   });
 }
 
-export {
-  adler32,
-  argon2Verify,
-  argon2d,
-  argon2i,
-  argon2id,
-  bcrypt,
-  bcryptVerify,
-  blake2b,
-  blake2s,
-  blake3,
-  crc32,
-  crc32c,
-  createAdler32,
-  createBLAKE2b,
-  createBLAKE2s,
-  createBLAKE3,
-  createCRC32,
-  createCRC32C,
-  createHMAC,
-  createKeccak,
-  createMD4,
-  createMD5,
-  createRIPEMD160,
-  createSHA1,
-  createSHA224,
-  createSHA256,
-  createSHA3,
-  createSHA384,
-  createSHA512,
-  createSM3,
-  createWhirlpool,
-  createXXHash128,
-  createXXHash3,
-  createXXHash32,
-  createXXHash64,
-  keccak,
-  md4,
-  md5,
-  pbkdf2,
-  ripemd160,
-  scrypt,
-  sha1,
-  sha224,
-  sha256,
-  sha3,
-  sha384,
-  sha512,
-  sm3,
-  whirlpool,
-  xxhash128,
-  xxhash3,
-  xxhash32,
-  xxhash64,
-};
+exports.adler32 = adler32;
+exports.argon2Verify = argon2Verify;
+exports.argon2d = argon2d;
+exports.argon2i = argon2i;
+exports.argon2id = argon2id;
+exports.bcrypt = bcrypt;
+exports.bcryptVerify = bcryptVerify;
+exports.blake2b = blake2b;
+exports.blake2s = blake2s;
+exports.blake3 = blake3;
+exports.crc32 = crc32;
+exports.crc32c = crc32c;
+exports.createAdler32 = createAdler32;
+exports.createBLAKE2b = createBLAKE2b;
+exports.createBLAKE2s = createBLAKE2s;
+exports.createBLAKE3 = createBLAKE3;
+exports.createCRC32 = createCRC32;
+exports.createCRC32C = createCRC32C;
+exports.createHMAC = createHMAC;
+exports.createKeccak = createKeccak;
+exports.createMD4 = createMD4;
+exports.createMD5 = createMD5;
+exports.createRIPEMD160 = createRIPEMD160;
+exports.createSHA1 = createSHA1;
+exports.createSHA224 = createSHA224;
+exports.createSHA256 = createSHA256;
+exports.createSHA3 = createSHA3;
+exports.createSHA384 = createSHA384;
+exports.createSHA512 = createSHA512;
+exports.createSM3 = createSM3;
+exports.createWhirlpool = createWhirlpool;
+exports.createXXHash128 = createXXHash128;
+exports.createXXHash3 = createXXHash3;
+exports.createXXHash32 = createXXHash32;
+exports.createXXHash64 = createXXHash64;
+exports.keccak = keccak;
+exports.md4 = md4;
+exports.md5 = md5;
+exports.pbkdf2 = pbkdf2;
+exports.ripemd160 = ripemd160;
+exports.scrypt = scrypt;
+exports.sha1 = sha1;
+exports.sha224 = sha224;
+exports.sha256 = sha256;
+exports.sha3 = sha3;
+exports.sha384 = sha384;
+exports.sha512 = sha512;
+exports.sm3 = sm3;
+exports.whirlpool = whirlpool;
+exports.xxhash128 = xxhash128;
+exports.xxhash3 = xxhash3;
+exports.xxhash32 = xxhash32;
+exports.xxhash64 = xxhash64;

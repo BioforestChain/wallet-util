@@ -9,9 +9,5 @@
   "include": [
     "src/**/*.mts",
   ],
-  "references": [
-    {
-      "path": "./tsconfig.cjs.json"
-    }
-  ]
+  "references": []
 }
