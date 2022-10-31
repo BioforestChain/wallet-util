@@ -1,6 +1,8 @@
 import { compare } from '../uint8array-tools/index.mjs';
 import * as validate from './validate.mjs';
-import wasm from './wasm_loader.mjs';
+import { instantiateWasm } from './wasm_loader.mjs';
+
+const wasm = await instantiateWasm();
 
 const WASM_BUFFER = new Uint8Array(wasm.memory.buffer);
 const WASM_PRIVATE_KEY_PTR = wasm.PRIVATE_INPUT.value;
@@ -15,39 +17,39 @@ const WASM_SIGNATURE_INPUT_PTR = wasm.SIGNATURE_INPUT.value;
 
 const PRIVATE_KEY_INPUT = WASM_BUFFER.subarray(
   WASM_PRIVATE_KEY_PTR,
-  WASM_PRIVATE_KEY_PTR + validate.PRIVATE_KEY_SIZE
+  WASM_PRIVATE_KEY_PTR + validate.PRIVATE_KEY_SIZE,
 );
 const PUBLIC_KEY_INPUT = WASM_BUFFER.subarray(
   WASM_PUBLIC_KEY_INPUT_PTR,
-  WASM_PUBLIC_KEY_INPUT_PTR + validate.PUBLIC_KEY_UNCOMPRESSED_SIZE
+  WASM_PUBLIC_KEY_INPUT_PTR + validate.PUBLIC_KEY_UNCOMPRESSED_SIZE,
 );
 const PUBLIC_KEY_INPUT2 = WASM_BUFFER.subarray(
   WASM_PUBLIC_KEY_INPUT_PTR2,
-  WASM_PUBLIC_KEY_INPUT_PTR2 + validate.PUBLIC_KEY_UNCOMPRESSED_SIZE
+  WASM_PUBLIC_KEY_INPUT_PTR2 + validate.PUBLIC_KEY_UNCOMPRESSED_SIZE,
 );
 const X_ONLY_PUBLIC_KEY_INPUT = WASM_BUFFER.subarray(
   WASM_X_ONLY_PUBLIC_KEY_INPUT_PTR,
-  WASM_X_ONLY_PUBLIC_KEY_INPUT_PTR + validate.X_ONLY_PUBLIC_KEY_SIZE
+  WASM_X_ONLY_PUBLIC_KEY_INPUT_PTR + validate.X_ONLY_PUBLIC_KEY_SIZE,
 );
 const X_ONLY_PUBLIC_KEY_INPUT2 = WASM_BUFFER.subarray(
   WASM_X_ONLY_PUBLIC_KEY_INPUT2_PTR,
-  WASM_X_ONLY_PUBLIC_KEY_INPUT2_PTR + validate.X_ONLY_PUBLIC_KEY_SIZE
+  WASM_X_ONLY_PUBLIC_KEY_INPUT2_PTR + validate.X_ONLY_PUBLIC_KEY_SIZE,
 );
 const TWEAK_INPUT = WASM_BUFFER.subarray(
   WASM_TWEAK_INPUT_PTR,
-  WASM_TWEAK_INPUT_PTR + validate.TWEAK_SIZE
+  WASM_TWEAK_INPUT_PTR + validate.TWEAK_SIZE,
 );
 const HASH_INPUT = WASM_BUFFER.subarray(
   WASM_HASH_INPUT_PTR,
-  WASM_HASH_INPUT_PTR + validate.HASH_SIZE
+  WASM_HASH_INPUT_PTR + validate.HASH_SIZE,
 );
 const EXTRA_DATA_INPUT = WASM_BUFFER.subarray(
   WASM_EXTRA_DATA_INPUT_PTR,
-  WASM_EXTRA_DATA_INPUT_PTR + validate.EXTRA_DATA_SIZE
+  WASM_EXTRA_DATA_INPUT_PTR + validate.EXTRA_DATA_SIZE,
 );
 const SIGNATURE_INPUT = WASM_BUFFER.subarray(
   WASM_SIGNATURE_INPUT_PTR,
-  WASM_SIGNATURE_INPUT_PTR + validate.SIGNATURE_SIZE
+  WASM_SIGNATURE_INPUT_PTR + validate.SIGNATURE_SIZE,
 );
 
 function assumeCompression(compressed?: boolean, p?: Uint8Array): number {
@@ -91,7 +93,7 @@ export function isPrivate(d: Uint8Array): boolean {
 export function pointAdd(
   pA: Uint8Array,
   pB: Uint8Array,
-  compressed?: boolean
+  compressed?: boolean,
 ): Uint8Array | null {
   validate.validatePoint(pA);
   validate.validatePoint(pB);
@@ -111,7 +113,7 @@ export function pointAdd(
 export function pointAddScalar(
   p: Uint8Array,
   tweak: Uint8Array,
-  compressed?: boolean
+  compressed?: boolean,
 ): Uint8Array | null {
   validate.validatePoint(p);
   validate.validateTweak(tweak);
@@ -142,7 +144,7 @@ export function pointCompress(p: Uint8Array, compressed?: boolean): Uint8Array {
 
 export function pointFromScalar(
   d: Uint8Array,
-  compressed?: boolean
+  compressed?: boolean,
 ): Uint8Array | null {
   validate.validatePrivate(d);
   const outputlen = assumeCompression(compressed);
@@ -184,7 +186,7 @@ export function xOnlyPointFromPoint(p: Uint8Array): Uint8Array {
 export function pointMultiply(
   p: Uint8Array,
   tweak: Uint8Array,
-  compressed?: boolean
+  compressed?: boolean,
 ): Uint8Array | null {
   validate.validatePoint(p);
   validate.validateTweak(tweak);
@@ -203,7 +205,7 @@ export function pointMultiply(
 
 export function privateAdd(
   d: Uint8Array,
-  tweak: Uint8Array
+  tweak: Uint8Array,
 ): Uint8Array | null {
   validate.validatePrivate(d);
   validate.validateTweak(tweak);
@@ -221,7 +223,7 @@ export function privateAdd(
 
 export function privateSub(
   d: Uint8Array,
-  tweak: Uint8Array
+  tweak: Uint8Array,
 ): Uint8Array | null {
   validate.validatePrivate(d);
   validate.validateTweak(tweak);
@@ -262,7 +264,7 @@ export interface XOnlyPointAddTweakResult {
 }
 export function xOnlyPointAddTweak(
   p: Uint8Array,
-  tweak: Uint8Array
+  tweak: Uint8Array,
 ): XOnlyPointAddTweakResult | null {
   validate.validateXOnlyPoint(p);
   validate.validateTweak(tweak);
@@ -271,13 +273,13 @@ export function xOnlyPointAddTweak(
     TWEAK_INPUT.set(tweak);
     const parity = wasm.xOnlyPointAddTweak();
     return parity !== -1
-      ? {
+      ? ({
           parity,
           xOnlyPubkey: X_ONLY_PUBLIC_KEY_INPUT.slice(
             0,
-            validate.X_ONLY_PUBLIC_KEY_SIZE
+            validate.X_ONLY_PUBLIC_KEY_SIZE,
           ),
-        }
+        } as XOnlyPointAddTweakResult)
       : null;
   } finally {
     X_ONLY_PUBLIC_KEY_INPUT.fill(0);
@@ -290,7 +292,7 @@ export function xOnlyPointAddTweakCheck(
   point: Uint8Array,
   tweak: Uint8Array,
   resultToCheck: Uint8Array,
-  tweakParity?: TweakParity
+  tweakParity?: TweakParity,
 ): boolean {
   validate.validateXOnlyPoint(point);
   validate.validateXOnlyPoint(resultToCheck);
@@ -307,7 +309,7 @@ export function xOnlyPointAddTweakCheck(
       wasm.xOnlyPointAddTweak();
       const newKey = X_ONLY_PUBLIC_KEY_INPUT.slice(
         0,
-        validate.X_ONLY_PUBLIC_KEY_SIZE
+        validate.X_ONLY_PUBLIC_KEY_SIZE,
       );
       return compare(newKey, resultToCheck) === 0;
     }
@@ -343,7 +345,7 @@ export interface RecoverableSignature {
 export function signRecoverable(
   h: Uint8Array,
   d: Uint8Array,
-  e?: Uint8Array
+  e?: Uint8Array,
 ): RecoverableSignature {
   validate.validateHash(h);
   validate.validatePrivate(d);
@@ -353,11 +355,11 @@ export function signRecoverable(
     PRIVATE_KEY_INPUT.set(d);
     if (e !== undefined) EXTRA_DATA_INPUT.set(e);
     const recoveryId: RecoveryIdType = wasm.signRecoverable(
-      e === undefined ? 0 : 1
-    );
+      e === undefined ? 0 : 1,
+    ) as RecoveryIdType;
     const signature: Uint8Array = SIGNATURE_INPUT.slice(
       0,
-      validate.SIGNATURE_SIZE
+      validate.SIGNATURE_SIZE,
     );
     return {
       signature,
@@ -374,7 +376,7 @@ export function signRecoverable(
 export function signSchnorr(
   h: Uint8Array,
   d: Uint8Array,
-  e?: Uint8Array
+  e?: Uint8Array,
 ): Uint8Array {
   validate.validateHash(h);
   validate.validatePrivate(d);
@@ -397,7 +399,7 @@ export function verify(
   h: Uint8Array,
   Q: Uint8Array,
   signature: Uint8Array,
-  strict = false
+  strict = false,
 ): boolean {
   validate.validateHash(h);
   validate.validatePoint(Q);
@@ -419,7 +421,7 @@ export function recover(
   h: Uint8Array,
   signature: Uint8Array,
   recoveryId: RecoveryIdType,
-  compressed = false
+  compressed = false,
 ): Uint8Array | null {
   validate.validateHash(h);
   validate.validateSignature(signature);
@@ -428,7 +430,7 @@ export function recover(
     validate.validateSigrPMinusN(signature);
   }
   validate.validateSignatureCustom((): boolean =>
-    isXOnlyPoint(signature.subarray(0, 32))
+    isXOnlyPoint(signature.subarray(0, 32)),
   );
 
   const outputlen = assumeCompression(compressed);
@@ -449,7 +451,7 @@ export function recover(
 export function verifySchnorr(
   h: Uint8Array,
   Q: Uint8Array,
-  signature: Uint8Array
+  signature: Uint8Array,
 ): boolean {
   validate.validateHash(h);
   validate.validateXOnlyPoint(Q);

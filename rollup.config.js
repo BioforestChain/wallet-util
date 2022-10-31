@@ -1,29 +1,57 @@
-import nodeResolve from '@rollup/plugin-node-resolve';
-import wasm from '@rollup/plugin-wasm';
-import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import terser from '@rollup/plugin-terser';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import copy from 'rollup-plugin-copy';
+import del from 'rollup-plugin-delete';
+// import wasm from '@rollup/plugin-wasm';
+// import json from '@rollup/plugin-json';
+// import typescript from '@rollup/plugin-typescript';
+// import terser from '@rollup/plugin-terser';
+
 /**
- * @type {import("rollup").RollupOptions}
+ * @return {import("rollup").Plugin[]}
  */
-export default {
-  input: 'dist/index.mjs',
-  output: {
-    dir: 'build',
-    format: 'esm',
-  },
-  treeshake: {
-    preset: 'smallest',
-  },
-  plugins: [
+const genPlugins = ({ outdir }) => {
+  return [
     commonjs(),
     nodeResolve({ browser: false, preferBuiltins: false }),
-    wasm({
-      //   sync: false,
-      targetEnv: 'browser',
+    // wasm({
+    //   targetEnv: 'browser',
+    // }),
+    copy({
+      targets: [{ src: 'assets/**/*.wasm', dest: `${outdir}/assets` }],
+      flatten: false,
     }),
-    json({}),
-    terser({ ecma: 2020 }),
-  ],
+    del({ targets: outdir }),
+  ];
 };
+/**
+ * @type {import("rollup").RollupOptions[]}
+ */
+export default [
+  {
+    input: 'dist/index.mjs',
+    output: {
+      dir: 'build',
+      entryFileNames: '[name].mjs',
+      chunkFileNames: '[name]-[hash].mjs',
+      format: 'esm',
+    },
+    treeshake: {
+      preset: 'smallest',
+    },
+    plugins: genPlugins({ outdir: 'build' }),
+  },
+  {
+    input: 'dist/node.mjs',
+    output: {
+      dir: 'build-node',
+      entryFileNames: '[name].mjs',
+      chunkFileNames: '[name]-[hash].mjs',
+      format: 'esm',
+    },
+    treeshake: {
+      preset: 'smallest',
+    },
+    plugins: genPlugins({ outdir: 'build-node' }),
+  },
+];

@@ -1751,6 +1751,7 @@ const _networksExtensions = {
     wif: 108,
   },
 };
+export { _networksExtensions as networks };
 
 const _networks_Map = new Map([
   [
