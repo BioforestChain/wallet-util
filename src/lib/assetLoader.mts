@@ -9,7 +9,7 @@ export interface $Config {
  * Current config
  */
 export const config: $Config = {
-  wasmBaseUrl: '/assets/wallet-util-wasm',
+  wasmBaseUrl: './assets',
   wasmLoader: (wasmUrl) => fetch(wasmUrl).then((res) => res.arrayBuffer()),
 };
 export async function setConfig(options: Partial<$Config>) {

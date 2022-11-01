@@ -39,7 +39,7 @@ Reflect.set(globalThis, 'Buffer', undefined);
   deepEqual(
     {
       privkey:
-        '0x7467bdcx870acb3615e84fe24a2417884128af83bbe0b7e77f043c9c6c79b624f',
+        '0x7467bdc870acb3615e84fe24a2417884128af83bbe0b7e77f043c9c6c79b624f',
       pubkey:
         '0x03dbb4930b2d9527c572b4287a0e90323179aeb0028140c4da0786a95ce906c273',
       address: '0x98f8a8D289D6e32976ECDaa6C31B2dBb47B2263B',

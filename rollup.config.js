@@ -5,8 +5,9 @@ import del from 'rollup-plugin-delete';
 // import wasm from '@rollup/plugin-wasm';
 // import json from '@rollup/plugin-json';
 // import typescript from '@rollup/plugin-typescript';
-// import terser from '@rollup/plugin-terser';
+import terser from '@rollup/plugin-terser';
 
+const isDev = process.argv.includes('--dev');
 /**
  * @return {import("rollup").Plugin[]}
  */
@@ -22,7 +23,8 @@ const genPlugins = ({ outdir }) => {
       flatten: false,
     }),
     del({ targets: outdir }),
-  ];
+    isDev ? null : terser({ ecma: 2020 }),
+  ].filter(Boolean);
 };
 /**
  * @type {import("rollup").RollupOptions[]}
@@ -31,7 +33,7 @@ export default [
   {
     input: 'dist/index.mjs',
     output: {
-      dir: 'build',
+      dir: 'build/web',
       entryFileNames: '[name].mjs',
       chunkFileNames: '[name]-[hash].mjs',
       format: 'esm',
@@ -39,12 +41,12 @@ export default [
     treeshake: {
       preset: 'smallest',
     },
-    plugins: genPlugins({ outdir: 'build' }),
+    plugins: genPlugins({ outdir: 'build/web' }),
   },
   {
     input: 'dist/node.mjs',
     output: {
-      dir: 'build-node',
+      dir: 'build/node',
       entryFileNames: '[name].mjs',
       chunkFileNames: '[name]-[hash].mjs',
       format: 'esm',
@@ -52,6 +54,6 @@ export default [
     treeshake: {
       preset: 'smallest',
     },
-    plugins: genPlugins({ outdir: 'build-node' }),
+    plugins: genPlugins({ outdir: 'build/node' }),
   },
 ];

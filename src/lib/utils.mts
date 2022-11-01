@@ -17,3 +17,13 @@ export function bytesToBinary(bytes: Uint8Array) {
     .map((x) => x.toString(2).padStart(8, '0'))
     .join('');
 }
+
+export const cacheCall = <
+  ARGS extends unknown[],
+  R extends {} /* NonNullable */,
+>(
+  fun: (...args: ARGS) => R,
+) => {
+  let r: R | undefined;
+  return (...args: ARGS) => (r ??= fun(...args));
+};

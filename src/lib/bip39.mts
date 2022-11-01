@@ -1,19 +1,33 @@
 import basex from '../../assets/base-x/index.cjs';
-import bip32_cjs, { BIP32Interface } from '../../assets/bip32/bip32.cjs';
+import type { BIP32Interface } from '../../assets/bip32/bip32.cjs';
 import * as bitcoin from '../../assets/bitcoinjs-lib/index.cjs';
 import buffer_cjs from '../../assets/buffer/index.cjs';
-import ecpair_cjs from '../../assets/ecpair/ecpair.cjs';
 
 import { pbkdf2, randomBytes, sha } from './crypto.mjs';
 import * as ethUtil from './ethUtil.mjs';
 import { COIN_SYMBOL, getNetWorkInfo, networkIsEthereum } from './networks.mjs';
-import * as ecc from './tiny-secp256k1/index.mjs';
-import { assert, binaryToByte, bytesToBinary } from './utils.mjs';
-import english from './wordlists/english.mjs';
+import { assert, binaryToByte, bytesToBinary, cacheCall } from './utils.mjs';
+import { $Language } from './wordlists/_types.mjs';
 
 const { Buffer } = buffer_cjs;
-const bip32 = bip32_cjs.BIP32Factory(ecc);
-const ecpair = ecpair_cjs.ECPairFactory(ecc);
+const setupTinySecp256k1 = cacheCall(() =>
+  import('./tiny-secp256k1/index.mjs').then(({ setupTinySecp256k1 }) =>
+    setupTinySecp256k1(),
+  ),
+);
+const setupBip32 = cacheCall(() =>
+  Promise.all([
+    setupTinySecp256k1(),
+    import('../../assets/bip32/bip32.cjs'),
+  ]).then(([ecc, bip32_cjs]) => bip32_cjs.BIP32Factory(ecc)),
+);
+
+const setupEcpair = cacheCall(() =>
+  Promise.all([
+    setupTinySecp256k1(),
+    import('../../assets/ecpair/ecpair.cjs'),
+  ]).then(([ecc, ecpair_cjs]) => ecpair_cjs.ECPairFactory(ecc)),
+);
 
 // declare const libs: typeof import("../assets/bip39-libs.js");
 // const libsLoader = async () => libs;
@@ -22,7 +36,7 @@ function assertEntropy(entropy: Uint8Array) {
   assert(
     entropy instanceof Uint8Array &&
       [16, 20, 24, 28, 32].includes(entropy.length),
-    'Invalid entropy'
+    'Invalid entropy',
   );
 }
 
@@ -48,7 +62,7 @@ async function deriveChecksumBits(entropy: Uint8Array) {
  */
 export async function entropyToMnemonic(
   entropy: Uint8Array,
-  wordlist: string[]
+  wordlist: string[],
 ): Promise<string> {
   assertEntropy(entropy);
   const entropyBits = bytesToBinary(entropy);
@@ -73,14 +87,14 @@ export async function entropyToMnemonic(
  */
 export async function generateMnemonic(
   wordlist: string[],
-  strength = 128
+  strength = 128,
 ): Promise<string> {
   assert(
     Number.isSafeInteger(strength) &&
       strength > 0 &&
       strength <= 256 &&
       strength % 32 === 0,
-    'Invalid strength'
+    'Invalid strength',
   );
   return entropyToMnemonic(randomBytes(strength / 8), wordlist);
 }
@@ -94,12 +108,32 @@ export const bytesToHexString = (byteArray: Uint8Array) => {
   }).join('');
 };
 
-export const getLanguageWordLists = (defaultLanguage: 'english') => {
-  if (defaultLanguage !== 'english') {
-    throw new Error(`unsupport language: ${defaultLanguage}`);
+export const getLanguageWordLists = async (language: $Language) => {
+  switch (language) {
+    case 'chinese_simplified':
+      return (await import('./wordlists/chinese_simplified.mjs')).default;
+    case 'chinese_traditional':
+      return (await import('./wordlists/chinese_traditional.mjs')).default;
+    case 'czech':
+      return (await import('./wordlists/czech.mjs')).default;
+    case 'english':
+      // case 'EN':
+      return (await import('./wordlists/english.mjs')).default;
+    case 'french':
+      return (await import('./wordlists/french.mjs')).default;
+    case 'italian':
+      return (await import('./wordlists/italian.mjs')).default;
+    case 'japanese':
+      // case 'JA':
+      return (await import('./wordlists/japanese.mjs')).default;
+    case 'korean':
+      return (await import('./wordlists/korean.mjs')).default;
+    case 'portuguese':
+      return (await import('./wordlists/portuguese.mjs')).default;
+    case 'spanish':
+      return (await import('./wordlists/spanish.mjs')).default;
   }
-  /** 因为现在只提供英文 */
-  return english;
+  throw new Error(`unsupport language: ${language}`);
 };
 /** 生成助记词 */
 export const generateRandomMnemonic = async (length = 12) => {
@@ -119,7 +153,7 @@ export const generateRandomMnemonic = async (length = 12) => {
       ' bits).'
     );
   }
-  const wordList = getLanguageWordLists('english');
+  const wordList = await getLanguageWordLists('english');
   const mnemonic = await generateMnemonic(wordList, strength);
   const seedBuff = await mnemonicToSeed(mnemonic);
   return {
@@ -146,7 +180,7 @@ export async function mnemonicToSeed(mnemonic: string, passphrase = '') {
     normalize(mnemonic).nfkd,
     salt(passphrase),
     2048,
-    64
+    64,
   );
 }
 
@@ -161,7 +195,7 @@ const validateMnemonic = async (mnemonic: string, wordlist: string[]) => {
 
 async function mnemonicToEntropy(
   mnemonic: string,
-  wordlist: string[]
+  wordlist: string[],
 ): Promise<Uint8Array> {
   const { words } = normalize(mnemonic);
   assert(words.length % 3 === 0, 'Invalid mnemonic');
@@ -180,7 +214,7 @@ async function mnemonicToEntropy(
   // calculate the checksum and compare
   const entropy = new Uint8Array(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    entropyBits.match(/(.{1,8})/g)!.map(binaryToByte)
+    entropyBits.match(/(.{1,8})/g)!.map(binaryToByte),
   );
   assertEntropy(entropy);
   const newChecksum = await deriveChecksumBits(entropy);
@@ -210,8 +244,7 @@ export const findPhraseErrors = async (phrase: string) => {
     throw new Error('phrase length is 0');
   }
   // Check word
-  /** @TODO 目前只支持英文格式 */
-  const wordList = getLanguageWordLists('english');
+  const wordList = await getLanguageWordLists('english');
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
     if (wordList.indexOf(word) == -1) {
@@ -231,11 +264,11 @@ export const findPhraseErrors = async (phrase: string) => {
 // #region 助机词生成地址
 async function convertRippleAdrr(address: string) {
   return basex(
-    'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz'
+    'rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz',
   ).encode(
     basex('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz').decode(
-      address
-    )
+      address,
+    ),
   );
 }
 
@@ -248,7 +281,7 @@ async function convertRippleAdrr(address: string) {
 
 function calcBip32ExtendedKey(
   bip32RootKey: BIP32Interface,
-  path: DERIVATION_PATH
+  path: DERIVATION_PATH,
 ) {
   const pathBits = path.split('/');
   for (let i = 0; i < pathBits.length; i++) {
@@ -273,7 +306,7 @@ function calcBip32ExtendedKey(
 
 async function toChecksumAddressForRsk(
   address: string,
-  chainId: number | null = null
+  chainId: number | null = null,
 ) {
   if (typeof address !== 'string') {
     throw new Error('address parameter should be a string.');
@@ -316,19 +349,20 @@ export async function calcForDerivationPath(
   symbol: COIN_SYMBOL,
   seed: string,
   derivationPath: DERIVATION_PATH,
-  index = 0
+  index = 0,
 ) {
   // const libs = await libsLoader();
   const networkInfo = getNetWorkInfo(symbol);
+  const bip32 = await setupBip32();
 
   const bip32RootKey = bip32.fromSeed(
     Buffer.from(seed, 'hex'),
-    networkInfo.network
+    networkInfo.network,
   );
   const bip32ExtendedKey = calcBip32ExtendedKey(bip32RootKey, derivationPath);
   if (undefined == bip32ExtendedKey) {
     throw new Error(
-      `derivationPath: ${derivationPath} not find bip32ExtendedKey.`
+      `derivationPath: ${derivationPath} not find bip32ExtendedKey.`,
     );
   }
 
@@ -359,6 +393,7 @@ export async function calcForDerivationPath(
   }
   // TRX is different
   if (networkInfo.name == 'TRX - Tron') {
+    const ecpair = await setupEcpair();
     const keyPair = ecpair.fromPrivateKey(key.privateKey!, {
       network: bitcoin.networks.bitcoin,
       compressed: false,
