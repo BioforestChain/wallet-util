@@ -1,5 +1,4 @@
-import node_buffer from '../../assets/buffer/index.cjs';
-const { Buffer } = node_buffer;
+import { Buffer } from './buffer.mjs';
 
 import { createKeccak, keccak as keccakHex } from './hash-wasm/index.mjs';
 export { keccakHex };

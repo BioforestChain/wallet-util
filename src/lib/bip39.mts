@@ -1,7 +1,7 @@
 import basex from '../../assets/base-x/index.cjs';
 import type { BIP32Interface } from '../../assets/bip32/bip32.cjs';
 import * as bitcoin from '../../assets/bitcoinjs-lib/index.cjs';
-import buffer_cjs from '../../assets/buffer/index.cjs';
+import { Buffer } from './buffer.mjs';
 
 import { pbkdf2, randomBytes, sha } from './crypto.mjs';
 import * as ethUtil from './ethUtil.mjs';
@@ -9,7 +9,6 @@ import { COIN_SYMBOL, getNetWorkInfo, networkIsEthereum } from './networks.mjs';
 import { assert, binaryToByte, bytesToBinary, cacheCall } from './utils.mjs';
 import { $Language } from './wordlists/_types.mjs';
 
-const { Buffer } = buffer_cjs;
 const setupTinySecp256k1 = cacheCall(() =>
   import('./tiny-secp256k1/index.mjs').then(({ setupTinySecp256k1 }) =>
     setupTinySecp256k1(),

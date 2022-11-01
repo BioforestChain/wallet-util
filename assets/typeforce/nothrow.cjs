@@ -1,4 +1,4 @@
-var typeforce = require('.//index.cjs');
+var typeforce = require('./index.cjs');
 
 function tfNoThrow(type, value, strict) {
   try {
