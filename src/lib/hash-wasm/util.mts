@@ -1,6 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-bitwise */
 
+import lockedCreate from './lockedCreate.mjs';
+import Mutex from './mutex.mjs';
+import { $WASM_NAME, $IWASMInterface } from './WASMInterface.mjs';
+
 function getGlobal() {
   // eslint-disable-next-line no-undef
   if (typeof globalThis !== 'undefined') return globalThis;
@@ -209,14 +213,30 @@ export function decodeBase64(data: string): Uint8Array {
 
   return bytes;
 }
-export function validateBits(bits: number) {
-  if (!Number.isInteger(bits) || bits < 8 || bits > 512 || bits % 8 !== 0) {
-    return new Error('Invalid variant! Valid values: 8, 16, ..., 512');
+export function validateBits(bits: number, max: number) {
+  if (!Number.isInteger(bits) || bits < 8 || bits > max || bits % 8 !== 0) {
+    throw `Invalid variant! Valid values: 8, 16, ..., ${max}`;
   }
-  return null;
 }
 
 export function getInitParam(outputBits: number, keyBits: number) {
   // eslint-disable-next-line no-bitwise
   return outputBits | (keyBits << 16);
 }
+
+const _invalidateSeed = (seed: number) =>
+  !Number.isInteger(seed) || seed < 0 || seed > 0xffffffff;
+
+export const validateSeed = (seed: number) => {
+  if (_invalidateSeed(seed)) {
+    throw new Error('Seed must be a valid 32-bit long unsigned integer.');
+  }
+};
+
+export const validateLowHeightSeed = (seedLow: number, seedHigh: number) => {
+  if (_invalidateSeed(seedLow) || _invalidateSeed(seedHigh)) {
+    throw new Error(
+      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).',
+    );
+  }
+};
