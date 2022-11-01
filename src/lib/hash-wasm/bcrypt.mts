@@ -4,8 +4,12 @@ import {
   IDataType,
   intArrayToString,
 } from './util.mjs';
-import { $WASM_NAME, WASMInterface } from './WASMInterface.mjs';
-const WASM_NAME: $WASM_NAME = 'bcrypt';
+import { createWasmPreparer } from './WASMInterface.mjs';
+
+/**
+ * Load bcrypt wasm
+ */
+export const prepareBcrypt = createWasmPreparer<$BcryptWasm>('bcrypt', 0);
 interface $BcryptWasm {
   bcrypt: (
     password_length: number,
@@ -39,7 +43,7 @@ async function bcryptInternal(
 ): Promise<string | Uint8Array> {
   const { costFactor, password, salt } = options;
 
-  const bcryptInterface = await WASMInterface<$BcryptWasm>(WASM_NAME, 0);
+  const bcryptInterface = await prepareBcrypt();
   bcryptInterface.writeMemory(getUInt8Buffer(salt), 0);
   const passwordBuffer = getUInt8Buffer(password);
   bcryptInterface.writeMemory(passwordBuffer, 16);
@@ -184,7 +188,7 @@ export async function bcryptVerify(
 
   const { hash, password } = options;
 
-  const bcryptInterface = await WASMInterface<$BcryptWasm>(WASM_NAME, 0);
+  const bcryptInterface = await prepareBcrypt();
   bcryptInterface.writeMemory(getUInt8Buffer(hash), 0);
 
   const passwordBuffer = getUInt8Buffer(password);

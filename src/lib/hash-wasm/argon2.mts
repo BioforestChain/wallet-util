@@ -8,8 +8,12 @@ import {
   IDataType,
   writeHexToUInt8,
 } from './util.mjs';
-import { $WASM_NAME, IHasher, WASMInterface } from './WASMInterface.mjs';
-const WASM_NAME: $WASM_NAME = 'argon2';
+import { createWasmPreparer, IHasher } from './WASMInterface.mjs';
+
+/**
+ * Load argon2 wasm
+ */
+export const prepareArgon2 = createWasmPreparer('argon2', 1024);
 
 export interface IArgon2Options {
   /**
@@ -136,7 +140,7 @@ async function argon2Internal(
   const { memorySize } = options; // in KB
 
   const [argon2Interface, blake512] = await Promise.all([
-    WASMInterface(WASM_NAME, 1024),
+    await prepareArgon2(),
     createBLAKE2b(512),
   ]);
 

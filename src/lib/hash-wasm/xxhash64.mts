@@ -1,32 +1,18 @@
-import lockedCreate from './lockedCreate.mjs';
-import Mutex from './mutex.mjs';
-import { IDataType } from './util.mjs';
-import {
-  $WASM_NAME,
-  IHasher,
-  IWASMInterface,
-  WASMInterface,
-} from './WASMInterface.mjs';
-const WASM_NAME: $WASM_NAME = 'xxhash64';
+import { IDataType, validateLowHeightSeed } from './util.mjs';
+import { createWasmPreparer, IHasher } from './WASMInterface.mjs';
+/**
+ * Load xxHash64 wasm
+ */
+export const prepareXXHash64 = createWasmPreparer('xxhash64', 4);
 
-const mutex = new Mutex();
-let wasmCache: IWASMInterface;
 const seedBuffer = new ArrayBuffer(8);
+const seedArray = new Uint8Array(seedBuffer);
+const seedView = new DataView(seedBuffer);
 
-function validateSeed(seed: number) {
-  if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) {
-    return new Error(
-      'Seed must be given as two valid 32-bit long unsigned integers (lo + high).',
-    );
-  }
-  return null;
-}
-
-function writeSeed(arr: ArrayBuffer, low: number, high: number) {
+function writeSeed(low: number, high: number) {
   // write in little-endian format
-  const buffer = new DataView(arr);
-  buffer.setUint32(0, low, true);
-  buffer.setUint32(4, high, true);
+  seedView.setUint32(0, low, true);
+  seedView.setUint32(4, high, true);
 }
 
 /**
@@ -38,37 +24,14 @@ function writeSeed(arr: ArrayBuffer, low: number, high: number) {
  *  initialize the internal state of the algorithm (defaults to 0)
  * @returns Computed hash as a hexadecimal string
  */
-export function xxhash64(
-  data: IDataType,
-  seedLow = 0,
-  seedHigh = 0,
-): Promise<string> {
-  if (validateSeed(seedLow)) {
-    return Promise.reject(validateSeed(seedLow));
-  }
+export const xxhash64 = async (data: IDataType, seedLow = 0, seedHigh = 0) => {
+  validateLowHeightSeed(seedLow, seedHigh);
 
-  if (validateSeed(seedHigh)) {
-    return Promise.reject(validateSeed(seedHigh));
-  }
-
-  if (wasmCache === undefined) {
-    return lockedCreate(mutex, WASM_NAME, 8).then((wasm) => {
-      wasmCache = wasm;
-      writeSeed(seedBuffer, seedLow, seedHigh);
-      wasmCache.writeMemory(new Uint8Array(seedBuffer));
-      return wasmCache.calculate(data);
-    });
-  }
-
-  try {
-    writeSeed(seedBuffer, seedLow, seedHigh);
-    wasmCache.writeMemory(new Uint8Array(seedBuffer));
-    const hash = wasmCache.calculate(data);
-    return Promise.resolve(hash);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-}
+  writeSeed(seedLow, seedHigh);
+  const wasm = await prepareXXHash64();
+  wasm.writeMemory(seedArray);
+  return wasm.calculate(data);
+};
 
 /**
  * Creates a new xxHash64 hash instance
@@ -77,39 +40,46 @@ export function xxhash64(
  * @param seedHigh Higher 32 bits of the number used to
  *  initialize the internal state of the algorithm (defaults to 0)
  */
-export function createXXHash64(seedLow = 0, seedHigh = 0): Promise<IHasher> {
-  if (validateSeed(seedLow)) {
-    return Promise.reject(validateSeed(seedLow));
-  }
+export const createXXHash64 = async (seedLow = 0, seedHigh = 0) => {
+  return createXXHash64Sync(seedLow, seedHigh, await prepareXXHash64());
+};
 
-  if (validateSeed(seedHigh)) {
-    return Promise.reject(validateSeed(seedHigh));
-  }
+/**
+ * Creates a new xxHash64 hash instance
+ * @param seedLow Lower 32 bits of the number used to
+ *  initialize the internal state of the algorithm (defaults to 0)
+ * @param seedHigh Higher 32 bits of the number used to
+ *  initialize the internal state of the algorithm (defaults to 0)
+ */
+export const createXXHash64Sync = (
+  seedLow = 0,
+  seedHigh = 0,
+  wasm = prepareXXHash64.wasm,
+) => {
+  validateLowHeightSeed(seedLow, seedHigh);
 
-  return WASMInterface(WASM_NAME, 8).then((wasm) => {
-    const instanceBuffer = new ArrayBuffer(8);
-    writeSeed(instanceBuffer, seedLow, seedHigh);
-    wasm.writeMemory(new Uint8Array(instanceBuffer));
-    wasm.init();
-    const obj: IHasher = {
-      init: () => {
-        wasm.writeMemory(new Uint8Array(instanceBuffer));
-        wasm.init();
-        return obj;
-      },
-      update: (data) => {
-        wasm.update(data);
-        return obj;
-      },
-      digest: (outputType) => wasm.digest(outputType) as any,
-      save: () => wasm.save(),
-      load: (data) => {
-        wasm.load(data);
-        return obj;
-      },
-      blockSize: 32,
-      digestSize: 8,
-    };
-    return obj;
-  });
-}
+  writeSeed(seedLow, seedHigh);
+  const seedArray = new Uint8Array(seedBuffer);
+  wasm.writeMemory(seedArray);
+  wasm.init();
+  const obj: IHasher = {
+    init: () => {
+      wasm.writeMemory(seedArray);
+      wasm.init();
+      return obj;
+    },
+    update: (data) => {
+      wasm.update(data);
+      return obj;
+    },
+    digest: (outputType) => wasm.digest(outputType) as any,
+    save: () => wasm.save(),
+    load: (data) => {
+      wasm.load(data);
+      return obj;
+    },
+    blockSize: 32,
+    digestSize: 8,
+  };
+  return obj;
+};

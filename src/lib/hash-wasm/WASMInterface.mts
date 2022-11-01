@@ -12,12 +12,6 @@ export const MAX_HEAP = 16 * 1024;
 const WASM_FUNC_HASH_LENGTH = 4;
 const wasmMutex = new Mutex();
 
-type ThenArg<T> = T extends Promise<infer U>
-  ? U
-  : T extends (...args: any[]) => Promise<infer V>
-  ? V
-  : T;
-
 export type IHasher = {
   /**
    * Initializes hash state to default value
@@ -62,8 +56,6 @@ export type IHasher = {
   digestSize: number;
 };
 
-const wasmModuleCache = new Map<string, Promise<WebAssembly.Module>>();
-
 export interface $Exports {
   Hash_SetMemorySize: (size: number) => void;
   Hash_GetBuffer: () => number;
@@ -80,84 +72,82 @@ export interface $Exports {
   ) => void;
 }
 
-export async function WASMInterface<T extends object = object>(
-  wasmName: $WASM_NAME,
-  hashLength: number,
-) {
-  let wasmInstance: WebAssembly.Instance | undefined;
-  let memoryView: Uint8Array | undefined;
-  let initialized = false;
-  let hash: Uint8Array | undefined;
+type $WasmCompile = {
+  hash: Uint8Array;
+  module: WebAssembly.Module;
+  instance: WebAssembly.Instance;
+};
 
+const wasmCompileCache = new Map<
+  string,
+  Promise<$WasmCompile> | $WasmCompile
+>();
+
+export const compileWasm = async (wasmName: $WASM_NAME) => {
   if (typeof WebAssembly === 'undefined') {
     throw new Error('WebAssembly is not supported in this environment!');
   }
+  let wasmCompileTask = wasmCompileCache.get(wasmName);
+  if (wasmCompileTask === undefined) {
+    wasmCompileTask = wasmMutex.dispatch(() =>
+      loadWasm(wasmName).then(async (wasm) => {
+        const hash = new Uint8Array(wasm.sha1.slice(0, WASM_FUNC_HASH_LENGTH));
+        const module = await WebAssembly.compile(wasm.data);
+        const instance = await WebAssembly.instantiate(module, {});
+        const wasmCompile = {
+          hash,
+          module,
+          instance,
+        };
+
+        wasmCompileCache.set(wasmName, wasmCompile);
+        return wasmCompile;
+      }),
+    );
+
+    wasmCompileCache.set(wasmName, wasmCompileTask);
+  }
+  return await wasmCompileTask;
+};
+
+export const WASMInterfaceSync = <T extends object = object>(
+  wasmCompile: $WasmCompile,
+  wasmName: $WASM_NAME,
+  hashLength: number,
+) => {
+  const { instance: wasmInstance, hash } = wasmCompile;
+  const exports = wasmInstance.exports as unknown as $Exports & T;
+  let memoryView = new Uint8Array(
+    exports.memory.buffer,
+    exports.Hash_GetBuffer(),
+    MAX_HEAP,
+  );
+  let initialized = false;
+
   const getMemory = () => memoryView!;
-  const getExports = () => wasmInstance!.exports as unknown as $Exports & T;
 
   const writeMemory = (data: Uint8Array, offset = 0) => {
     getMemory().set(data, offset);
   };
 
   const setMemorySize = (totalSize: number) => {
-    const exports = getExports();
     exports.Hash_SetMemorySize(totalSize);
-    const arrayOffset: number = exports.Hash_GetBuffer();
-    const memoryBuffer = exports.memory.buffer;
-    memoryView = new Uint8Array(memoryBuffer, arrayOffset, totalSize);
+    memoryView = new Uint8Array(
+      exports.memory.buffer,
+      exports.Hash_GetBuffer(),
+      totalSize,
+    );
   };
 
   const getStateSize = () => {
-    const exports = getExports();
     const view = new DataView(exports.memory.buffer);
     const stateSize = view.getUint32(exports.STATE_SIZE, true);
     return stateSize;
   };
 
-  const loadWASMPromise = wasmMutex.dispatch(async () => {
-    let moduleTask = wasmModuleCache.get(wasmName);
-    if (moduleTask === undefined) {
-      moduleTask = loadWasm(wasmName).then((wasm) => {
-        hash = new Uint8Array(wasm.sha1.slice(0, WASM_FUNC_HASH_LENGTH));
-        return WebAssembly.compile(wasm.data);
-      });
-
-      wasmModuleCache.set(wasmName, moduleTask);
-    }
-
-    const module = await moduleTask;
-    wasmInstance = await WebAssembly.instantiate(module, {
-      // env: {
-      //   emscripten_memcpy_big: (dest, src, num) => {
-      //     const memoryBuffer = wasmInstance.exports.memory.buffer;
-      //     const memView = new Uint8Array(memoryBuffer, 0);
-      //     memView.set(memView.subarray(src, src + num), dest);
-      //   },
-      //   print_memory: (offset, len) => {
-      //     const memoryBuffer = wasmInstance.exports.memory.buffer;
-      //     const memView = new Uint8Array(memoryBuffer, 0);
-      //     console.log('print_int32', memView.subarray(offset, offset + len));
-      //   },
-      // },
-    });
-
-    // wasmInstance.exports._start();
-  });
-
-  const setupInterface = async () => {
-    if (!wasmInstance) {
-      await loadWASMPromise;
-    }
-    const exports = getExports();
-
-    const arrayOffset: number = exports.Hash_GetBuffer();
-    const memoryBuffer = exports.memory.buffer;
-    memoryView = new Uint8Array(memoryBuffer, arrayOffset, MAX_HEAP);
-  };
-
   const init = (bits?: number) => {
     initialized = true;
-    getExports().Hash_Init(bits);
+    exports.Hash_Init(bits);
   };
 
   const updateUInt8Array = (data: Uint8Array): void => {
@@ -166,7 +156,7 @@ export async function WASMInterface<T extends object = object>(
       const chunk = data.subarray(read, read + MAX_HEAP);
       read += chunk.length;
       getMemory().set(chunk);
-      getExports().Hash_Update(chunk.length);
+      exports.Hash_Update(chunk.length);
     }
   };
 
@@ -189,7 +179,7 @@ export async function WASMInterface<T extends object = object>(
     }
     initialized = false;
 
-    getExports().Hash_Final(padding);
+    exports.Hash_Final(padding);
 
     if (outputType === 'binary') {
       // the data is copied to allow GC of the original memory object
@@ -206,9 +196,9 @@ export async function WASMInterface<T extends object = object>(
       );
     }
 
-    const stateOffset: number = getExports().Hash_GetState();
+    const stateOffset: number = exports.Hash_GetState();
     const stateLength: number = getStateSize();
-    const memoryBuffer = getExports().memory.buffer;
+    const memoryBuffer = exports.memory.buffer;
     const internalState = new Uint8Array(
       memoryBuffer,
       stateOffset,
@@ -227,7 +217,6 @@ export async function WASMInterface<T extends object = object>(
     if (!(state instanceof Uint8Array)) {
       throw new Error('load() expects an Uint8Array generated by save()');
     }
-    const exports = getExports();
 
     const stateOffset: number = exports.Hash_GetState();
     const stateLength: number = getStateSize();
@@ -305,17 +294,15 @@ export async function WASMInterface<T extends object = object>(
 
     const buffer = getUInt8Buffer(data);
     getMemory().set(buffer);
-    getExports().Hash_Calculate(buffer.length, initParam, digestParam);
+    exports.Hash_Calculate(buffer.length, initParam, digestParam);
 
     return getDigestHex(digestChars, getMemory(), hashLength);
   };
 
-  await setupInterface();
-
   return {
     getMemory,
     writeMemory,
-    getExports,
+    getExports: () => exports,
     setMemorySize,
     init,
     update,
@@ -325,6 +312,46 @@ export async function WASMInterface<T extends object = object>(
     calculate,
     hashLength,
   };
-}
+};
 
-export type IWASMInterface = ThenArg<ReturnType<typeof WASMInterface>>;
+export const WASMInterface = async <T extends object = object>(
+  wasmName: $WASM_NAME,
+  hashLength: number,
+) => {
+  return WASMInterfaceSync<T>(
+    await compileWasm(wasmName),
+    wasmName,
+    hashLength,
+  );
+};
+
+export type $IWASMInterface = Awaited<ReturnType<typeof WASMInterface>>;
+
+/**
+ * @TODO 实现一个池子，如果 digest 了，那么就回收到池子中，可以重复使用
+ */
+export const createWasmPreparer = <T extends object = object>(
+  wasmName: $WASM_NAME,
+  hashLength: number,
+) => {
+  const preparer = () => {
+    return WASMInterface<T>(wasmName, hashLength);
+  };
+
+  Object.defineProperties(preparer, {
+    wasm: {
+      get() {
+        const wasmCompile = wasmCompileCache.get(wasmName);
+        if (wasmCompile === undefined || wasmCompile instanceof Promise) {
+          throw new Error(`wasm instance ${wasmName} is not yet ready.`);
+        }
+        return WASMInterfaceSync<T>(wasmCompile, wasmName, hashLength);
+      },
+    },
+  });
+  return preparer as typeof preparer & {
+    readonly wasm: $IWASMInterface;
+  };
+};
+
+export type $WasmPreparer = ReturnType<typeof createWasmPreparer>;

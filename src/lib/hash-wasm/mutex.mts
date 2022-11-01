@@ -14,7 +14,7 @@ class Mutex {
   async dispatch<T>(fn: () => PromiseLike<T>): Promise<T> {
     const unlock = await this.lock();
     try {
-      return await Promise.resolve(fn());
+      return await fn();
     } finally {
       unlock();
     }

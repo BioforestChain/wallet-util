@@ -6,7 +6,7 @@
   "types": "./dist/index.d.mts",
   "scripts": {
     "dev": "tsc --build -w",
-    "bundle:dev": "rollup -c --dev",
+    "bundle:dev": "rollup -c --dev -w",
     "bundle": "rollup -c",
     "test": "node build/node/node.mjs",
     "format": "prettier src --write"

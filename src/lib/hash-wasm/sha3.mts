@@ -1,24 +1,27 @@
-import lockedCreate from './lockedCreate.mjs';
-import Mutex from './mutex.mjs';
 import { IDataType } from './util.mjs';
-import {
-  $WASM_NAME,
-  IHasher,
-  IWASMInterface,
-  WASMInterface,
-} from './WASMInterface.mjs';
-const WASM_NAME: $WASM_NAME = 'sha3';
+import { createWasmPreparer, IHasher } from './WASMInterface.mjs';
 
-type IValidBits = 224 | 256 | 384 | 512;
-const mutex = new Mutex();
-let wasmCache: IWASMInterface;
+/**
+ * Load SHA-3 wasm
+ */
+const prepareSHA3_MAP = {
+  224: createWasmPreparer('sha3', 224 / 8),
+  256: createWasmPreparer('sha3', 256 / 8),
+  384: createWasmPreparer('sha3', 384 / 8),
+  512: createWasmPreparer('sha3', 512 / 8),
+} as const;
+Object.setPrototypeOf(prepareSHA3_MAP, null);
 
-function validateBits(bits: IValidBits) {
-  if (![224, 256, 384, 512].includes(bits)) {
-    return new Error('Invalid variant! Valid values: 224, 256, 384, 512');
+export type $IValidBits = keyof typeof prepareSHA3_MAP;
+
+export const getSha3Preparer = (bits: $IValidBits) => {
+  if (bits in prepareSHA3_MAP === false) {
+    throw new Error(
+      `Invalid variant! Valid values: ${Object.keys(prepareSHA3_MAP)}`,
+    );
   }
-  return null;
-}
+  return prepareSHA3_MAP[bits];
+};
 
 /**
  * Calculates SHA-3 hash
@@ -26,59 +29,46 @@ function validateBits(bits: IValidBits) {
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  * @returns Computed hash as a hexadecimal string
  */
-export function sha3(data: IDataType, bits: IValidBits = 512): Promise<string> {
-  if (validateBits(bits)) {
-    return Promise.reject(validateBits(bits));
-  }
-
-  const hashLength = bits / 8;
-
-  if (wasmCache === undefined || wasmCache.hashLength !== hashLength) {
-    return lockedCreate(mutex, WASM_NAME, hashLength).then((wasm) => {
-      wasmCache = wasm;
-      return wasmCache.calculate(data, bits, 0x06);
-    });
-  }
-
-  try {
-    const hash = wasmCache.calculate(data, bits, 0x06);
-    return Promise.resolve(hash);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-}
+export const sha3 = async (data: IDataType, bits: $IValidBits = 512) => {
+  return (await getSha3Preparer(bits)()).calculate(data, bits, 0x06);
+};
 
 /**
  * Creates a new SHA-3 hash instance
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  */
-export function createSHA3(bits: IValidBits = 512): Promise<IHasher> {
-  if (validateBits(bits)) {
-    return Promise.reject(validateBits(bits));
-  }
+export const createSHA3 = async (bits: $IValidBits = 512) => {
+  return createSHA3Sync(bits, await getSha3Preparer(bits)());
+};
 
+/**
+ * Creates a new SHA-3 hash instance
+ * @param bits Number of output bits. Valid values: 224, 256, 384, 512
+ */
+export const createSHA3Sync = (
+  bits: $IValidBits = 512,
+  wasm = getSha3Preparer(bits).wasm,
+) => {
   const outputSize = bits / 8;
 
-  return WASMInterface(WASM_NAME, outputSize).then((wasm) => {
-    wasm.init(bits);
-    const obj: IHasher = {
-      init: () => {
-        wasm.init(bits);
-        return obj;
-      },
-      update: (data) => {
-        wasm.update(data);
-        return obj;
-      },
-      digest: (outputType) => wasm.digest(outputType, 0x06) as any,
-      save: () => wasm.save(),
-      load: (data) => {
-        wasm.load(data);
-        return obj;
-      },
-      blockSize: 200 - 2 * outputSize,
-      digestSize: outputSize,
-    };
-    return obj;
-  });
-}
+  wasm.init(bits);
+  const obj: IHasher = {
+    init: () => {
+      wasm.init(bits);
+      return obj;
+    },
+    update: (data) => {
+      wasm.update(data);
+      return obj;
+    },
+    digest: (outputType) => wasm.digest(outputType, 0x06) as any,
+    save: () => wasm.save(),
+    load: (data) => {
+      wasm.load(data);
+      return obj;
+    },
+    blockSize: 200 - 2 * outputSize,
+    digestSize: outputSize,
+  };
+  return obj;
+};

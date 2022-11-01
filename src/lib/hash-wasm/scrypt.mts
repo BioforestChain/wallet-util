@@ -1,8 +1,13 @@
 import { pbkdf2 } from './pbkdf2.mjs';
 import { createSHA256 } from './sha256.mjs';
 import { getDigestHex, IDataType } from './util.mjs';
-import { $WASM_NAME, WASMInterface } from './WASMInterface.mjs';
-const WASM_NAME: $WASM_NAME = 'scrypt';
+import { createWasmPreparer } from './WASMInterface.mjs';
+
+/**
+ * Load Scrypt wasm
+ */
+export const prepareScrypt = createWasmPreparer<$ScryptWasm>('scrypt', 0);
+
 export interface $ScryptWasm {
   scrypt: (blockSize: number, costFactor: number, parallelism: number) => void;
 }
@@ -53,7 +58,7 @@ async function scryptInternal(
     outputType: 'binary',
   });
 
-  const scryptInterface = await WASMInterface<$ScryptWasm>(WASM_NAME, 0);
+  const scryptInterface = await prepareScrypt();
 
   // last block is for storing the temporary vectors
   const VSize = 128 * blockSize * costFactor;
