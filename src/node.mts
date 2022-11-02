@@ -1,14 +1,14 @@
 import { deepEqual } from 'node:assert';
-import { webcrypto } from 'node:crypto';
+import { webcrypto, createHmac } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 Reflect.set(globalThis, 'crypto', webcrypto);
-Reflect.set(globalThis, 'Buffer', undefined);
+// Reflect.set(globalThis, 'Buffer', undefined);
 
-(async () => {
+/// 初始化安装
+await (async () => {
   const { setup } = await import('./index.mjs');
-
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
@@ -16,19 +16,39 @@ Reflect.set(globalThis, 'Buffer', undefined);
     __dirname,
     __dirname.endsWith('dist') ? '../assets' : './assets',
   );
-
-  const {
-    bip39: { calcForDerivationPath, DERIVATION_PATH },
-    networks: { COIN_SYMBOL },
-  } = await setup({
+  await setup({
     wasmBaseUrl: ASSETS_PATH,
     async wasmLoader(wasmUri) {
       console.log('loading', wasmUri);
       return new Uint8Array(await readFile(wasmUri)).buffer;
     },
   });
+  console.log('🎉 setup done!');
+})();
 
-  /// RUN DEMO
+/// 测试算法库
+await (async () => {
+  const { prepareCrypto } = await import('./lib/bip32/_setup.mjs');
+  await prepareCrypto();
+
+  const { hmacSHA512 } = await import('./lib/bip32/crypto.mjs');
+
+  const key = Buffer.from('key');
+  const data = Buffer.from('data');
+  deepEqual(
+    hmacSHA512(key, data).toString('hex'),
+    createHmac('sha512', key).update(data).digest('hex'),
+    'hmac 算法异常',
+  );
+})();
+
+/// RUN DEMO
+await (async () => {
+  const { setup } = await import('./index.mjs');
+  const {
+    bip39: { calcForDerivationPath, DERIVATION_PATH },
+    networks: { COIN_SYMBOL },
+  } = await setup();
 
   const testRes = await calcForDerivationPath(
     COIN_SYMBOL.ETH,
@@ -45,6 +65,9 @@ Reflect.set(globalThis, 'Buffer', undefined);
       address: '0x98f8a8D289D6e32976ECDaa6C31B2dBb47B2263B',
     },
     testRes,
+    '派生路径生成ETH地址异常',
   );
   console.log(testRes);
 })();
+
+console.log('✅ all test passed.');

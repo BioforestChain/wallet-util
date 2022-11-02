@@ -1,3 +1,4 @@
+// @ts-check
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
@@ -6,6 +7,11 @@ import del from 'rollup-plugin-delete';
 // import json from '@rollup/plugin-json';
 // import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
+import inject from '@rollup/plugin-inject';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const isDev = process.argv.includes('--dev');
 /**
@@ -23,8 +29,20 @@ const genPlugins = ({ outdir }) => {
       flatten: false,
     }),
     del({ targets: outdir }),
-    isDev ? null : terser({ ecma: 2020 }),
-  ].filter(Boolean);
+    inject({
+      Buffer: [path.resolve(__dirname, './dist/lib/buffer.mjs'), 'Buffer'],
+    }),
+    isDev ? { name: 'terser-disabled' } : terser({ ecma: 2020 }),
+  ]; //.filter(Boolean);
+};
+
+/**
+ * @type {import("rollup").OutputOptions}
+ */
+const outputConfig = {
+  entryFileNames: '[name].mjs',
+  chunkFileNames: '[name]-[hash].mjs',
+  format: 'esm',
 };
 /**
  * @type {import("rollup").RollupOptions[]}
@@ -34,9 +52,7 @@ export default [
     input: 'dist/index.mjs',
     output: {
       dir: 'build/web',
-      entryFileNames: '[name].mjs',
-      chunkFileNames: '[name]-[hash].mjs',
-      format: 'esm',
+      ...outputConfig,
     },
     treeshake: {
       preset: 'smallest',
@@ -47,9 +63,7 @@ export default [
     input: 'dist/node.mjs',
     output: {
       dir: 'build/node',
-      entryFileNames: '[name].mjs',
-      chunkFileNames: '[name]-[hash].mjs',
-      format: 'esm',
+      ...outputConfig,
     },
     treeshake: {
       preset: 'smallest',
