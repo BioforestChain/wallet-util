@@ -28,9 +28,9 @@ export type IHasher = {
    *                   returns hexadecimal string
    */
   digest: {
-    (outputType: 'binary'): Uint8Array;
-    (outputType?: 'hex'): string;
-    (outputType?: any): string;
+    (outputType?: 'binary'): Uint8Array;
+    (outputType?: any): Uint8Array;
+    (outputType: 'hex'): string;
   };
   /**
    * Save the current internal state of the hasher for later resumption with load().
@@ -83,10 +83,10 @@ const wasmCompileCache = new Map<
   Promise<$WasmCompile> | $WasmCompile
 >();
 
+// if (typeof WebAssembly === 'undefined') {
+//   throw new Error('WebAssembly is not supported in this environment!');
+// }
 export const compileWasm = async (wasmName: $WASM_NAME) => {
-  if (typeof WebAssembly === 'undefined') {
-    throw new Error('WebAssembly is not supported in this environment!');
-  }
   let wasmCompileTask = wasmCompileCache.get(wasmName);
   if (wasmCompileTask === undefined) {
     wasmCompileTask = wasmMutex.dispatch(() =>
@@ -171,7 +171,7 @@ export const WASMInterfaceSync = <T extends object = object>(
   const digestChars = new Uint8Array(hashLength * 2);
 
   const digest = (
-    outputType: 'hex' | 'binary' = 'hex',
+    outputType: 'hex' | 'binary' = 'binary',
     padding?: number,
   ): Uint8Array | string => {
     if (!initialized) {
@@ -181,12 +181,11 @@ export const WASMInterfaceSync = <T extends object = object>(
 
     exports.Hash_Final(padding);
 
-    if (outputType === 'binary') {
-      // the data is copied to allow GC of the original memory object
-      return getMemory().slice(0, hashLength);
+    if (outputType === 'hex') {
+      return getDigestHex(digestChars, getMemory(), hashLength);
     }
-
-    return getDigestHex(digestChars, getMemory(), hashLength);
+    // the data is copied to allow GC of the original memory object
+    return getMemory().slice(0, hashLength);
   };
 
   const save = (): Uint8Array => {
@@ -348,9 +347,16 @@ export const createWasmPreparer = <T extends object = object>(
         return WASMInterfaceSync<T>(wasmCompile, wasmName, hashLength);
       },
     },
+    prepare: {
+      value: async () => {
+        await compileWasm(wasmName);
+      },
+    },
   });
+
   return preparer as typeof preparer & {
     readonly wasm: $IWASMInterface;
+    prepare(): Promise<void>;
   };
 };
 

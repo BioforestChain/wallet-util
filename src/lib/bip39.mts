@@ -1,6 +1,4 @@
 import basex from '../../assets/base-x/index.cjs';
-import type { BIP32Interface } from '../../assets/bip32/bip32.cjs';
-import * as bitcoin from '../../assets/bitcoinjs-lib/index.cjs';
 import { Buffer } from './buffer.mjs';
 
 import { pbkdf2, randomBytes, sha } from './crypto.mjs';
@@ -9,23 +7,36 @@ import { COIN_SYMBOL, getNetWorkInfo, networkIsEthereum } from './networks.mjs';
 import { assert, binaryToByte, bytesToBinary, cacheCall } from './utils.mjs';
 import { $Language } from './wordlists/_types.mjs';
 
+const setupBitcoin = cacheCall(async () => {
+  const { prepareCrypto } = await import('./bitcoinjs-lib/_setup.mjs');
+  await prepareCrypto();
+  const address = await import('./bitcoinjs-lib/address.mjs');
+  const networks = await import('./bitcoinjs-lib/networks.mjs');
+  return {
+    address,
+    networks,
+  };
+});
+
 const setupTinySecp256k1 = cacheCall(() =>
   import('./tiny-secp256k1/index.mjs').then(({ setupTinySecp256k1 }) =>
     setupTinySecp256k1(),
   ),
 );
-const setupBip32 = cacheCall(() =>
-  Promise.all([
+const setupBip32 = cacheCall(async () => {
+  const [ecc, { prepareCrypto }] = await Promise.all([
     setupTinySecp256k1(),
-    import('../../assets/bip32/bip32.cjs'),
-  ]).then(([ecc, bip32_cjs]) => bip32_cjs.BIP32Factory(ecc)),
-);
+    import('./bip32/_setup.mjs'),
+  ]);
+  await prepareCrypto();
+  const { BIP32Factory } = await import('./bip32/bip32.mjs');
+  return BIP32Factory(ecc);
+});
 
 const setupEcpair = cacheCall(() =>
-  Promise.all([
-    setupTinySecp256k1(),
-    import('../../assets/ecpair/ecpair.cjs'),
-  ]).then(([ecc, ecpair_cjs]) => ecpair_cjs.ECPairFactory(ecc)),
+  Promise.all([setupTinySecp256k1(), import('./ecpair/ecpair.mjs')]).then(
+    ([ecc, { ECPairFactory }]) => ECPairFactory(ecc),
+  ),
 );
 
 // declare const libs: typeof import("../assets/bip39-libs.js");
@@ -109,28 +120,28 @@ export const bytesToHexString = (byteArray: Uint8Array) => {
 
 export const getLanguageWordLists = async (language: $Language) => {
   switch (language) {
-    case 'chinese_simplified':
-      return (await import('./wordlists/chinese_simplified.mjs')).default;
-    case 'chinese_traditional':
-      return (await import('./wordlists/chinese_traditional.mjs')).default;
-    case 'czech':
-      return (await import('./wordlists/czech.mjs')).default;
+    // case 'chinese_simplified':
+    //   return (await import('./wordlists/chinese_simplified.mjs')).default;
+    // case 'chinese_traditional':
+    //   return (await import('./wordlists/chinese_traditional.mjs')).default;
+    // case 'czech':
+    //   return (await import('./wordlists/czech.mjs')).default;
     case 'english':
       // case 'EN':
       return (await import('./wordlists/english.mjs')).default;
-    case 'french':
-      return (await import('./wordlists/french.mjs')).default;
-    case 'italian':
-      return (await import('./wordlists/italian.mjs')).default;
-    case 'japanese':
-      // case 'JA':
-      return (await import('./wordlists/japanese.mjs')).default;
-    case 'korean':
-      return (await import('./wordlists/korean.mjs')).default;
-    case 'portuguese':
-      return (await import('./wordlists/portuguese.mjs')).default;
-    case 'spanish':
-      return (await import('./wordlists/spanish.mjs')).default;
+    // case 'french':
+    //   return (await import('./wordlists/french.mjs')).default;
+    // case 'italian':
+    //   return (await import('./wordlists/italian.mjs')).default;
+    // case 'japanese':
+    //   // case 'JA':
+    //   return (await import('./wordlists/japanese.mjs')).default;
+    // case 'korean':
+    //   return (await import('./wordlists/korean.mjs')).default;
+    // case 'portuguese':
+    //   return (await import('./wordlists/portuguese.mjs')).default;
+    // case 'spanish':
+    //   return (await import('./wordlists/spanish.mjs')).default;
   }
   throw new Error(`unsupport language: ${language}`);
 };
@@ -279,7 +290,7 @@ async function convertRippleAdrr(address: string) {
 // }
 
 function calcBip32ExtendedKey(
-  bip32RootKey: BIP32Interface,
+  bip32RootKey: import('./bip32/bip32.mjs').BIP32Interface,
   path: DERIVATION_PATH,
 ) {
   const pathBits = path.split('/');
@@ -350,7 +361,7 @@ export async function calcForDerivationPath(
   derivationPath: DERIVATION_PATH,
   index = 0,
 ) {
-  // const libs = await libsLoader();
+  const bitcoin = await setupBitcoin();
   const networkInfo = getNetWorkInfo(symbol);
   const bip32 = await setupBip32();
 

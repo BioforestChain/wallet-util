@@ -1,8 +1,8 @@
-import networks from '../../assets/bitcoinjs-lib/networks.cjs';
+import { bitcoin, regtest, testnet } from './bitcoinjs-lib/networks.mjs';
 const _networksExtensions = {
-  bitcoin: networks.bitcoin,
-  regtest: networks.regtest,
-  testnet: networks.testnet,
+  bitcoin: bitcoin,
+  regtest: regtest,
+  testnet: testnet,
   dummyNetwork: {
     bip32: {
       public: 0,

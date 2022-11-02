@@ -46,13 +46,13 @@ function calculateHmac(hasher: IHasher, key: IDataType): IHasher {
       hasher.update(data);
       return obj;
     },
-    digest: ((outputType) => {
+    digest: (outputType) => {
       const uintArr = hasher.digest('binary');
       hasher.init();
       hasher.update(opad);
       hasher.update(uintArr);
       return hasher.digest(outputType) as any;
-    }) ,
+    },
     save: () => {
       throw new Error('save() not supported');
     },
@@ -83,3 +83,5 @@ export function createHMAC(
 
   return hash.then((hasher) => calculateHmac(hasher, key));
 }
+
+export const createHMACSync = calculateHmac;
