@@ -1,4 +1,5 @@
 import type { $Language, $WordList } from './wordlists/_types.mjs';
+export * from './wordlists/_types.mjs';
 
 export const getWordList = async (language: $Language) => {
   switch (language) {

@@ -14,3 +14,16 @@ export type $Language =
   | 'spanish';
 
 export type $WordList = string[];
+
+export const ALL_LANGUAGE: $Language[] = [
+  'english',
+  'japanese',
+  'chinese_simplified',
+  'chinese_traditional',
+  'czech',
+  'french',
+  'italian',
+  'korean',
+  'portuguese',
+  'spanish',
+];

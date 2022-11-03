@@ -34,6 +34,7 @@
   "dependencies": {
     "@types/bs58check": "^2.1.0",
     "@types/pbkdf2": "^3.1.0",
+    "fastest-levenshtein": "^1.0.16",
     "pbkdf2": "^3.1.2"
   }
 }

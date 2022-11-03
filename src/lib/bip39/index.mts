@@ -12,7 +12,7 @@ const WORDLIST_REQUIRED =
   'A wordlist is required but a default could not be found.\n' +
   'Please pass a 2048 word array explicitly.';
 
-function normalize(str?: string): string {
+export function normalize(str?: string): string {
   return (str || '').normalize('NFKD');
 }
 

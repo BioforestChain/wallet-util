@@ -1,4 +1,4 @@
-import type { $Language } from './lib/bip39/wordlists/_types.mjs';
+import type { $Language, $WordList } from './lib/bip39/wordlists/_types.mjs';
 import { randomBytes } from './lib/crypto.mjs';
 import { Buffer } from './lib/buffer.mjs';
 import type {
@@ -11,6 +11,7 @@ import {
   getNetworks,
   getEthereumUtil,
   getEcpair,
+  getBip39,
 } from './modules.mjs';
 import { BIP32Interface } from './lib/bip32/bip32.mjs';
 export { randomBytes, Buffer };
@@ -70,20 +71,18 @@ export const calcForDerivationPath = async (
     );
   }
 
-  const key = bip32ExtendedKey.derive(index);
-  // bitcoin.address.
+  const keyPair = bip32ExtendedKey.derive(index);
 
-  // let keyPair = key.keyPair;
-  let address = key.toBase58(); // keyPair.getAddress().toString();
-  const hasPrivkey = !key.isNeutered();
+  let address = keyPair.toBase58();
+  const hasPrivkey = !keyPair.isNeutered();
   let privkey = 'NA';
   if (hasPrivkey) {
-    privkey = key.toWIF();
+    privkey = keyPair.toWIF();
   }
-  let pubkey = key.publicKey.toString('hex');
+  let pubkey = keyPair.publicKey.toString('hex');
   // Ethereum values are different
   if (networks.etc.isEthereum(coinName)) {
-    const pubkeyBuffer = key.publicKey;
+    const pubkeyBuffer = keyPair.publicKey;
     const ethUtil = await getEthereumUtil();
 
     const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
@@ -93,28 +92,73 @@ export const calcForDerivationPath = async (
     address = ethUtil.addHexPrefix(checksumAddress);
     pubkey = ethUtil.addHexPrefix(pubkey);
     if (hasPrivkey) {
-      privkey = ethUtil.bufferToHex(key.privateKey!);
+      privkey = ethUtil.bufferToHex(keyPair.privateKey!);
     }
   }
   // TRX is different
   if (networks.tron.isTron(coinName)) {
     const ethUtil = await getEthereumUtil();
     const ecpair = await getEcpair();
-    const keyPair = ecpair.fromPrivateKey(key.privateKey!, {
+    const ecPair = ecpair.fromPrivateKey(keyPair.privateKey!, {
       network: networks.networks.bitcoin,
       compressed: false,
     });
 
-    // keyPair = new libs.bitcoin.ECPair(keyPair.d, null, {
-    //   network: networkInfo.network,
-    //   compressed: false,
-    // });
-    const pubkeyBuffer = keyPair.getPublicKey!();
+    const pubkeyBuffer = ecPair.getPublicKey!();
     const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
     const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
     address = bitcoin.address.toBase58Check(addressBuffer, 0x41);
     if (hasPrivkey) {
-      privkey = keyPair.privateKey!.toString('hex');
+      privkey = ecPair.privateKey!.toString('hex');
+    }
+  }
+
+  if (networks.rsk.isRsk(coinName)) {
+    const pubkeyBuffer = keyPair.publicKey;
+    const ethUtil = await getEthereumUtil();
+    const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
+    const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
+    var hexAddress = addressBuffer.toString('hex');
+    // Use chainId based on selected network
+    // Ref: https://developers.rsk.co/rsk/architecture/account-based/#chainid
+    let chainId: number | undefined;
+    switch (coinName) {
+      case 'R-BTC - RSK':
+        chainId = 30;
+        break;
+      case 'tR-BTC - RSK Testnet':
+        chainId = 31;
+        break;
+    }
+
+    const toChecksumAddressForRsk = (address: string, chainId?: number) => {
+      if (typeof address !== 'string') {
+        throw new Error('address parameter should be a string.');
+      }
+
+      if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+        throw new Error('Given address is not a valid RSK address: ' + address);
+      }
+
+      const stripAddress = ethUtil.stripHexPrefix(address).toLowerCase();
+      const prefix = chainId != null ? chainId.toString() + '0x' : '';
+      const keccakHash = ethUtil.keccakHex(prefix + stripAddress, 256);
+      let checksumAddress = '0x';
+
+      for (let i = 0; i < stripAddress.length; i++) {
+        checksumAddress +=
+          parseInt(keccakHash[i], 16) >= 8
+            ? stripAddress[i].toUpperCase()
+            : stripAddress[i];
+      }
+
+      return checksumAddress;
+    };
+    var checksumAddress = toChecksumAddressForRsk(hexAddress, chainId);
+    address = ethUtil.addHexPrefix(checksumAddress);
+    pubkey = ethUtil.addHexPrefix(pubkey);
+    if (hasPrivkey) {
+      privkey = ethUtil.bufferToHex(keyPair.privateKey!);
     }
   }
 
@@ -233,97 +277,90 @@ function calcBip32ExtendedKey(
   return bip32RootKey;
 }
 
-// function findDerivationPathErrors(
-//   path: string,
-//   bip32RootKey?: import('./lib/bip32/bip32.mjs').BIP32Interface,
-//   hardenedAddresses?: boolean,
-// ) {
-//   // TODO is not perfect but is better than nothing
-//   // Inspired by
-//   // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#test-vectors
-//   // and
-//   // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-//   var maxDepth = 255; // TODO verify this!!
-//   var maxIndexValue = Math.pow(2, 31); // TODO verify this!!
-//   if (path[0] != 'm') {
-//     return "First character must be 'm'";
-//   }
-//   if (path.length > 1) {
-//     if (path[1] != '/') {
-//       return "Separator must be '/'";
-//     }
-//     var indexes = path.split('/');
-//     if (indexes.length > maxDepth) {
-//       return (
-//         'Derivation depth is ' +
-//         indexes.length +
-//         ', must be less than ' +
-//         maxDepth
-//       );
-//     }
-//     for (var depth = 1; depth < indexes.length; depth++) {
-//       var index = indexes[depth];
-//       var invalidChars = index.replace(/^[0-9]+'?$/g, '');
-//       if (invalidChars.length > 0) {
-//         return (
-//           'Invalid characters ' + invalidChars + ' found at depth ' + depth
-//         );
-//       }
-//       var indexValue = parseInt(index.replace("'", ''));
-//       if (isNaN(depth)) {
-//         return 'Invalid number at depth ' + depth;
-//       }
-//       if (indexValue > maxIndexValue) {
-//         return (
-//           'Value of ' +
-//           indexValue +
-//           ' at depth ' +
-//           depth +
-//           ' must be less than ' +
-//           maxIndexValue
-//         );
-//       }
-//     }
-//   }
-//   // Check root key exists or else derivation path is useless!
-//   if (!bip32RootKey) {
-//     return 'No root key';
-//   }
-//   // Check no hardened derivation path when using xpub keys
-//   var hardenedPath = path.indexOf("'") > -1;
-//   var hardened = hardenedPath || hardenedAddresses;
-//   var isXpubkey = bip32RootKey.isNeutered();
-//   if (hardened && isXpubkey) {
-//     return 'Hardened derivation path is invalid with xpub key';
-//   }
-//   return false;
-// }
+/**寻找错误 */
+export const findPhraseErrors = async (
+  phrase: string,
+  language?: $Language,
+) => {
+  const { bip39, wordlists } = await getBip39();
 
-// function calcForDerivationPath2(derivationPath:string) {
-//   clearDerivedKeys();
-//   clearAddressesList();
-//   showPending();
-//   // Don't show segwit if it's selected but network doesn't support it
-//   if (segwitSelected() && !networkHasSegwit()) {
-//     showSegwitUnavailable();
-//     hidePending();
-//     return;
-//   }
-//   showSegwitAvailable();
-//   // Get the derivation path
-//   var derivationPath = getDerivationPath();
-//   var errorText = findDerivationPathErrors(derivationPath);
-//   if (errorText) {
-//     showValidationError(errorText);
-//     return;
-//   }
-//   bip32ExtendedKey = calcBip32ExtendedKey(derivationPath);
-//   if (bip44TabSelected()) {
-//     displayBip44Info();
-//   } else if (bip49TabSelected()) {
-//     displayBip49Info();
-//   } else if (bip84TabSelected()) {
-//     displayBip84Info();
-//   }
-//   displayBip32Info();
-// }
+  const words = phraseToWordArray(bip39.normalize(phrase));
+  // Detect blank phrase
+  if (words.length == 0) {
+    return 'Blank mnemonic';
+  }
+  if (language === undefined) {
+    language = await getLanguageFromWords(words);
+  }
+  if (language === undefined) {
+    return 'Cannot be matched to any language';
+  }
+
+  const wordset = new Set(await wordlists.getWordList(language));
+  // Check each word
+  for (const word of words) {
+    if (wordset.has(word) === false) {
+      console.log('Finding closest match to ' + word);
+      const nearestWord = await findNearestWord(word, language);
+      return word + ' not in wordlist, did you mean ' + nearestWord + '?';
+    }
+  }
+  if (bip39.validateMnemonic(phrase) === false) {
+    return 'Invalid mnemonic';
+  }
+  return false;
+};
+
+/**寻找最接近的单词 */
+export const findNearestWord = async (word: string, language: $Language) => {
+  const { closest } = await import('./lib/fastest-levenshtein/index.mjs');
+
+  const { wordlists } = await getBip39();
+  const wordlist = await wordlists.getWordList(language);
+  return closest(word, wordlist);
+};
+
+export const phraseToWordArray = (phrase: string) => {
+  return phrase.trim().split(/\s+/);
+};
+
+export const wordArrayToPhrase = async (
+  words: $WordList,
+  language?: $Language,
+) => {
+  let sep = ' ';
+  if (language === undefined) {
+    language = await getLanguageFromWords(words);
+  }
+  if (language === 'japanese') {
+    sep = '\u3000';
+  }
+  return words.join(sep);
+};
+
+export const getLanguageFromPhrase = async (phrase: string) => {
+  // Check if how many words from existing phrase match a language.
+  return getLanguageFromWord(phrase.match(/[^\s\n]+/)?.[0]);
+};
+
+export const getLanguageFromWords = async (words: $WordList) => {
+  for (const word of words) {
+    const lang = await getLanguageFromWord(word);
+    if (lang !== undefined) {
+      return lang;
+    }
+  }
+};
+
+export const getLanguageFromWord = async (word?: string) => {
+  if (!word) {
+    return;
+  }
+  const { wordlists } = await getBip39();
+  for (const language of wordlists.ALL_LANGUAGE) {
+    const wordlist = await wordlists.getWordList(language);
+    if (wordlist.includes(word)) {
+      return language;
+    }
+  }
+};

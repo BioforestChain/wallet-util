@@ -1,8 +1,6 @@
 import { Buffer } from '../buffer.mjs';
 
-import {
-  createKeccakSync,
-} from '../hash-wasm/keccak.mjs';
+import { createKeccakSync } from '../hash-wasm/keccak.mjs';
 import { $Sha3Bits } from '../hash-wasm/sha3.mjs';
 import { IDataType } from '../hash-wasm/util.mjs';
 import { pointCompress } from '../tiny-secp256k1/index.mjs';
@@ -12,7 +10,7 @@ export const keccakHex = (data: IDataType, bits?: $Sha3Bits) => {
 };
 export const keccak256Buffer = (publicKey: Uint8Array) => {
   const hash = createKeccakSync(256);
-  return Buffer.from(hash.update(publicKey).digest('hex'), 'hex');
+  return Buffer.from(hash.update(publicKey).digest());
 };
 
 export const importPublic = async (publickKey: Uint8Array) => {
