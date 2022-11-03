@@ -3,11 +3,11 @@ import { Buffer } from '../buffer.mjs';
 import {
   createKeccakSync,
 } from '../hash-wasm/keccak.mjs';
-import { $IValidBits } from '../hash-wasm/sha3.mjs';
+import { $Sha3Bits } from '../hash-wasm/sha3.mjs';
 import { IDataType } from '../hash-wasm/util.mjs';
 import { pointCompress } from '../tiny-secp256k1/index.mjs';
 
-export const keccakHex = (data: IDataType, bits?: $IValidBits) => {
+export const keccakHex = (data: IDataType, bits?: $Sha3Bits) => {
   return createKeccakSync(bits).update(data).digest('hex');
 };
 export const keccak256Buffer = (publicKey: Uint8Array) => {

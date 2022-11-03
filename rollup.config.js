@@ -48,7 +48,7 @@ const outputConfig = {
       return 'wordlists/[name].mjs';
     }
 
-    console.log('chunkInfo', chunkInfo);
+    // console.log('chunkInfo', chunkInfo);
     return '[name]-[hash].mjs';
   },
   format: 'esm',

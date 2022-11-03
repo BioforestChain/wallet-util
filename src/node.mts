@@ -1,20 +1,25 @@
 import { deepEqual } from 'node:assert';
-import { webcrypto, createHmac } from 'node:crypto';
+import { createHmac, webcrypto } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const IS_BUNDLED = __dirname.endsWith('dist') === false;
+
 Reflect.set(globalThis, 'crypto', webcrypto);
-// Reflect.set(globalThis, 'Buffer', undefined);
+// if (IS_BUNDLED) {
+//   Reflect.set(globalThis, 'Buffer', undefined);
+// }
 
 /// 初始化安装
 await (async () => {
   const { setup } = await import('./index.mjs');
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
 
   const ASSETS_PATH = path.resolve(
     __dirname,
-    __dirname.endsWith('dist') ? '../assets' : './assets',
+    IS_BUNDLED ? './assets' : '../assets',
   );
   await setup({
     wasmBaseUrl: ASSETS_PATH,
@@ -44,14 +49,14 @@ await (async () => {
 
 /// RUN DEMO
 await (async () => {
-  const { setup, calcForDerivationPath } = await import('./index.mjs');
+  const { setup, walletUtil } = await import('./index.mjs');
 
   // const {
   //   bip39: { calcForDerivationPath, DERIVATION_PATH },
   //   networks: { COIN_SYMBOL },
   // } = await setup();
 
-  const testRes = await calcForDerivationPath(
+  const testRes = await walletUtil.calcForDerivationPath(
     'ETH - Ethereum',
     '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
     0,

@@ -1,4 +1,4 @@
-import { $IValidBits, getSha3Preparer } from './sha3.mjs';
+import { $Sha3Bits, getSha3Preparer } from './sha3.mjs';
 import { IDataType } from './util.mjs';
 import { IHasher } from './WASMInterface.mjs';
 
@@ -8,7 +8,7 @@ import { IHasher } from './WASMInterface.mjs';
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  * @returns Computed hash as a hexadecimal string
  */
-export const keccak = async (data: IDataType, bits: $IValidBits = 512) => {
+export const keccak = async (data: IDataType, bits: $Sha3Bits = 512) => {
   return (await getSha3Preparer(bits)()).calculate(data, bits, 0x01);
 };
 
@@ -16,12 +16,12 @@ export const keccak = async (data: IDataType, bits: $IValidBits = 512) => {
  * Creates a new Keccak hash instance
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  */
-export const createKeccak = async (bits: $IValidBits = 512) => {
+export const createKeccak = async (bits: $Sha3Bits = 512) => {
   return createKeccakSync(bits, await getSha3Preparer(bits)());
 };
 
 export const createKeccakSync = (
-  bits: $IValidBits = 512,
+  bits: $Sha3Bits = 512,
   wasm = getSha3Preparer(bits).wasm,
 ) => {
   const outputSize = bits / 8;

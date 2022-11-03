@@ -11,7 +11,7 @@ import {
   getNetworks,
   getEthereumUtil,
   getEcpair,
-} from './setup.mjs';
+} from './modules.mjs';
 import { BIP32Interface } from './lib/bip32/bip32.mjs';
 export { randomBytes, Buffer };
 
@@ -46,6 +46,7 @@ export const generateRandomMnemonic = async (
   };
 };
 
+/** 计算基于币种派生路径的地址 */
 export const calcForDerivationPath = async (
   coinName: $CoinName,
   seed: string,

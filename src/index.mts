@@ -5,6 +5,13 @@ export const setup = cacheCall(async (options?: Partial<$Config>) => {
   if (options) {
     await setConfig(options);
   }
-  return await import('./setup.mjs');
 });
-export * from './wallet.mjs';
+import * as modules from './modules.mjs';
+import * as walletUtil from './wallet.mjs';
+
+export { modules, walletUtil };
+export type $Modules = typeof modules;
+export type $WalletUtil = typeof walletUtil;
+
+/// internal types
+export * from './types.mjs';

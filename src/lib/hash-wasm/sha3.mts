@@ -12,9 +12,9 @@ const prepareSHA3_MAP = {
 } as const;
 Object.setPrototypeOf(prepareSHA3_MAP, null);
 
-export type $IValidBits = keyof typeof prepareSHA3_MAP;
+export type $Sha3Bits = keyof typeof prepareSHA3_MAP;
 
-export const getSha3Preparer = (bits: $IValidBits) => {
+export const getSha3Preparer = (bits: $Sha3Bits) => {
   if (bits in prepareSHA3_MAP === false) {
     throw new Error(
       `Invalid variant! Valid values: ${Object.keys(prepareSHA3_MAP)}`,
@@ -29,7 +29,7 @@ export const getSha3Preparer = (bits: $IValidBits) => {
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  * @returns Computed hash as a hexadecimal string
  */
-export const sha3 = async (data: IDataType, bits: $IValidBits = 512) => {
+export const sha3 = async (data: IDataType, bits: $Sha3Bits = 512) => {
   return (await getSha3Preparer(bits)()).calculate(data, bits, 0x06);
 };
 
@@ -37,7 +37,7 @@ export const sha3 = async (data: IDataType, bits: $IValidBits = 512) => {
  * Creates a new SHA-3 hash instance
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  */
-export const createSHA3 = async (bits: $IValidBits = 512) => {
+export const createSHA3 = async (bits: $Sha3Bits = 512) => {
   return createSHA3Sync(bits, await getSha3Preparer(bits)());
 };
 
@@ -46,7 +46,7 @@ export const createSHA3 = async (bits: $IValidBits = 512) => {
  * @param bits Number of output bits. Valid values: 224, 256, 384, 512
  */
 export const createSHA3Sync = (
-  bits: $IValidBits = 512,
+  bits: $Sha3Bits = 512,
   wasm = getSha3Preparer(bits).wasm,
 ) => {
   const outputSize = bits / 8;
