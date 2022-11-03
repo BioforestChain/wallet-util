@@ -28,8 +28,8 @@ await (async () => {
 
 /// 测试算法库
 await (async () => {
-  const { prepareCrypto } = await import('./lib/bip32/_setup.mjs');
-  await prepareCrypto();
+  const { prepareBip32 } = await import('./lib/bip32/_setup.mjs');
+  await prepareBip32();
 
   const { hmacSHA512 } = await import('./lib/bip32/crypto.mjs');
 
@@ -44,16 +44,16 @@ await (async () => {
 
 /// RUN DEMO
 await (async () => {
-  const { setup } = await import('./index.mjs');
-  const {
-    bip39: { calcForDerivationPath, DERIVATION_PATH },
-    networks: { COIN_SYMBOL },
-  } = await setup();
+  const { setup, calcForDerivationPath } = await import('./index.mjs');
+
+  // const {
+  //   bip39: { calcForDerivationPath, DERIVATION_PATH },
+  //   networks: { COIN_SYMBOL },
+  // } = await setup();
 
   const testRes = await calcForDerivationPath(
-    COIN_SYMBOL.ETH,
+    'ETH - Ethereum',
     '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
-    DERIVATION_PATH.ETH,
     0,
   );
   deepEqual(

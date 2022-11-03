@@ -41,7 +41,16 @@ const genPlugins = ({ outdir }) => {
  */
 const outputConfig = {
   entryFileNames: '[name].mjs',
-  chunkFileNames: '[name]-[hash].mjs',
+  chunkFileNames: (chunkInfo) => {
+    const filepath = chunkInfo.moduleIds.at(-1) || '';
+    const dirpath = path.dirname(filepath);
+    if (path.basename(dirpath) === 'wordlists') {
+      return 'wordlists/[name].mjs';
+    }
+
+    console.log('chunkInfo', chunkInfo);
+    return '[name]-[hash].mjs';
+  },
   format: 'esm',
 };
 /**

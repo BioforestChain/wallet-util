@@ -170,7 +170,7 @@ export const WASMInterfaceSync = <T extends object = object>(
 
   const digestChars = new Uint8Array(hashLength * 2);
 
-  const digest = (
+  const digest = ((
     outputType: 'hex' | 'binary' = 'binary',
     padding?: number,
   ): Uint8Array | string => {
@@ -186,6 +186,10 @@ export const WASMInterfaceSync = <T extends object = object>(
     }
     // the data is copied to allow GC of the original memory object
     return getMemory().slice(0, hashLength);
+  }) as {
+    (outputType?: 'binary', padding?: number): Uint8Array;
+    (outputType?: any, padding?: number): Uint8Array;
+    (outputType: 'hex', padding?: number): string;
   };
 
   const save = (): Uint8Array => {
@@ -324,7 +328,11 @@ export const WASMInterface = async <T extends object = object>(
   );
 };
 
-export type $IWASMInterface = Awaited<ReturnType<typeof WASMInterface>>;
+export type $IWASMInterface<T extends object = object> = ReturnType<
+  typeof WASMInterfaceSync
+> & {
+  getExports(): $Exports & T;
+};
 
 /**
  * @TODO 实现一个池子，如果 digest 了，那么就回收到池子中，可以重复使用

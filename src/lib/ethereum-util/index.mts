@@ -1,23 +1,23 @@
-import { Buffer } from './buffer.mjs';
+import { Buffer } from '../buffer.mjs';
 
-import { createKeccak, keccak as keccakHex } from './hash-wasm/index.mjs';
-export { keccakHex };
+import {
+  createKeccakSync,
+} from '../hash-wasm/keccak.mjs';
+import { $IValidBits } from '../hash-wasm/sha3.mjs';
+import { IDataType } from '../hash-wasm/util.mjs';
+import { pointCompress } from '../tiny-secp256k1/index.mjs';
 
-const setupTinySecp256k1 = () =>
-  import('./tiny-secp256k1/index.mjs').then(({ setupTinySecp256k1 }) =>
-    setupTinySecp256k1(),
-  );
-
-export const keccak256Buffer = async (publicKey: Uint8Array) => {
-  const hash = await createKeccak(256);
+export const keccakHex = (data: IDataType, bits?: $IValidBits) => {
+  return createKeccakSync(bits).update(data).digest('hex');
+};
+export const keccak256Buffer = (publicKey: Uint8Array) => {
+  const hash = createKeccakSync(256);
   return Buffer.from(hash.update(publicKey).digest('hex'), 'hex');
 };
 
 export const importPublic = async (publickKey: Uint8Array) => {
   if (publickKey.length !== 64) {
-    publickKey = (await setupTinySecp256k1())
-      .pointCompress(publickKey, false)
-      .slice(1);
+    publickKey = pointCompress(publickKey, false).slice(1);
   }
   return publickKey;
 };

@@ -1,9 +1,9 @@
 /* eslint-disable no-bitwise */
-import { createHMAC } from './hmac.mjs';
+import { createHMAC, createHMACSync } from './hmac.mjs';
 import { getDigestHex, getUInt8Buffer, IDataType } from './util.mjs';
 import { IHasher } from './WASMInterface.mjs';
 
-export interface IPBKDF2Options {
+interface IPBKDF2BaseOptions {
   /**
    * Password (or message) to be hashed
    */
@@ -21,22 +21,31 @@ export interface IPBKDF2Options {
    */
   hashLength: number;
   /**
-   * Hash algorithm to use. It has to be the return value of a function like createSHA1()
-   */
-  hashFunction: Promise<IHasher>;
-  /**
    * Desired output type. Defaults to 'hex'
    */
   outputType?: 'hex' | 'binary';
 }
 
-async function calculatePBKDF2(
+export interface IPBKDF2AsyncOptions extends IPBKDF2BaseOptions {
+  /**
+   * Hash algorithm to use. It has to be the return value of a function like createSHA1()
+   */
+  hashFunction: Promise<IHasher>;
+}
+export interface IPBKDF2SyncOptions extends IPBKDF2BaseOptions {
+  /**
+   * Hash algorithm to use. It has to be the return value of a function like createSHA1()
+   */
+  hashFunction: IHasher;
+}
+
+function calculatePBKDF2(
   digest: IHasher,
   salt: IDataType,
   iterations: number,
   hashLength: number,
   outputType?: 'hex' | 'binary',
-): Promise<Uint8Array | string> {
+): Uint8Array | string {
   const DK = new Uint8Array(hashLength);
   const block1 = new Uint8Array(salt.length + 4);
   const block1View = new DataView(block1.buffer);
@@ -76,23 +85,16 @@ async function calculatePBKDF2(
     destPos += hLen;
   }
 
-  if (outputType === 'binary') {
-    return DK;
+  if (outputType === 'hex') {
+    const digestChars = new Uint8Array(hashLength * 2);
+    return getDigestHex(digestChars, DK, hashLength);
   }
-
-  const digestChars = new Uint8Array(hashLength * 2);
-  return getDigestHex(digestChars, DK, hashLength);
+  return DK;
 }
 
-const validateOptions = (options: IPBKDF2Options) => {
+const validateBaseOptions = (options: IPBKDF2BaseOptions) => {
   if (!options || typeof options !== 'object') {
     throw new Error('Invalid options parameter. It requires an object.');
-  }
-
-  if (!options.hashFunction || !options.hashFunction.then) {
-    throw new Error(
-      'Invalid hash function is provided! Usage: pbkdf2("password", "salt", 1000, 32, createSHA1()).',
-    );
   }
 
   if (!Number.isInteger(options.iterations) || options.iterations < 1) {
@@ -114,26 +116,45 @@ const validateOptions = (options: IPBKDF2Options) => {
   }
 };
 
-interface IPBKDF2OptionsBinary {
-  outputType: 'binary';
+type PBKDF2ReturnType<T> = T extends {
+  outputType: 'hex';
 }
-
-type PBKDF2ReturnType<T> = T extends IPBKDF2OptionsBinary ? Uint8Array : string;
+  ? string
+  : Uint8Array;
 
 /**
  * Generates a new PBKDF2 hash for the supplied password
  */
-export async function pbkdf2<T extends IPBKDF2Options>(
+export async function pbkdf2<T extends IPBKDF2AsyncOptions>(
   options: T,
 ): Promise<PBKDF2ReturnType<T>> {
-  validateOptions(options);
+  const hashFunction = await options.hashFunction;
+  if (!hashFunction) {
+    throw new Error(
+      'Invalid hash function is provided! Usage: pbkdf2("password", "salt", 1000, 32, createSHA1()).',
+    );
+  }
 
-  const hmac = await createHMAC(options.hashFunction, options.password);
+  return pbkdf2Sync({
+    ...options,
+    hashFunction,
+  });
+}
+
+export const pbkdf2Sync = <T extends IPBKDF2SyncOptions>(options: T) => {
+  if (!options.hashFunction) {
+    throw new Error(
+      'Invalid hash function is provided! Usage: pbkdf2Sync("password", "salt", 1000, 32, createSHA1Sync()).',
+    );
+  }
+  validateBaseOptions(options);
+
+  const hmac = createHMACSync(options.hashFunction, options.password);
   return calculatePBKDF2(
     hmac,
     options.salt,
     options.iterations,
     options.hashLength,
     options.outputType,
-  ) as any;
-}
+  ) as PBKDF2ReturnType<T>;
+};

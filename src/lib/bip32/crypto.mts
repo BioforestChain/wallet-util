@@ -1,7 +1,7 @@
 import { Buffer } from '../buffer.mjs';
 import { createSHA512Sync } from '../hash-wasm/sha512.mjs';
 import { createHMACSync } from '../hash-wasm/hmac.mjs';
-export { hash160 } from '../bitcoinjs-lib/crypto.mjs';
+export { hash160 } from '../bitcoin-lib/crypto.mjs';
 
 // const ZEROS = Buffer.alloc(128);
 

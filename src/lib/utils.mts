@@ -4,10 +4,6 @@ export function assert(condition: boolean, message: string): asserts condition {
   }
 }
 
-export function padStart(str: string, length: number, padString: string) {
-  return str.padStart(length, padString);
-}
-
 export function binaryToByte(bin: string) {
   return parseInt(bin, 2);
 }
@@ -20,7 +16,7 @@ export function bytesToBinary(bytes: Uint8Array) {
 
 export const cacheCall = <
   ARGS extends unknown[],
-  R extends {} /* NonNullable */,
+  R extends unknown /* NonNullable */,
 >(
   fun: (...args: ARGS) => R,
 ) => {

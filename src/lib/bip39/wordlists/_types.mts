@@ -12,3 +12,5 @@ export type $Language =
   | 'korean'
   | 'portuguese'
   | 'spanish';
+
+export type $WordList = string[];

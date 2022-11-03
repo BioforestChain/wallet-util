@@ -5,8 +5,6 @@ export const setup = cacheCall(async (options?: Partial<$Config>) => {
   if (options) {
     await setConfig(options);
   }
-  const bip39 = await import('./lib/bip39.mjs');
-  const networks = await import('./lib/networks.mjs');
-  return { bip39, networks };
+  return await import('./setup.mjs');
 });
-export type $WalletUtil = Awaited<ReturnType<typeof setup>>;
+export * from './wallet.mjs';
