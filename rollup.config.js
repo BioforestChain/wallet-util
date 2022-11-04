@@ -57,7 +57,7 @@ const outputConfig = {
 /**
  * @type {import("rollup").RollupOptions[]}
  */
-export default [
+const options = [
   {
     input: 'dist/index.mjs',
     output: {
@@ -69,7 +69,9 @@ export default [
     },
     plugins: genPlugins({ outdir: 'build/web' }),
   },
-  {
+];
+if (isDev) {
+  options.push({
     input: 'dist/node.mjs',
     output: {
       dir: 'build/node',
@@ -79,5 +81,6 @@ export default [
       preset: 'smallest',
     },
     plugins: genPlugins({ outdir: 'build/node' }),
-  },
-];
+  });
+}
+export default options;
