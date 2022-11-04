@@ -31,6 +31,11 @@ await (async () => {
   console.log('🎉 setup done!');
 })();
 
+await (async () => {
+  const { walletUtil } = await import('./index.mjs');
+  console.log(await walletUtil.generateRandomMnemonic(12));
+})();
+
 /// 测试算法库
 await (async () => {
   const { prepareBip32 } = await import('./lib/bip32/_setup.mjs');

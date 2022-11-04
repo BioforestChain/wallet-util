@@ -1,19 +1,21 @@
+import type { BIP32Interface } from './lib/bip32/bip32.mjs';
 import type { $Language, $WordList } from './lib/bip39/wordlists/_types.mjs';
-import { randomBytes } from './lib/crypto.mjs';
-import { Buffer } from './lib/buffer.mjs';
 import type {
   $CoinName,
   $DerivationPath,
 } from './lib/networks-extensions/coins.mjs';
+
 import {
-  getBitcoin,
   getBip32,
-  getNetworks,
-  getEthereumUtil,
-  getEcpair,
   getBip39,
+  getBitcoin,
+  getEcpair,
+  getEthereumUtil,
+  getNetworks,
 } from './modules.mjs';
-import { BIP32Interface } from './lib/bip32/bip32.mjs';
+
+import { Buffer } from './lib/buffer.mjs';
+import { randomBytes } from './lib/crypto.mjs';
 export { randomBytes, Buffer };
 
 /** 生成助记词 */
@@ -21,10 +23,7 @@ export const generateRandomMnemonic = async (
   length = 12,
   language: $Language = 'english',
 ) => {
-  const { getWordList } = await import('./lib/bip39/wordlists.mjs');
-  const { generateMnemonic, mnemonicToSeed } = await import(
-    './lib/bip39/index.mjs'
-  );
+  const { wordlists, bip39 } = await getBip39();
 
   const numWords = length;
   const strength = (numWords / 3) * 32;
@@ -38,9 +37,13 @@ export const generateRandomMnemonic = async (
       ' bits).'
     );
   }
-  const wordList = await getWordList(language);
-  const mnemonic = await generateMnemonic(strength, randomBytes, wordList);
-  const seedBuff = await mnemonicToSeed(mnemonic);
+  const wordList = await wordlists.getWordList(language);
+  const mnemonic = await bip39.generateMnemonic(
+    strength,
+    randomBytes,
+    wordList,
+  );
+  const seedBuff = await bip39.mnemonicToSeed(mnemonic);
   return {
     mnemonic,
     seedBuff,
