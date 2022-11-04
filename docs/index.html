@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallet Util Demo</title>
+    <script type="module">
+      import { setup, walletUtil } from '/lib/index.mjs';
+      setup({
+        wasmBaseUrl: '/lib/assets',
+      });
+      globalThis.walletUtil = walletUtil;
+      console.log(walletUtil);
+    </script>
+    <style>
+      #test-terminal {
+        background: #eee;
+        padding: 0.5em 1em 1em 1em;
+        position: relative;
+        border-radius: 1em;
+      }
+      #test-terminal pre {
+        margin: 0;
+        padding-bottom: 1em;
+      }
+      #test-stdin {
+        color: #0d47a1;
+      }
+      #test-stdout {
+        color: #1b5e20;
+      }
+      #test-stderr {
+        color: #b71c1c;
+      }
+      #test-timespan {
+        position: absolute;
+        bottom: 0.5em;
+        right: 0;
+        font-size: 0.8em;
+        color: #00bcd4;
+        padding-right: 0.8em;
+        text-shadow: 0 0 0.3em #fff;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <select name="tests" id="test-sel">
+      <option value="test1">calcForDerivationPath ETH</option>
+    </select>
+    <button id="test-btn">RUN ▶️</button>
+    <hr />
+    <div id="test-terminal">
+      <pre id="test-stdin"></pre>
+      <pre id="test-stdout"></pre>
+      <pre id="test-stderr"></pre>
+      <span id="test-timespan"></span>
+    </div>
+  </body>
+  <script>
+    const $ = document.querySelector.bind(document);
+    const $sel = $('#test-sel');
+    const $btn = $('#test-btn');
+    const $terminal = $('#test-terminal');
+    const $timespan = $('#test-timespan');
+    const $stdin = $('#test-stdin');
+    const $stdout = $('#test-stdout');
+    const $stderr = $('#test-stderr');
+
+    $btn.addEventListener('click', async () => {
+      $btn.disabled = true;
+      const startTime = performance.now();
+      try {
+        const test = TESTS[$sel.value];
+        $stdin.innerHTML = trimIndent(test.toString());
+        $stdout.innerHTML = '';
+        $stderr.innerHTML = '';
+        const res = await test();
+        $stdout.innerHTML = JSON.stringify(
+          res,
+          (key, value) => {
+            return value;
+          },
+          2,
+        );
+      } catch (err) {
+        $stderr.innerHTML =
+          err instanceof Error ? err.stack ?? err.message : String(err);
+      } finally {
+        const endTime = performance.now();
+        $timespan.innerHTML = `+ ${(endTime - startTime).toFixed(4)}ms`;
+        $btn.disabled = false;
+      }
+    });
+
+    const trimIndent = (code) => {
+      const lines = code.split('\n');
+      const lastLine = lines.at(-1);
+      const indent = lastLine.length - lastLine.trimStart().length;
+      return lines
+        .map((line, index) => {
+          if (line.slice(0, indent).trim().length === 0) {
+            return line.slice(indent);
+          }
+          return line;
+        })
+        .join('\n');
+    };
+
+    const TESTS = {
+      test1: async () => {
+        const testRes = await walletUtil.calcForDerivationPath(
+          'ETH - Ethereum',
+          '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
+          0,
+        );
+        return testRes;
+      },
+    };
+  </script>
+</html>

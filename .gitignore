@@ -2,5 +2,6 @@ build
 build-node
 dist
 node_modules
+docs/lib
 
 .*.bak

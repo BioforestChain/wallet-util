@@ -10,7 +10,11 @@
     "bundle": "rollup -c",
     "test": "node dist/node.mjs",
     "test:bundle": "node build/node/node.mjs",
+    "demo": "node ./script/demo-server.mjs",
     "format": "prettier src --write"
+  },
+  "-engines": {
+    "node": ">=16"
   },
   "files": [
     "build",
