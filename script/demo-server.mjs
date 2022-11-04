@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const WORKSPACE = path.resolve(__dirname, '../');
-const ROOT = path.resolve(WORKSPACE, 'docs');
+const ROOT = path.resolve(WORKSPACE, 'example');
 const LIB = path.resolve(ROOT, 'lib');
 if (fs.existsSync(LIB)) {
   fs.unlinkSync(LIB);
