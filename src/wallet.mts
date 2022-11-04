@@ -296,28 +296,30 @@ export const findPhraseErrors = async (
     return 'Cannot be matched to any language';
   }
 
-  const wordset = new Set(await wordlists.getWordList(language));
+  const wordlist = await wordlists.getWordList(language);
+  const wordset = new Set(wordlist);
   // Check each word
   for (const word of words) {
     if (wordset.has(word) === false) {
       console.log('Finding closest match to ' + word);
-      const nearestWord = await findNearestWord(word, language);
+      const nearestWord = await _findNearestWord(word, wordlist);
       return word + ' not in wordlist, did you mean ' + nearestWord + '?';
     }
   }
   if (bip39.validateMnemonic(phrase) === false) {
     return 'Invalid mnemonic';
   }
-  return false;
+};
+const _findNearestWord = async (word: string, wordlist: string[]) => {
+  const { closest } = await import('./lib/fastest-levenshtein/index.mjs');
+
+  return closest(word, wordlist);
 };
 
 /**寻找最接近的单词 */
 export const findNearestWord = async (word: string, language: $Language) => {
-  const { closest } = await import('./lib/fastest-levenshtein/index.mjs');
-
   const { wordlists } = await getBip39();
-  const wordlist = await wordlists.getWordList(language);
-  return closest(word, wordlist);
+  return await _findNearestWord(word, await wordlists.getWordList(language));
 };
 
 export const phraseToWordArray = (phrase: string) => {
