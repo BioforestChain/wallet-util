@@ -5,6 +5,7 @@ import * as bscript from './script.mjs';
 import * as types from './types.mjs';
 import { bech32, bech32m } from '../bech32.mjs';
 import { bs58check } from '../bs58check/index.mjs';
+import { Buffer } from '../buffer.mjs';
 const { typeforce } = types;
 
 export interface Base58CheckResult {

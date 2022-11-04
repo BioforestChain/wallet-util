@@ -1,7 +1,8 @@
-import { Buffer } from './lib/buffer.mjs';
-import { randomBytes } from './lib/crypto.mjs';
+/**
+ * 该文件是各个子模块的异步加载集合
+ */
+
 import { cacheCall } from './lib/utils.mjs';
-export { randomBytes, Buffer };
 
 export const getBitcoin = cacheCall(async () => {
   const { prepareBitcoinLib } = await import('./lib/bitcoin-lib/_setup.mjs');

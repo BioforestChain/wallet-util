@@ -8,8 +8,8 @@
     "dev": "tsc --build -w",
     "dev:bundle": "rollup -c --dev -w",
     "bundle": "rollup -c",
-    "test": "node dist/node.mjs",
-    "test:bundle": "node build/node/node.mjs",
+    "test": "node --enable-source-maps dist/node.mjs",
+    "test:bundle": "node --enable-source-maps build/node/node.mjs",
     "demo": "node ./script/demo-server.mjs",
     "format": "prettier src --write"
   },

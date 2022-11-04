@@ -49,12 +49,7 @@ await (async () => {
 
 /// RUN DEMO
 await (async () => {
-  const { setup, walletUtil } = await import('./index.mjs');
-
-  // const {
-  //   bip39: { calcForDerivationPath, DERIVATION_PATH },
-  //   networks: { COIN_SYMBOL },
-  // } = await setup();
+  const { walletUtil } = await import('./index.mjs');
 
   const testRes = await walletUtil.calcForDerivationPath(
     'ETH - Ethereum',
@@ -71,6 +66,28 @@ await (async () => {
     },
     testRes,
     '派生路径生成ETH地址异常',
+  );
+  console.log(testRes);
+})();
+
+await (async () => {
+  const { walletUtil } = await import('./index.mjs');
+
+  const testRes = await walletUtil.calcForDerivationPath(
+    'TRX - Tron',
+    '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
+    0,
+  );
+  deepEqual(
+    {
+      privkey:
+        '695073298f70902d9e6eee3e30779e92fefc52999f034f27bcddb8c73d44a740',
+      pubkey:
+        '038204f94ad43fb86d9b1ab511c8887d8991d1ca7fa6a759be75772bdfb691e18c',
+      address: 'TVuDMsMbG9K3sJsGX3vvS7t7dynaN3hVwH',
+    },
+    testRes,
+    '派生路径生成TRX地址异常',
   );
   console.log(testRes);
 })();

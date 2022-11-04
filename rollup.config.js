@@ -40,6 +40,7 @@ const genPlugins = ({ outdir }) => {
  * @type {import("rollup").OutputOptions}
  */
 const outputConfig = {
+  sourcemap: isDev,
   entryFileNames: '[name].mjs',
   chunkFileNames: (chunkInfo) => {
     const filepath = chunkInfo.moduleIds.at(-1) || '';

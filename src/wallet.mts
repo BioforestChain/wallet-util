@@ -104,9 +104,10 @@ export const calcForDerivationPath = async (
       compressed: false,
     });
 
-    const pubkeyBuffer = ecPair.getPublicKey!();
+    const pubkeyBuffer = ecPair.publicKey;
     const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
     const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
+    console.log('addressBuffer', addressBuffer);
     address = bitcoin.address.toBase58Check(addressBuffer, 0x41);
     if (hasPrivkey) {
       privkey = ecPair.privateKey!.toString('hex');
