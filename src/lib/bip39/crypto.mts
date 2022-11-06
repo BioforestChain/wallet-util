@@ -17,7 +17,7 @@ export const pbkdf2Sync = (
     salt,
     iterations,
     hashLength,
-    digest: 'binary',
+    outputType: 'binary',
   });
   return Buffer.from(buf);
 };
@@ -35,7 +35,7 @@ export const pbkdf2 = async (
     salt,
     iterations,
     hashLength,
-    digest: 'binary',
+    outputType: 'binary',
   });
   return Buffer.from(buf);
 };

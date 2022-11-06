@@ -3,6 +3,7 @@ import { createHmac, webcrypto } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getBip39 } from './modules.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,11 +32,26 @@ await (async () => {
   console.log('🎉 setup done!');
 })();
 
+/// hash-wasm
+await (async () => {
+  const { bip39 } = await getBip39();
+})();
+
+/// 助记词
 await (async () => {
   const { walletUtil } = await import('./index.mjs');
-  const { mnemonic } = await walletUtil.generateRandomMnemonic(12);
-  console.log(mnemonic);
+  const { mnemonic, seedBuff } = await walletUtil.generateRandomMnemonic(12);
+  console.log('mnemonic:', mnemonic);
+  console.log('seedBuff:', seedBuff.toString('hex'));
   deepEqual(await walletUtil.findPhraseErrors(mnemonic), undefined);
+  console.log(
+    'calcForDerivationPath:',
+    await walletUtil.calcForDerivationPath(
+      'TRX - Tron',
+      seedBuff.toString('hex'),
+      0,
+    ),
+  );
 })();
 
 /// 测试算法库

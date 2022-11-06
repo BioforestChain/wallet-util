@@ -12,14 +12,14 @@ export function isPoint(p: Buffer | number | undefined | null): boolean {
   if (p.length < 33) return false;
 
   const t = p[0];
-  const x = p.slice(1, 33);
+  const x = p.subarray(1, 33);
   if (x.compare(ZERO32) === 0) return false;
   if (x.compare(EC_P) >= 0) return false;
   if ((t === 0x02 || t === 0x03) && p.length === 33) {
     return true;
   }
 
-  const y = p.slice(33);
+  const y = p.subarray(33);
   if (y.compare(ZERO32) === 0) return false;
   if (y.compare(EC_P) >= 0) return false;
   if (t === 0x04 && p.length === 65) return true;
@@ -56,7 +56,7 @@ export const ECPoint = typeforce.quacksLike('Point');
 
 // exposed, external API
 export const Network = typeforce.compile({
-  messagePrefix: typeforce.oneOf(typeforce.Buffer, typeforce.String),
+  messagePrefix: typeforce.anyOf(typeforce.Buffer, typeforce.String),
   bip32: {
     public: typeforce.UInt32,
     private: typeforce.UInt32,
@@ -81,5 +81,8 @@ export const UInt8 = typeforce.UInt8;
 export const UInt32 = typeforce.UInt32;
 export const Function = typeforce.Function;
 export const BufferN = typeforce.BufferN;
+
 export const Null = typeforce.Null;
 export const oneOf = typeforce.oneOf;
+export const Nil = typeforce.Nil;
+export const anyOf = typeforce.anyOf;

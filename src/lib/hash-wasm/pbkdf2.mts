@@ -106,7 +106,7 @@ const validateBaseOptions = (options: IPBKDF2BaseOptions) => {
   }
 
   if (options.outputType === undefined) {
-    options.outputType = 'hex';
+    options.outputType = 'binary';
   }
 
   if (!['hex', 'binary'].includes(options.outputType)) {
@@ -125,9 +125,9 @@ type PBKDF2ReturnType<T> = T extends {
 /**
  * Generates a new PBKDF2 hash for the supplied password
  */
-export async function pbkdf2<T extends IPBKDF2AsyncOptions>(
-  options: T,
-): Promise<PBKDF2ReturnType<T>> {
+export const pbkdf2 = async <T extends IPBKDF2AsyncOptions>(
+  options: Pick<T, keyof IPBKDF2AsyncOptions>,
+): Promise<PBKDF2ReturnType<T>> => {
   const hashFunction = await options.hashFunction;
   if (!hashFunction) {
     throw new Error(
@@ -138,10 +138,12 @@ export async function pbkdf2<T extends IPBKDF2AsyncOptions>(
   return pbkdf2Sync({
     ...options,
     hashFunction,
-  });
-}
+  }) as unknown as PBKDF2ReturnType<T>;
+};
 
-export const pbkdf2Sync = <T extends IPBKDF2SyncOptions>(options: T) => {
+export const pbkdf2Sync = <T extends IPBKDF2SyncOptions>(
+  options: Pick<T, keyof IPBKDF2SyncOptions>,
+) => {
   if (!options.hashFunction) {
     throw new Error(
       'Invalid hash function is provided! Usage: pbkdf2Sync("password", "salt", 1000, 32, createSHA1Sync()).',
