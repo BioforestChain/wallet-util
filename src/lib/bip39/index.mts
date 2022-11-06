@@ -51,7 +51,7 @@ export function mnemonicToSeedSync(
   return pbkdf2Sync(mnemonicBuffer, saltBuffer, 2048, 64, 'sha512');
 }
 
-export  function mnemonicToSeed(
+export function mnemonicToSeed(
   mnemonic: string,
   password?: string,
 ): Promise<Buffer> {
@@ -64,7 +64,7 @@ export function mnemonicToEntropy(
   mnemonic: string,
   wordlist?: string[],
 ): string {
-  wordlist = wordlist || getDefaultWordlist().wordList;
+  wordlist = wordlist || getDefaultWordlist()?.wordlist;
   if (!wordlist) {
     throw new Error(WORDLIST_REQUIRED);
   }
@@ -119,7 +119,7 @@ export function entropyToMnemonic(
   if (!Buffer.isBuffer(entropy)) {
     entropy = Buffer.from(entropy, 'hex');
   }
-  wordlist = wordlist || getDefaultWordlist().wordList;
+  wordlist = wordlist || getDefaultWordlist()?.wordlist;
   if (!wordlist) {
     throw new Error(WORDLIST_REQUIRED);
   }

@@ -31,7 +31,7 @@ export const getWordList = async (language: $Language) => {
 
 const WORDLISTS_MAP = new Map<$Language, $WordList>();
 
-let DEFAULT_WORDLIST: $WordList | undefined;
+let DEFAULT_WORDLIST: { language: $Language; wordlist: $WordList } | undefined;
 
 export function setDefaultWordlist(
   language: $Language,
@@ -46,17 +46,9 @@ export function setDefaultWordlist(
     );
   }
   // void getWordList(language);
-  DEFAULT_WORDLIST = wordlist;
+  DEFAULT_WORDLIST = { language, wordlist };
 }
 
 export function getDefaultWordlist() {
-  if (!DEFAULT_WORDLIST) {
-    throw new Error('No Default Wordlist set.');
-  }
-  for (const [language, wordList] of WORDLISTS_MAP) {
-    if (wordList[0] === DEFAULT_WORDLIST[0]) {
-      return { language, wordList };
-    }
-  }
-  throw new Error('Invalid Default Wordlist.');
+  return DEFAULT_WORDLIST;
 }

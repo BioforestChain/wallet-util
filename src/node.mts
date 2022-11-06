@@ -33,7 +33,9 @@ await (async () => {
 
 await (async () => {
   const { walletUtil } = await import('./index.mjs');
-  console.log(await walletUtil.generateRandomMnemonic(12));
+  const { mnemonic } = await walletUtil.generateRandomMnemonic(12);
+  console.log(mnemonic);
+  deepEqual(await walletUtil.findPhraseErrors(mnemonic), undefined);
 })();
 
 /// 测试算法库

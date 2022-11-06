@@ -294,7 +294,9 @@ export const findPhraseErrors = async (
     return 'Blank mnemonic';
   }
   if (language === undefined) {
-    language = await getLanguageFromWords(words);
+    language =
+      wordlists.getDefaultWordlist()?.language ??
+      (await getLanguageFromWords(words));
   }
   if (language === undefined) {
     return 'Cannot be matched to any language';
@@ -310,7 +312,7 @@ export const findPhraseErrors = async (
       return word + ' not in wordlist, did you mean ' + nearestWord + '?';
     }
   }
-  if (bip39.validateMnemonic(phrase) === false) {
+  if (bip39.validateMnemonic(phrase, wordlist) === false) {
     return 'Invalid mnemonic';
   }
 };
