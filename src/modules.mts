@@ -72,3 +72,7 @@ export const getEthereumUtil = cacheCall(async () => {
   await prepareEthereumUtil();
   return await import('./lib/ethereum-util/index.mjs');
 });
+
+export const getHashWasm = cacheCall(async () => {
+  return await import('./lib/hash-wasm/index.mjs');
+});

@@ -1,8 +1,5 @@
 // @ts-check
 import { createResolveTo } from './resolveTo.mjs';
-import { walkDir } from './walkFile.mjs';
-import fs from 'node:fs';
-import path from 'node:path';
 
 import jsbuildinfo from '../dist/tsconfig.js.tsbuildinfo.json' assert { type: 'json' };
 import { Tree } from './tree.mjs';

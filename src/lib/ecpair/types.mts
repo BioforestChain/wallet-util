@@ -3,7 +3,7 @@ export { typeforce };
 
 // exposed, external API
 export const Network = typeforce.compile({
-  messagePrefix: typeforce.oneOf(typeforce.Buffer, typeforce.String),
+  messagePrefix: typeforce.anyOf(typeforce.Buffer, typeforce.String),
   bip32: {
     public: typeforce.UInt32,
     private: typeforce.UInt32,

@@ -329,10 +329,8 @@ export const WASMInterface = async <T extends object = object>(
 };
 
 export type $IWASMInterface<T extends object = object> = ReturnType<
-  typeof WASMInterfaceSync
-> & {
-  getExports(): $Exports & T;
-};
+  typeof WASMInterfaceSync<T>
+>;
 
 /**
  * @TODO 实现一个池子，如果 digest 了，那么就回收到池子中，可以重复使用
@@ -363,7 +361,7 @@ export const createWasmPreparer = <T extends object = object>(
   });
 
   return preparer as typeof preparer & {
-    readonly wasm: $IWASMInterface;
+    readonly wasm: $IWASMInterface<T>;
     prepare(): Promise<void>;
   };
 };

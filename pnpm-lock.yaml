@@ -8,6 +8,8 @@ specifiers:
   '@types/bs58check': ^2.1.0
   '@types/node': ^18.11.7
   '@types/pbkdf2': ^3.1.0
+  '@types/prettier': ^2.7.1
+  chalk: ^5.1.2
   fastest-levenshtein: ^1.0.16
   pbkdf2: ^3.1.2
   prettier: ^2.7.1
@@ -30,6 +32,8 @@ devDependencies:
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.3
   '@rollup/plugin-terser': 0.1.0_rollup@3.2.3
   '@types/node': 18.11.7
+  '@types/prettier': 2.7.1
+  chalk: 5.1.2
   prettier: 2.7.1
   rollup: 3.2.3
   rollup-plugin-copy: 3.4.0
@@ -236,6 +240,10 @@ packages:
       '@types/node': 18.11.7
     dev: false
 
+  /@types/prettier/2.7.1:
+    resolution: {integrity: sha512-ri0UmynRRvZiiUJdiz38MmIblKK+oH30MztdBVR95dv/Ubw6neWSb8u1XpRb72L4qsZOhz+L+z9JD40SJmfWow==}
+    dev: true
+
   /@types/resolve/1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: true
@@ -299,6 +307,11 @@ packages:
   /builtin-modules/3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
+    dev: true
+
+  /chalk/5.1.2:
+    resolution: {integrity: sha512-E5CkT4jWURs1Vy5qGJye+XwCkNj7Od3Af7CP6SujMetSMkLs8Do2RWJK5yx1wamHV/op8Rz+9rltjaTQWDnEFQ==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
     dev: true
 
   /cipher-base/1.0.4:

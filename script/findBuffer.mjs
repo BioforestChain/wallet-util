@@ -3,6 +3,7 @@ import { createResolveTo } from './resolveTo.mjs';
 import { walkDir } from './walkFile.mjs';
 import path from 'node:path';
 import { Tree } from './tree.mjs';
+import { indexToLine } from './index_to_line.mjs';
 
 const resolveTo = createResolveTo(import.meta.url);
 const tree = new Tree();
@@ -18,14 +19,10 @@ for (const { filepath, dirname } of walkDir(resolveTo('../src'))) {
     index !== undefined &&
     fileContent.includes('buffer/index.cjs') === false
   ) {
-    let walk = 0;
-    for (const [lineIndex, line] of fileContent.split('\n').entries()) {
-      walk += line.length;
-      if (walk >= index) {
-        console.log(`${filepath}:${lineIndex}:${index - (walk - line.length)}`);
-        need_inject = true;
-        break;
-      }
+    const pos = indexToLine(fileContent, index);
+    if (pos) {
+      console.log(`${filepath}:${pos.line}:${pos.col}`);
+      need_inject = true;
     }
   }
 
@@ -38,7 +35,7 @@ for (const { filepath, dirname } of walkDir(resolveTo('../src'))) {
       tree.write(
         filepath,
         `const { Buffer } = require('${require_buffer_path}'); // auto-inject!\n` +
-          fileContent
+          fileContent,
       );
     }
   }

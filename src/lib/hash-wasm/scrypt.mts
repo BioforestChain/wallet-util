@@ -1,7 +1,7 @@
-import { pbkdf2 } from './pbkdf2.mjs';
-import { createSHA256 } from './sha256.mjs';
+import { pbkdf2, pbkdf2Sync } from './pbkdf2.mjs';
+import { createSHA256, createSHA256Sync, prepareSHA256 } from './sha256.mjs';
 import { getDigestHex, IDataType } from './util.mjs';
-import { createWasmPreparer } from './WASMInterface.mjs';
+import { createWasmPreparer, IHasher } from './WASMInterface.mjs';
 
 /**
  * Load Scrypt wasm
@@ -43,42 +43,41 @@ export interface ScryptOptions {
   outputType?: 'hex' | 'binary';
 }
 
-async function scryptInternal(
+const scryptInternalSync = (
   options: ScryptOptions,
-): Promise<string | Uint8Array> {
+  hashFunction: IHasher,
+  wasm = prepareScrypt.wasm,
+) => {
   const { costFactor, blockSize, parallelism, hashLength } = options;
-  const SHA256Hasher = createSHA256();
 
-  const blockData = await pbkdf2({
+  const blockData = pbkdf2Sync({
     password: options.password,
     salt: options.salt,
     iterations: 1,
     hashLength: 128 * blockSize * parallelism,
-    hashFunction: SHA256Hasher,
+    hashFunction: hashFunction,
     outputType: 'binary',
   });
-
-  const scryptInterface = await prepareScrypt();
 
   // last block is for storing the temporary vectors
   const VSize = 128 * blockSize * costFactor;
   const XYSize = 256 * blockSize;
-  scryptInterface.setMemorySize(blockData.length + VSize + XYSize);
-  scryptInterface.writeMemory(blockData, 0);
+  wasm.setMemorySize(blockData.length + VSize + XYSize);
+  wasm.writeMemory(blockData, 0);
 
   // mix blocks
-  scryptInterface.getExports().scrypt(blockSize, costFactor, parallelism);
+  wasm.getExports().scrypt(blockSize, costFactor, parallelism);
 
-  const expensiveSalt = scryptInterface
+  const expensiveSalt = wasm
     .getMemory()
     .subarray(0, 128 * blockSize * parallelism);
 
-  const outputData = await pbkdf2({
+  const outputData = pbkdf2Sync({
     password: options.password,
     salt: expensiveSalt,
     iterations: 1,
     hashLength,
-    hashFunction: SHA256Hasher,
+    hashFunction: hashFunction,
     outputType: 'binary',
   });
 
@@ -89,7 +88,7 @@ async function scryptInternal(
 
   // return binary format
   return outputData;
-}
+};
 
 // eslint-disable-next-line no-bitwise
 const isPowerOfTwo = (v: number): boolean => !!(v && !(v & (v - 1)));
@@ -134,17 +133,38 @@ interface IScryptOptionsBinary {
   outputType: 'binary';
 }
 
-type ScryptReturnType<T> = T extends IScryptOptionsBinary ? Uint8Array : string;
+type ScryptReturnType<T> = T extends {
+  outputType: 'hex';
+}
+  ? string
+  : Uint8Array;
 
 /**
  * Calculates hash using the scrypt password-based key derivation function
  * @returns Computed hash as a hexadecimal string or as
  *          Uint8Array depending on the outputType option
  */
-export async function scrypt<T extends ScryptOptions>(
-  options: T,
-): Promise<ScryptReturnType<T>> {
+export const scrypt = async <T extends ScryptOptions>(options: T) => {
   validateOptions(options);
 
-  return scryptInternal(options) as any;
-}
+  return scryptInternalSync(
+    options,
+    await createSHA256(),
+    await prepareScrypt(),
+  ) as unknown as ScryptReturnType<T>;
+};
+
+/**
+ * Calculates hash using the scrypt password-based key derivation function
+ * @returns Computed hash as a hexadecimal string or as
+ *          Uint8Array depending on the outputType option
+ */
+export const scryptSync = <T extends ScryptOptions>(options: T) => {
+  validateOptions(options);
+
+  return scryptInternalSync(
+    options,
+    createSHA256Sync(),
+    prepareScrypt.wasm,
+  ) as unknown as ScryptReturnType<T>;
+};
