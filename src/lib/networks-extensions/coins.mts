@@ -60,6 +60,7 @@ export const coins = {
   'BTCP - Bitcoin Private': C('BTCP', 'bitcoinprivate', 183),
   'BTCPt - Bitcoin Private Testnet': C('BTCPt', 'bitcoinprivatetestnet', 1),
   'BSC - Binance Smart Chain': C('BSC', 'bitcoin', 60),
+  'BNB - Binance Smart Chain': C('BNB', 'bitcoin', 60),
   'BSV - BitcoinSV': C('BSV', 'bitcoinsv', 236),
   'BTCZ - Bitcoinz': C('BTCZ', 'bitcoinz', 177),
   'BTDX - BitCloud': C('BTDX', 'bitcloud', 218),
