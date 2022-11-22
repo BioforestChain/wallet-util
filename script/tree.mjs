@@ -18,6 +18,9 @@ export class Tree {
     }
     return content;
   }
+  has(filepath) {
+    return this.cache.has(filepath) || fs.existsSync(filepath);
+  }
   write(filepath, content) {
     this.cache.set(filepath, content);
   }

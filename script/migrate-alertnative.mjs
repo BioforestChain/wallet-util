@@ -34,18 +34,21 @@ export const ALERTNATIVE_LIBS = new Map([
   ['buffer', resolveTo('../src/lib/buffer.mjs')],
   ['crypto', resolveTo('../src/lib/crypto.mjs')],
   ['crc-32', resolveTo('../src/lib/crc-32/index.mjs')],
-  ...listPackage('@noble/hashes', resolveTo('../src/lib/_moke-@noble__hashes')),
-  ...listPackage(
-    '@noble/secp256k1',
-    resolveTo('../src/lib/_moke-@noble__secp256k1'),
-  ),
-  ...listPackage(
-    'ethereum-cryptography',
-    resolveTo('../src/lib/_moke-ethereum-cryptography-base'),
-  ),
-  ...listPackage(
-    'ethereum-cryptography',
-    resolveTo('../src/lib/_moke-ethereum-cryptography'),
-  ),
-  ...listPackage('ethereum-common', resolveTo('../src/lib/ethereum/common')),
+  ['bn.js', resolveTo('../src/lib/bn.mjs')],
+  ['bech32', resolveTo('../src/lib/bech32.mjs')],
+  ['hash-wasm', resolveTo('../src/lib/hash-wasm/index.mjs')],
+  // ...listPackage('@noble/hashes', resolveTo('../src/lib/_moke-@noble__hashes')),
+  // ...listPackage(
+  //   '@noble/secp256k1',
+  //   resolveTo('../src/lib/_moke-@noble__secp256k1'),
+  // ),
+  // ...listPackage(
+  //   'ethereum-cryptography',
+  //   resolveTo('../src/lib/_moke-ethereum-cryptography-base'),
+  // ),
+  // ...listPackage(
+  //   'ethereum-cryptography',
+  //   resolveTo('../src/lib/_moke-ethereum-cryptography'),
+  // ),
+  // ...listPackage('ethereum-common', resolveTo('../src/lib/ethereum/common')),
 ]);

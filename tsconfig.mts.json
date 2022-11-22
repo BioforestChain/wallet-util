@@ -10,5 +10,15 @@
     "src/**/*.mts",
     "src/**/*.json",
   ],
+  "exclude": [
+    "src/lib/_moke-@noble__hashes",
+    "src/lib/_moke-@noble__secp256k1",
+    "src/lib/_moke-ethereum-cryptography",
+    "src/lib/_moke-ethereum-cryptography-base",
+    "src/lib/_moke-web3",
+    "src/lib/crc-32",
+    "src/lib/ethereum",
+    "src/lib/web3",
+  ],
   "references": []
 }

@@ -10,6 +10,10 @@ import { walkDir } from './walkFile.mjs';
 import { format } from './format.mjs';
 import chalk from 'chalk';
 import { indexToLine } from './index_to_line.mjs';
+const resolveTo = createResolveTo(import.meta.url);
+const prettierConfig = JSON.parse(
+  fs.readFileSync(resolveTo('../.prettierrc'), 'utf-8'),
+);
 
 /**
  *
@@ -45,16 +49,12 @@ export const migrateFile = (
   const formatCode = (code) => {
     return format(code, {
       parser: parserMap[ext],
+      ...prettierConfig,
     });
   };
 
-  let fileContent = '';
-  try {
-    fileContent = formatCode(tree.read(entry.filepath));
-  } catch (err) {
-    console.error(err.codeFrame ?? err);
-    process.exit(1);
-  }
+  let fileContent = tree.read(entry.filepath);
+
   /* hook read content */
   if (hook.readContent) {
     const hookReadContentResult = hook.readContent({
@@ -69,8 +69,16 @@ export const migrateFile = (
       return;
     }
   }
-  // console.log('filepath', entry.filepath);
 
+  /// format
+  try {
+    fileContent = formatCode(fileContent);
+  } catch (err) {
+    console.error(err.codeFrame ?? err);
+    process.exit(1);
+  }
+
+  /// process import/export from *
   fileContent = fileContent.replace(
     /from '([^']+)'/g,
     (_, from, index, content) => {
@@ -90,7 +98,16 @@ export const migrateFile = (
           if (fs.statSync(from_path).isDirectory()) {
             from += '/index.mjs';
           }
-        } else {
+        }
+        /// from 'name.js' => from 'name.mjs'
+        else if (
+          from.endsWith('.js') &&
+          fs.existsSync(from_path.replace(/\.js$/, '.ts'))
+        ) {
+          from = from.replace(/js$/, 'mjs');
+        }
+        /// from 'name' => from 'name.mjs'
+        else {
           from += '.mjs';
         }
         const new_from_path = path.resolve(entry.dirname, from);
@@ -174,6 +191,7 @@ export const migratePackages = async (
 
   /// 开始迁移工作
   for (const [packageName, task] of tasks) {
+    console.log(chalk.green('migrating'), packageName);
     // 清空DEST
     fs.rmSync(task.to_source_dir, { recursive: true, force: true });
     /// 开始遍历源文件
