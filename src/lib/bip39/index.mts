@@ -128,9 +128,9 @@ export function entropyToMnemonic(
   if (entropy.length < 16) {
     throw new TypeError(INVALID_ENTROPY);
   }
-  if (entropy.length > 32) {
-    throw new TypeError(INVALID_ENTROPY);
-  }
+  // if (entropy.length > 32) {
+  //   throw new TypeError(INVALID_ENTROPY);
+  // }
   if (entropy.length % 4 !== 0) {
     throw new TypeError(INVALID_ENTROPY);
   }
