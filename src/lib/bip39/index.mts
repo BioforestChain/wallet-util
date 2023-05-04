@@ -96,9 +96,9 @@ export function mnemonicToEntropy(
   if (entropyBytes.length < 16) {
     throw new Error(INVALID_ENTROPY);
   }
-  if (entropyBytes.length > 32) {
-    throw new Error(INVALID_ENTROPY);
-  }
+  // if (entropyBytes.length > 32) {
+  //   throw new Error(INVALID_ENTROPY);
+  // }
   if (entropyBytes.length % 4 !== 0) {
     throw new Error(INVALID_ENTROPY);
   }
