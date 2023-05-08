@@ -348,27 +348,41 @@ export const wordArrayToPhrase = async (
 
 export const getLanguageFromPhrase = async (phrase: string) => {
   // Check if how many words from existing phrase match a language.
-  return getLanguageFromWord(phrase.match(/[^\s\n]+/)?.[0]);
+  return getLanguagesFromWord(phrase.match(/[^\s\n]+/)?.[0]);
 };
 
 export const getLanguageFromWords = async (words: $WordList) => {
+  const wordsLength = words.length;
+  const recordLangs = [] as $Language[];
   for (const word of words) {
-    const lang = await getLanguageFromWord(word);
-    if (lang !== undefined) {
+    const langs = await getLanguagesFromWord(word);
+    if (langs !== undefined) {
+      recordLangs.push(...langs);
+    }
+  }
+  const langOccurrence_Map = new Map<$Language/** language */, number/** count */>();
+  recordLangs.forEach(lang => {
+    const count = langOccurrence_Map.get(lang);
+    langOccurrence_Map.set(lang, count ? count + 1 : 1);
+  });
+  for(const [lang, count] of langOccurrence_Map) {
+    if(count === wordsLength) {
       return lang;
     }
   }
 };
 
-export const getLanguageFromWord = async (word?: string) => {
+export const getLanguagesFromWord = async (word?: string) => {
   if (!word) {
     return;
   }
   const { wordlists } = await getBip39();
+  const languages = [] as $Language[];
   for (const language of wordlists.ALL_LANGUAGE) {
     const wordlist = await wordlists.getWordList(language);
     if (wordlist.includes(word)) {
-      return language;
+      languages.push(language);
     }
   }
+  return languages;
 };
