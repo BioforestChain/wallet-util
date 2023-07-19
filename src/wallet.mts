@@ -50,19 +50,30 @@ export const generateRandomMnemonic = async (
   };
 };
 
-/** 计算基于币种派生路径的地址 */
+/**
+ * 计算基于币种派生路径的地址
+ * @param coinName 
+ * @param seed 
+ * @param index 
+ * @param purpose 固定使用44，但是bitcoin需要3种类型地址：44,49,84 
+ * @returns 
+ */
 export const calcForDerivationPath = async (
   coinName: $CoinName,
   seed: string,
   index = 0,
+  purpose: 44 | 49 | 84 = 44,
 ) => {
   const bitcoin = await getBitcoin();
   const networks = await getNetworks();
   const bip32 = await getBip32();
 
   const networkInfo = await networks.getCoin(coinName);
-  const derivationPath = networkInfo.derivationPath;
-
+  let derivationPath = networkInfo.derivationPath;
+  /// 由于derivationPath固定44，这里需要判断下
+  if(purpose !== 44) {
+    derivationPath.replace("m/44", `m/${purpose}`);
+  }
   const bip32RootKey = bip32.fromSeed(
     Buffer.from(seed, 'hex'),
     networkInfo.network,
@@ -83,6 +94,10 @@ export const calcForDerivationPath = async (
     privkey = keyPair.toWIF();
   }
   let pubkey = keyPair.publicKey.toString('hex');
+  // bitcoin
+  if (networks.btc.isBitcoin(coinName)) {
+    address = bitcoin.address.toBase58Check(keyPair.identifier, keyPair.network.pubKeyHash!);
+  }
   // Ethereum values are different
   if (networks.etc.isEthereum(coinName)) {
     const pubkeyBuffer = keyPair.publicKey;

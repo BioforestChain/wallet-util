@@ -53,6 +53,7 @@
     <select name="tests" id="test-sel">
       <option value="test1">calcForDerivationPath ETH</option>
       <option value="test2">calcForDerivationPath TRX</option>
+      <option value="test3">calcForDerivationPath BTC Testnet</option>
     </select>
     <button id="test-btn">RUN ▶️</button>
     <hr />
@@ -118,7 +119,7 @@
       test1: async () => {
         const testRes = await walletUtil.calcForDerivationPath(
           'ETH - Ethereum',
-          '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
+          'b73241f1892473b58270ddc1623a43c502bdb77242eae56061f51a66454b0570bd7c0a88f7b965b9c74584b360e49e6ddb533b7282573ae07230659a4d50dfd4',
           0,
         );
         return testRes;
@@ -126,11 +127,19 @@
       test2: async () => {
         const testRes = await walletUtil.calcForDerivationPath(
           'TRX - Tron',
-          '208ea2315c340b913f36f8cca16ed04396b3ec2ce0a20bb4eec7f473824af7a32217161f65f93901dd9ebaf2d3b090cee46355b853f513dff8e75f3a4f5245f6',
+          'b73241f1892473b58270ddc1623a43c502bdb77242eae56061f51a66454b0570bd7c0a88f7b965b9c74584b360e49e6ddb533b7282573ae07230659a4d50dfd4',
           0,
         );
         return testRes;
       },
+      test3: async () => {
+        const testRes = await walletUtil.calcForDerivationPath(
+          'BTC - Bitcoin Testnet',
+          'b73241f1892473b58270ddc1623a43c502bdb77242eae56061f51a66454b0570bd7c0a88f7b965b9c74584b360e49e6ddb533b7282573ae07230659a4d50dfd4',
+          0,
+        );
+        return testRes;
+      }
     };
   </script>
 </html>
