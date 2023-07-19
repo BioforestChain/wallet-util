@@ -56,6 +56,7 @@ export const generateRandomMnemonic = async (
  * @param seed 
  * @param index 
  * @param purpose 固定使用44，但是bitcoin需要3种类型地址：44,49,84 
+ * @param externalOrInternal 固定0，但是bitcoin有区分外部跟内容（接收，找零）：0 外部，1 找零
  * @returns 
  */
 export const calcForDerivationPath = async (
@@ -63,6 +64,7 @@ export const calcForDerivationPath = async (
   seed: string,
   index = 0,
   purpose: 44 | 49 | 84 = 44,
+  externalOrInternal: 0 | 1 = 0,
 ) => {
   const bitcoin = await getBitcoin();
   const networks = await getNetworks();
@@ -71,8 +73,11 @@ export const calcForDerivationPath = async (
   const networkInfo = await networks.getCoin(coinName);
   let derivationPath = networkInfo.derivationPath;
   /// 由于derivationPath固定44，这里需要判断下
-  if(purpose !== 44) {
-    derivationPath.replace("m/44", `m/${purpose}`);
+  if(purpose != 44) {
+    derivationPath = derivationPath.replace("m/44", `m/${purpose}`) as $DerivationPath;
+  }
+  if(externalOrInternal == 1) {
+    derivationPath = derivationPath.replace(/.$/, String(externalOrInternal)) as $DerivationPath;
   }
   const bip32RootKey = bip32.fromSeed(
     Buffer.from(seed, 'hex'),
