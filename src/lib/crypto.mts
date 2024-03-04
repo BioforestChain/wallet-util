@@ -13,7 +13,7 @@ export function toBytes(data: $Input): Uint8Array {
 
 export async function sha(
   algorithm: 'SHA-1' | 'SHA-256' | 'SHA-512',
-  input: $Input
+  input: $Input,
 ) {
   const arrayBuffer = await subtle.digest(algorithm, toBytes(input));
   return new Uint8Array(arrayBuffer);
@@ -24,14 +24,14 @@ export async function pbkdf2(
   password: $Input,
   salt: $Input,
   iterations: number,
-  byteLength: number
+  byteLength: number,
 ): Promise<Uint8Array> {
   const baseKey = await subtle.importKey(
     'raw',
     toBytes(password),
     'PBKDF2',
     false,
-    ['deriveBits']
+    ['deriveBits'],
   );
 
   const arrayBuffer = await subtle.deriveBits(
@@ -42,7 +42,7 @@ export async function pbkdf2(
       iterations,
     },
     baseKey,
-    byteLength * 8
+    byteLength * 8,
   );
   return new Uint8Array(arrayBuffer);
 }

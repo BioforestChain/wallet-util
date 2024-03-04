@@ -1,5 +1,9 @@
 import Mutex from './mutex.mjs';
-import { $WASM_NAME, $IWASMInterface, WASMInterface } from './WASMInterface.mjs';
+import {
+  $WASM_NAME,
+  $IWASMInterface,
+  WASMInterface,
+} from './WASMInterface.mjs';
 
 export default async function lockedCreate(
   mutex: Mutex,

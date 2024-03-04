@@ -12,10 +12,12 @@ import {
   getEcpair,
   getEthereumUtil,
   getNetworks,
+  getTinySecp256k1,
 } from './modules.mjs';
 
 import { Buffer } from './lib/buffer.mjs';
 import { randomBytes } from './lib/crypto.mjs';
+
 export { randomBytes, Buffer };
 
 /** 生成助记词 */
@@ -52,32 +54,39 @@ export const generateRandomMnemonic = async (
 
 /**
  * 计算基于币种派生路径的地址
- * @param coinName 
- * @param seed 
- * @param index 
- * @param purpose 固定使用44，但是bitcoin需要3种类型地址：44,49,84 
+ * @param coinName
+ * @param seed
+ * @param index
+ * @param purpose 正常现在都是使用44，但是bitcoin需要4种类型地址：44,49,84,86
  * @param externalOrInternal 固定0，但是bitcoin有区分外部跟内容（接收，找零）：0 外部，1 找零
- * @returns 
+ * @returns
  */
 export const calcForDerivationPath = async (
   coinName: $CoinName,
   seed: string,
   index = 0,
-  purpose: 44 | 49 | 84 = 44,
+  purpose: 44 | 49 | 84 | 86 = 44,
   externalOrInternal: 0 | 1 = 0,
 ) => {
   const bitcoin = await getBitcoin();
   const networks = await getNetworks();
   const bip32 = await getBip32();
+  const ecc = await getTinySecp256k1();
 
   const networkInfo = await networks.getCoin(coinName);
   let derivationPath = networkInfo.derivationPath;
   /// 由于derivationPath固定44，这里需要判断下
-  if(purpose != 44) {
-    derivationPath = derivationPath.replace("m/44", `m/${purpose}`) as $DerivationPath;
+  if (purpose != 44) {
+    derivationPath = derivationPath.replace(
+      'm/44',
+      `m/${purpose}`,
+    ) as $DerivationPath;
   }
-  if(externalOrInternal == 1) {
-    derivationPath = derivationPath.replace(/.$/, String(externalOrInternal)) as $DerivationPath;
+  if (externalOrInternal == 1) {
+    derivationPath = derivationPath.replace(
+      /.$/,
+      String(externalOrInternal),
+    ) as $DerivationPath;
   }
   const bip32RootKey = bip32.fromSeed(
     Buffer.from(seed, 'hex'),
@@ -101,7 +110,10 @@ export const calcForDerivationPath = async (
   let pubkey = keyPair.publicKey.toString('hex');
   // bitcoin
   if (networks.btc.isBitcoin(coinName)) {
-    address = bitcoin.address.toBase58Check(keyPair.identifier, keyPair.network.pubKeyHash!);
+    address = bitcoin.address.toBase58Check(
+      keyPair.identifier,
+      keyPair.network.pubKeyHash!,
+    );
   }
   // Ethereum values are different
   if (networks.etc.isEthereum(coinName)) {
@@ -269,6 +281,63 @@ export const calcForDerivationPath = async (
   //   pubkey = publicKey.toString("hex");
   //   address = libs.zoobcUtil.getZBCAddress(publicKey, "ZBC");
   // }
+
+  /// 判断地址类型
+  const isSegwit = purpose === 49 || purpose === 84;
+  if (isSegwit) {
+    /// 细分
+    const isP2wpkhInP2sh = purpose === 49;
+    const isP2wpkh = purpose === 84;
+    if (isP2wpkhInP2sh) {
+      const keyhash = bitcoin.crypto.hash160(keyPair.publicKey);
+      const scriptsig = bitcoin.script.compile([
+        bitcoin.OPS.OP_0,
+        Buffer.from(keyhash),
+      ]);
+      const addressbytes = bitcoin.crypto.hash160(scriptsig);
+      const scriptpubkey = bitcoin.script.compile([
+        bitcoin.OPS.OP_HASH160,
+        addressbytes,
+        bitcoin.OPS.OP_EQUAL,
+      ]);
+      address = bitcoin.address.fromOutputScript(
+        Buffer.from(scriptpubkey),
+        networkInfo.network,
+      );
+    } else if (isP2wpkh) {
+      const keyhash = bitcoin.crypto.hash160(keyPair.publicKey);
+      const scriptpubkey = bitcoin.script.compile([
+        bitcoin.OPS.OP_0,
+        Buffer.from(keyhash),
+      ]);
+      address = bitcoin.address.fromOutputScript(
+        Buffer.from(scriptpubkey),
+        networkInfo.network,
+      );
+    }
+  } else if (purpose === 86) {
+    const createKeySpendOutput = (publicKey: Buffer) => {
+      // x-only pubkey (remove 1 byte y parity)
+      const myXOnlyPubkey = publicKey.slice(1, 33);
+      const commitHash = bitcoin.crypto.taggedHash('TapTweak', myXOnlyPubkey);
+
+      const tweakResult = ecc.xOnlyPointAddTweak(myXOnlyPubkey, commitHash);
+      if (tweakResult === null) throw new Error('Invalid Tweak');
+      const { xOnlyPubkey: tweaked } = tweakResult;
+      // scriptPubkey
+      return Buffer.concat([
+        // witness v1, PUSH_DATA 32 bytes
+        Buffer.from([0x51, 0x20]),
+        // x-only tweaked pubkey
+        tweaked,
+      ]);
+    }
+    const output = createKeySpendOutput(keyPair.publicKey);
+    address = bitcoin.address.fromOutputScript(
+      Buffer.from(output),
+      networkInfo.network,
+    );
+  }
   return {
     privkey,
     pubkey,
@@ -380,13 +449,16 @@ export const getLanguageFromWords = async (words: $WordList) => {
       recordLangs.push(...langs);
     }
   }
-  const langOccurrence_Map = new Map<$Language/** language */, number/** count */>();
-  recordLangs.forEach(lang => {
+  const langOccurrence_Map = new Map<
+    $Language /** language */,
+    number /** count */
+  >();
+  recordLangs.forEach((lang) => {
     const count = langOccurrence_Map.get(lang);
     langOccurrence_Map.set(lang, count ? count + 1 : 1);
   });
-  for(const [lang, count] of langOccurrence_Map) {
-    if(count === wordsLength) {
+  for (const [lang, count] of langOccurrence_Map) {
+    if (count === wordsLength) {
       return lang;
     }
   }

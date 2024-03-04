@@ -5,8 +5,8 @@ import * as bscript from '../script.mjs';
 import { isPoint, typeforce as typef } from '../types.mjs';
 import { Payment, PaymentOpts, StackFunction } from './index.mjs';
 import * as lazy from './lazy.mjs';
+import { Buffer } from '../../buffer.mjs';
 const OPS = bscript.OPS;
-
 // input: {signature} {pubkey}
 // output: OP_DUP OP_HASH160 {hash160(pubkey)} OP_EQUALVERIFY OP_CHECKSIG
 export function p2pkh(a: Payment, opts?: PaymentOpts): Payment {

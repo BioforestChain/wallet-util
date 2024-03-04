@@ -11,6 +11,7 @@ import {
 } from './index.mjs';
 import * as lazy from './lazy.mjs';
 import { bs58check } from '../../bs58check/index.mjs';
+import { Buffer } from '../../buffer.mjs';
 const OPS = bscript.OPS;
 
 function stacksEqual(a: Buffer[], b: Buffer[]): boolean {

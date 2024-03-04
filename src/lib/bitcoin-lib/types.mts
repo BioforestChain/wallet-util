@@ -7,6 +7,15 @@ const EC_P = NBuffer.from(
   'fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f',
   'hex',
 );
+
+export function stacksEqual(a: Buffer[], b: Buffer[]): boolean {
+  if (a.length !== b.length) return false;
+
+  return a.every((x, i) => {
+    return x.equals(b[i]);
+  });
+}
+
 export function isPoint(p: Buffer | number | undefined | null): boolean {
   if (!NBuffer.isBuffer(p)) return false;
   if (p.length < 33) return false;
@@ -65,6 +74,46 @@ export const Network = typeforce.compile({
   scriptHash: typeforce.UInt8,
   wif: typeforce.UInt8,
 });
+
+export interface XOnlyPointAddTweakResult {
+  parity: 1 | 0;
+  xOnlyPubkey: Uint8Array;
+}
+
+export const TAPLEAF_VERSION_MASK = 0xfe;
+export function isTapleaf(o: any): o is Tapleaf {
+  if (!o || !('output' in o)) return false;
+  if (!NBuffer.isBuffer(o.output)) return false;
+  if (o.version !== undefined)
+    return (o.version & TAPLEAF_VERSION_MASK) === o.version;
+  return true;
+}
+
+export interface Tapleaf {
+  output: Buffer;
+  version?: number;
+}
+
+/**
+ * Binary tree repsenting script path spends for a Taproot input.
+ * Each node is either a single Tapleaf, or a pair of Tapleaf | Taptree.
+ * The tree has no balancing requirements.
+ */
+export type Taptree = [Taptree | Tapleaf, Taptree | Tapleaf] | Tapleaf;
+
+export function isTaptree(scriptTree: any): scriptTree is Taptree {
+  if (!Array(scriptTree)) return isTapleaf(scriptTree);
+  if (scriptTree.length !== 2) return false;
+  return scriptTree.every((t: any) => isTaptree(t));
+}
+
+export interface TinySecp256k1Interface {
+  isXOnlyPoint(p: Uint8Array): boolean;
+  xOnlyPointAddTweak(
+    p: Uint8Array,
+    tweak: Uint8Array,
+  ): XOnlyPointAddTweakResult | null;
+}
 
 export const Buffer256bit = typeforce.BufferN(32);
 export const Hash160bit = typeforce.BufferN(20);

@@ -11,11 +11,15 @@ export const getBitcoin = cacheCall(async () => {
   const payments = await import('./lib/bitcoin-lib/payments/index.mjs');
   const psbt = await import('./lib/bitcoin-lib/psbt.mjs');
   const script = await import('./lib/bitcoin-lib/script.mjs');
+  const crypto = await import('./lib/bitcoin-lib/crypto.mjs');
+  const { OPS } = await import('./lib/bitcoin-lib/ops.mjs');
   return {
     address,
     payments,
     psbt,
     script,
+    crypto,
+    OPS,
   };
 });
 

@@ -197,7 +197,7 @@ export class Transaction {
   }
 
   hasWitnesses(): boolean {
-    return this.ins.some(x => {
+    return this.ins.some((x) => {
       return x.witness.length !== 0;
     });
   }
@@ -238,7 +238,7 @@ export class Transaction {
     newTx.version = this.version;
     newTx.locktime = this.locktime;
 
-    newTx.ins = this.ins.map(txIn => {
+    newTx.ins = this.ins.map((txIn) => {
       return {
         hash: txIn.hash,
         index: txIn.index,
@@ -248,7 +248,7 @@ export class Transaction {
       };
     });
 
-    newTx.outs = this.outs.map(txOut => {
+    newTx.outs = this.outs.map((txOut) => {
       return {
         script: txOut.script,
         value: txOut.value,
@@ -281,7 +281,7 @@ export class Transaction {
 
     // ignore OP_CODESEPARATOR
     const ourScript = bscript.compile(
-      bscript.decompile(prevOutScript)!.filter(x => {
+      bscript.decompile(prevOutScript)!.filter((x) => {
         return x !== opcodes.OP_CODESEPARATOR;
       }),
     );
@@ -328,7 +328,7 @@ export class Transaction {
       // SIGHASH_ALL: only ignore input scripts
     } else {
       // "blank" others input scripts
-      txTmp.ins.forEach(input => {
+      txTmp.ins.forEach((input) => {
         input.script = EMPTY_BUFFER;
       });
       txTmp.ins[inIndex].script = ourScript;
@@ -387,36 +387,36 @@ export class Transaction {
 
     if (!isAnyoneCanPay) {
       let bufferWriter = BufferWriter.withCapacity(36 * this.ins.length);
-      this.ins.forEach(txIn => {
+      this.ins.forEach((txIn) => {
         bufferWriter.writeSlice(txIn.hash);
         bufferWriter.writeUInt32(txIn.index);
       });
       hashPrevouts = bcrypto.sha256(bufferWriter.end());
 
       bufferWriter = BufferWriter.withCapacity(8 * this.ins.length);
-      values.forEach(value => bufferWriter.writeUInt64(value));
+      values.forEach((value) => bufferWriter.writeUInt64(value));
       hashAmounts = bcrypto.sha256(bufferWriter.end());
 
       bufferWriter = BufferWriter.withCapacity(
         prevOutScripts.map(varSliceSize).reduce((a, b) => a + b),
       );
-      prevOutScripts.forEach(prevOutScript =>
+      prevOutScripts.forEach((prevOutScript) =>
         bufferWriter.writeVarSlice(prevOutScript),
       );
       hashScriptPubKeys = bcrypto.sha256(bufferWriter.end());
 
       bufferWriter = BufferWriter.withCapacity(4 * this.ins.length);
-      this.ins.forEach(txIn => bufferWriter.writeUInt32(txIn.sequence));
+      this.ins.forEach((txIn) => bufferWriter.writeUInt32(txIn.sequence));
       hashSequences = bcrypto.sha256(bufferWriter.end());
     }
 
     if (!(isNone || isSingle)) {
       const txOutsSize = this.outs
-        .map(output => 8 + varSliceSize(output.script))
+        .map((output) => 8 + varSliceSize(output.script))
         .reduce((a, b) => a + b);
       const bufferWriter = BufferWriter.withCapacity(txOutsSize);
 
-      this.outs.forEach(out => {
+      this.outs.forEach((out) => {
         bufferWriter.writeUInt64(out.value);
         bufferWriter.writeVarSlice(out.script);
       });
@@ -516,7 +516,7 @@ export class Transaction {
       tbuffer = Buffer.allocUnsafe(36 * this.ins.length);
       bufferWriter = new BufferWriter(tbuffer, 0);
 
-      this.ins.forEach(txIn => {
+      this.ins.forEach((txIn) => {
         bufferWriter.writeSlice(txIn.hash);
         bufferWriter.writeUInt32(txIn.index);
       });
@@ -532,7 +532,7 @@ export class Transaction {
       tbuffer = Buffer.allocUnsafe(4 * this.ins.length);
       bufferWriter = new BufferWriter(tbuffer, 0);
 
-      this.ins.forEach(txIn => {
+      this.ins.forEach((txIn) => {
         bufferWriter.writeUInt32(txIn.sequence);
       });
 
@@ -550,7 +550,7 @@ export class Transaction {
       tbuffer = Buffer.allocUnsafe(txOutsSize);
       bufferWriter = new BufferWriter(tbuffer, 0);
 
-      this.outs.forEach(out => {
+      this.outs.forEach((out) => {
         bufferWriter.writeUInt64(out.value);
         bufferWriter.writeVarSlice(out.script);
       });
@@ -640,7 +640,7 @@ export class Transaction {
 
     bufferWriter.writeVarInt(this.ins.length);
 
-    this.ins.forEach(txIn => {
+    this.ins.forEach((txIn) => {
       bufferWriter.writeSlice(txIn.hash);
       bufferWriter.writeUInt32(txIn.index);
       bufferWriter.writeVarSlice(txIn.script);
@@ -648,7 +648,7 @@ export class Transaction {
     });
 
     bufferWriter.writeVarInt(this.outs.length);
-    this.outs.forEach(txOut => {
+    this.outs.forEach((txOut) => {
       if (isOutput(txOut)) {
         bufferWriter.writeUInt64(txOut.value);
       } else {
@@ -659,7 +659,7 @@ export class Transaction {
     });
 
     if (hasWitnesses) {
-      this.ins.forEach(input => {
+      this.ins.forEach((input) => {
         bufferWriter.writeVector(input.witness);
       });
     }

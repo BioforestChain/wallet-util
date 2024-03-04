@@ -5,6 +5,7 @@ import { isPoint, typeforce as typef } from '../types.mjs';
 import { Payment, PaymentOpts, StackElement, StackFunction } from './index.mjs';
 import * as lazy from './lazy.mjs';
 import { bech32 } from '../../bech32.mjs';
+import { Buffer } from '../../buffer.mjs';
 const OPS = bscript.OPS;
 
 const EMPTY_BUFFER = Buffer.alloc(0);

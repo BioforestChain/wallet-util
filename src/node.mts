@@ -114,5 +114,17 @@ await (async () => {
   );
   console.log(testRes);
 })();
+console.log('BTC - Bitcoin Testnet 44');
+await (async () => {
+  const { walletUtil } = await import('./index.mjs');
+
+  const testRes = await walletUtil.calcForDerivationPath(
+    'BTC - Bitcoin Testnet',
+    '75c9d49959bb769f92c7fa4d6f17fe9625e7819e1bd07a7ea9bac0a7471e76e79a1e1e47049f9e1570ba3e6c29dc04cee15a7b357efc58b83350665fcfdf1e7d',
+    0,
+    44,
+  );
+  console.log(testRes);
+})();
 
 console.log('✅ all test passed.');
