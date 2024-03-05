@@ -114,17 +114,32 @@ await (async () => {
   );
   console.log(testRes);
 })();
-console.log('BTC - Bitcoin Testnet 44');
+
 await (async () => {
   const { walletUtil } = await import('./index.mjs');
-
+  console.log('BTC - Bitcoin Testnet: from seed');
+  const purpose = 44;
+  const coinName = 'BTC - Bitcoin Testnet';
   const testRes = await walletUtil.calcForDerivationPath(
-    'BTC - Bitcoin Testnet',
-    '75c9d49959bb769f92c7fa4d6f17fe9625e7819e1bd07a7ea9bac0a7471e76e79a1e1e47049f9e1570ba3e6c29dc04cee15a7b357efc58b83350665fcfdf1e7d',
+    coinName,
+    '6bb5ec876061761f2313a83f86382ff71fe6b8c383b4482f449e52b645e829fa2058aea7f8e7c6c8f59a9e884248f2b3c71851010c003bb27de91262c7b5ccd6',
     0,
-    44,
+    purpose,
   );
   console.log(testRes);
+  console.log('BTC - Bitcoin Testnet: from privateKey');
+  const testPrivateKeyRes = await walletUtil.getBitcoinAddressFromPrivateKey(
+    testRes.privkey,
+    coinName,
+    purpose,
+  );
+  console.log(testPrivateKeyRes);
+
+  deepEqual(
+    testRes,
+    testPrivateKeyRes,
+    '派生路径生成 跟私钥生成的Bitcoin地址异常',
+  );
 })();
 
 console.log('✅ all test passed.');

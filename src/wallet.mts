@@ -20,6 +20,8 @@ import { randomBytes } from './lib/crypto.mjs';
 
 export { randomBytes, Buffer };
 
+type $PurposeType = 44 | 49 | 84 | 86;
+
 /** 生成助记词 */
 export const generateRandomMnemonic = async (
   length = 12,
@@ -65,13 +67,12 @@ export const calcForDerivationPath = async (
   coinName: $CoinName,
   seed: string,
   index = 0,
-  purpose: 44 | 49 | 84 | 86 = 44,
+  purpose: $PurposeType = 44,
   externalOrInternal: 0 | 1 = 0,
 ) => {
   const bitcoin = await getBitcoin();
   const networks = await getNetworks();
   const bip32 = await getBip32();
-  const ecc = await getTinySecp256k1();
 
   const networkInfo = await networks.getCoin(coinName);
   let derivationPath = networkInfo.derivationPath;
@@ -142,7 +143,6 @@ export const calcForDerivationPath = async (
     const pubkeyBuffer = ecPair.publicKey;
     const ethPubkey = await ethUtil.importPublic(pubkeyBuffer);
     const addressBuffer = await ethUtil.publicToAddress(ethPubkey);
-    console.log('addressBuffer', addressBuffer);
     address = bitcoin.address.toBase58Check(addressBuffer, 0x41);
     if (hasPrivkey) {
       privkey = ecPair.privateKey!.toString('hex');
@@ -283,60 +283,13 @@ export const calcForDerivationPath = async (
   // }
 
   /// 判断地址类型
-  const isSegwit = purpose === 49 || purpose === 84;
-  if (isSegwit) {
-    /// 细分
-    const isP2wpkhInP2sh = purpose === 49;
-    const isP2wpkh = purpose === 84;
-    if (isP2wpkhInP2sh) {
-      const keyhash = bitcoin.crypto.hash160(keyPair.publicKey);
-      const scriptsig = bitcoin.script.compile([
-        bitcoin.OPS.OP_0,
-        Buffer.from(keyhash),
-      ]);
-      const addressbytes = bitcoin.crypto.hash160(scriptsig);
-      const scriptpubkey = bitcoin.script.compile([
-        bitcoin.OPS.OP_HASH160,
-        addressbytes,
-        bitcoin.OPS.OP_EQUAL,
-      ]);
-      address = bitcoin.address.fromOutputScript(
-        Buffer.from(scriptpubkey),
-        networkInfo.network,
-      );
-    } else if (isP2wpkh) {
-      const keyhash = bitcoin.crypto.hash160(keyPair.publicKey);
-      const scriptpubkey = bitcoin.script.compile([
-        bitcoin.OPS.OP_0,
-        Buffer.from(keyhash),
-      ]);
-      address = bitcoin.address.fromOutputScript(
-        Buffer.from(scriptpubkey),
-        networkInfo.network,
-      );
-    }
-  } else if (purpose === 86) {
-    const createKeySpendOutput = (publicKey: Buffer) => {
-      // x-only pubkey (remove 1 byte y parity)
-      const myXOnlyPubkey = publicKey.slice(1, 33);
-      const commitHash = bitcoin.crypto.taggedHash('TapTweak', myXOnlyPubkey);
-
-      const tweakResult = ecc.xOnlyPointAddTweak(myXOnlyPubkey, commitHash);
-      if (tweakResult === null) throw new Error('Invalid Tweak');
-      const { xOnlyPubkey: tweaked } = tweakResult;
-      // scriptPubkey
-      return Buffer.concat([
-        // witness v1, PUSH_DATA 32 bytes
-        Buffer.from([0x51, 0x20]),
-        // x-only tweaked pubkey
-        tweaked,
-      ]);
-    }
-    const output = createKeySpendOutput(keyPair.publicKey);
-    address = bitcoin.address.fromOutputScript(
-      Buffer.from(output),
-      networkInfo.network,
-    );
+  const purposeTypeAddress = await checkPurposeTypeAddressFromPublicKey(
+    keyPair.publicKey,
+    coinName,
+    purpose,
+  );
+  if (purposeTypeAddress) {
+    address = purposeTypeAddress;
   }
   return {
     privkey,
@@ -477,4 +430,115 @@ export const getLanguagesFromWord = async (word?: string) => {
     }
   }
   return languages;
+};
+
+/**
+ * 根据私钥恢复bitcoin地址
+ * 根据需求的函数，非bitcoinhs-lib内函数
+ */
+export const getBitcoinAddressFromPrivateKey = async (
+  wifString: string,
+  coinName: $CoinName,
+  purpose: $PurposeType,
+) => {
+  const ecpairApi = await getEcpair();
+  const networks = await getNetworks();
+  const bitcoin = await getBitcoin();
+  // bitcoin
+  if (networks.btc.isBitcoin(coinName) === false) {
+    throw new Error(`coinName:${coinName} is not bitoin.`);
+  }
+  const networkInfo = await networks.getCoin(coinName);
+  const ecpair = ecpairApi.fromWIF(wifString, networkInfo.network); // 导入私钥
+
+  let address = bitcoin.address.toBase58Check(
+    bitcoin.crypto.hash160(ecpair.publicKey),
+    ecpair.network.pubKeyHash,
+  );
+  /// 判断地址类型
+  const purposeTypeAddress = await checkPurposeTypeAddressFromPublicKey(
+    ecpair.publicKey,
+    coinName,
+    purpose,
+  );
+  if (purposeTypeAddress) {
+    address = purposeTypeAddress;
+  }
+  return {
+    privkey: wifString,
+    pubkey: ecpair.publicKey.toString('hex'),
+    address,
+  };
+};
+
+/**
+ * 校验协议地址
+ */
+const checkPurposeTypeAddressFromPublicKey = async (
+  publicKey: Buffer,
+  coinName: $CoinName,
+  purpose: $PurposeType,
+) => {
+  const bitcoin = await getBitcoin();
+  const ecc = await getTinySecp256k1();
+  const networks = await getNetworks();
+
+  const networkInfo = await networks.getCoin(coinName);
+  const isSegwit = purpose === 49 || purpose === 84;
+  let address = '';
+  if (isSegwit) {
+    /// 细分
+    const isP2wpkhInP2sh = purpose === 49;
+    const isP2wpkh = purpose === 84;
+    if (isP2wpkhInP2sh) {
+      const keyhash = bitcoin.crypto.hash160(publicKey);
+      const scriptsig = bitcoin.script.compile([
+        bitcoin.OPS.OP_0,
+        Buffer.from(keyhash),
+      ]);
+      const addressbytes = bitcoin.crypto.hash160(scriptsig);
+      const scriptpubkey = bitcoin.script.compile([
+        bitcoin.OPS.OP_HASH160,
+        addressbytes,
+        bitcoin.OPS.OP_EQUAL,
+      ]);
+      address = bitcoin.address.fromOutputScript(
+        Buffer.from(scriptpubkey),
+        networkInfo.network,
+      );
+    } else if (isP2wpkh) {
+      const keyhash = bitcoin.crypto.hash160(publicKey);
+      const scriptpubkey = bitcoin.script.compile([
+        bitcoin.OPS.OP_0,
+        Buffer.from(keyhash),
+      ]);
+      address = bitcoin.address.fromOutputScript(
+        Buffer.from(scriptpubkey),
+        networkInfo.network,
+      );
+    }
+  } else if (purpose === 86) {
+    const createKeySpendOutput = (publicKey: Buffer) => {
+      // x-only pubkey (remove 1 byte y parity)
+      const myXOnlyPubkey = publicKey.slice(1, 33);
+      const commitHash = bitcoin.crypto.taggedHash('TapTweak', myXOnlyPubkey);
+
+      const tweakResult = ecc.xOnlyPointAddTweak(myXOnlyPubkey, commitHash);
+      if (tweakResult === null) throw new Error('Invalid Tweak');
+      const { xOnlyPubkey: tweaked } = tweakResult;
+      // scriptPubkey
+      return Buffer.concat([
+        // witness v1, PUSH_DATA 32 bytes
+        Buffer.from([0x51, 0x20]),
+        // x-only tweaked pubkey
+        tweaked,
+      ]);
+    };
+    const output = createKeySpendOutput(publicKey);
+    address = bitcoin.address.fromOutputScript(
+      Buffer.from(output),
+      networkInfo.network,
+    );
+  }
+  return address;
 };
