@@ -14,7 +14,7 @@ import {
   checkForInput,
   checkForOutput,
 } from '../bip174.mjs';
-
+import { Buffer } from '../buffer.mjs';
 import { fromOutputScript, toOutputScript } from './address.mjs';
 import { cloneBuffer, reverseBuffer } from './bufferutils.mjs';
 import { hash160 } from './crypto.mjs';
@@ -631,15 +631,18 @@ export class Psbt {
     const { hash, sighashType } = getHashAndSighashType(
       this.data.inputs,
       inputIndex,
-      keyPair.publicKey,
+      Buffer.from(keyPair.publicKey),
       this.__CACHE,
       sighashTypes,
     );
 
     const partialSig = [
       {
-        pubkey: keyPair.publicKey,
-        signature: bscript.signature.encode(keyPair.sign(hash), sighashType),
+        pubkey: Buffer.from(keyPair.publicKey),
+        signature: bscript.signature.encode(
+          Buffer.from(keyPair.sign(hash)),
+          sighashType,
+        ),
       },
     ];
 
@@ -756,7 +759,7 @@ interface PsbtOpts {
   maximumFeeRate: number;
 }
 
-interface PsbtInputExtended extends PsbtInput, TransactionInput {}
+export interface PsbtInputExtended extends PsbtInput, TransactionInput {}
 
 type PsbtOutputExtended = PsbtOutputExtendedAddress | PsbtOutputExtendedScript;
 

@@ -1,3 +1,4 @@
+import { Buffer } from '../buffer.mjs';
 import * as types from './types.mjs';
 const { typeforce } = types;
 import * as varuint from '../varuint-bitcoin.mjs';

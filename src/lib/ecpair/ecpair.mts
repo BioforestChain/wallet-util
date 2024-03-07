@@ -1,4 +1,4 @@
-// import { Buffer } from '../buffer.mjs';
+import { Buffer } from '../buffer.mjs';
 import { randomBytes } from '../crypto.mjs';
 import * as wif from '../wif/index.mjs';
 import * as networks from './networks.mjs';

@@ -1,5 +1,6 @@
 import * as bip66 from './bip66.mjs';
 import * as types from './types.mjs';
+import { Buffer } from '../buffer.mjs';
 const { typeforce } = types;
 
 const ZERO = Buffer.alloc(1, 0);

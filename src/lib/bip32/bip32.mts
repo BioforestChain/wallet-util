@@ -55,6 +55,7 @@ export interface BIP32API {
     chainCode: Buffer,
     network?: Network,
   ): BIP32Interface;
+  toXOnly(pubKey: Buffer): Buffer;
 }
 
 interface XOnlyPointAddTweakResult {
@@ -577,5 +578,6 @@ export function BIP32Factory(ecc: TinySecp256k1Interface): BIP32API {
     fromBase58,
     fromPublicKey,
     fromPrivateKey,
+    toXOnly,
   };
 }

@@ -8,6 +8,7 @@ import * as bcrypto from './crypto.mjs';
 import * as bscript from './script.mjs';
 import { OPS as opcodes } from './script.mjs';
 import * as types from './types.mjs';
+import { Buffer } from '../buffer.mjs';
 const { typeforce } = types;
 
 function varSliceSize(someScript: Buffer): number {

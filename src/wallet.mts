@@ -17,10 +17,18 @@ import {
 
 import { Buffer } from './lib/buffer.mjs';
 import { randomBytes } from './lib/crypto.mjs';
+import { type PsbtInputExtended } from './lib/bitcoin-lib/psbt.mjs';
 
 export { randomBytes, Buffer };
 
 type $PurposeType = 44 | 49 | 84 | 86;
+
+enum AddressType {
+  NATIVE_SEGWIT_P2WPKH = 'Native Segwit P2WPKH',
+  NESTED_SEGWIT_P2SH_P2PKH = 'Nested Segwit P2SH_P2PKH',
+  TAPROOT_P2TR = 'Taproot P2TR',
+  LEGACY_P2PKH = 'Legacy P2PKH',
+}
 
 /** 生成助记词 */
 export const generateRandomMnemonic = async (
@@ -541,4 +549,138 @@ const checkPurposeTypeAddressFromPublicKey = async (
     );
   }
   return address;
+};
+
+/** 地址类型 */
+export const detectAddressType = (address: string): AddressType => {
+  if (address.startsWith('tb1q') || address.startsWith('bc1q'))
+    return AddressType.NATIVE_SEGWIT_P2WPKH;
+  if (address.startsWith('tb1p') || address.startsWith('bc1p'))
+    return AddressType.TAPROOT_P2TR;
+  if (address.length > 34) return AddressType.NESTED_SEGWIT_P2SH_P2PKH;
+  return AddressType.LEGACY_P2PKH;
+};
+
+/**
+ * 创建bitcoin psbt格式的转账交易
+ */
+export const createBitcoinPsbt = async (opts: {
+  coinName: $CoinName;
+  privateKey: string;
+  utxos: {
+    txid: string;
+    value: string;
+    txHex: string;
+    vout: number;
+  }[];
+  senderId: string;
+  recipientId: string;
+  amount: number | string;
+  feeRate: number | string;
+}) => {
+  const {
+    coinName,
+    privateKey,
+    utxos,
+    senderId,
+    recipientId,
+    amount,
+    feeRate,
+  } = opts;
+
+  const bitcoin = await getBitcoin();
+  const networks = await getNetworks();
+  const ecpair = await getEcpair();
+  const bip32 = await getBip32();
+
+  const networkInfo = await networks.getCoin(coinName);
+
+  const psbt = new bitcoin.psbt.Psbt({ network: networkInfo.network });
+
+  const keyPair = ecpair.fromWIF(privateKey, networkInfo.network);
+
+  const totalUnspent_BI = utxos.reduce(
+    (sum, { value }) => sum + BigInt(value),
+    BigInt(0),
+  );
+  let amount_BI = BigInt(amount);
+  const remainBalance_BI = totalUnspent_BI - amount_BI;
+  /// 判断下转出数量是否大于传入的utxos总和
+  if (remainBalance_BI < BigInt(0)) {
+    throw new Error(
+      `Total less than amount: ${totalUnspent_BI.toString()} < ${amount_BI.toString()}`,
+    );
+  }
+
+  /// 每超出传入总和，开始塞入utxos
+  psbt.addInputs(
+    utxos.map((item) => {
+      const input = { hash: item.txid, index: item.vout } as PsbtInputExtended;
+      const addressType = detectAddressType(senderId);
+
+      if (addressType != AddressType.LEGACY_P2PKH) {
+        const payment = (() => {
+          return bitcoin.payments.p2wpkh({
+            pubkey: keyPair.publicKey,
+            network: networkInfo.network,
+          });
+        })();
+        // Add witnessUtxo data
+        input['witnessUtxo'] = { script: payment.output!, value: +item.value };
+
+        if (addressType == AddressType.TAPROOT_P2TR) {
+          input['tapInternalKey'] = bip32.toXOnly(keyPair.publicKey);
+        }
+        if (addressType == AddressType.NESTED_SEGWIT_P2SH_P2PKH) {
+          input['redeemScript'] = payment.redeem!.output;
+        }
+      } else {
+        input['nonWitnessUtxo'] = Buffer.from(item.txHex, 'hex');
+      }
+      return input;
+    }),
+  );
+
+  /// 计算本次手续费
+  const finalFee_BI = (() => {
+    const tPsbt = psbt.clone();
+    tPsbt.addOutput({ address: recipientId, value: +amount_BI.toString() });
+    tPsbt.addOutput({ address: senderId, value: +remainBalance_BI.toString() });
+    tPsbt.signAllInputs(keyPair);
+    tPsbt.finalizeAllInputs();
+    const estTx = tPsbt.extractTransaction(true);
+    const vBytes = estTx.virtualSize();
+    return BigInt(vBytes) * BigInt(feeRate);
+  })();
+
+  /// 先判断 本次是否为全部转出
+  const allSend = remainBalance_BI === BigInt(0);
+  if (allSend) {
+    /// 数量 - 手续费 就是 新的转移数量
+    amount_BI = amount_BI - finalFee_BI;
+  } else {
+    /// 不是全部转的话，需要判断 手续费 + 转出 是否大于 输入
+    if (totalUnspent_BI - amount_BI - finalFee_BI < BigInt(0)) {
+      return {
+        fee: finalFee_BI.toString(),
+      };
+    }
+    /// 剩余数量返回回来
+    psbt.addOutput({
+      address: senderId,
+      value: +(remainBalance_BI - finalFee_BI).toString(),
+    });
+  }
+
+  /// 塞入本次要转移的人
+  psbt.addOutput({ address: recipientId, value: +amount_BI.toString() });
+
+  psbt.signAllInputs(keyPair);
+
+  psbt.finalizeAllInputs();
+  const tx = psbt.extractTransaction();
+  return {
+    fee: finalFee_BI.toString(),
+    txHex: tx.toHex(),
+  };
 };
