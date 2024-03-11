@@ -21,9 +21,9 @@ import { type PsbtInputExtended } from './lib/bitcoin-lib/psbt.mjs';
 
 export { randomBytes, Buffer };
 
-type $PurposeType = 44 | 49 | 84 | 86;
+export type $PurposeType = 44 | 49 | 84 | 86;
 
-enum AddressType {
+export enum AddressType {
   NATIVE_SEGWIT_P2WPKH = 'Native Segwit P2WPKH',
   NESTED_SEGWIT_P2SH_P2PKH = 'Nested Segwit P2SH_P2PKH',
   TAPROOT_P2TR = 'Taproot P2TR',
